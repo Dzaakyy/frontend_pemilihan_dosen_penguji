@@ -19,7 +19,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/ecommerce',
+      path: '/dashboard',
       name: 'Ecommerce',
       component: () => import('../views/Ecommerce.vue'),
       meta: {
