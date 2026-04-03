@@ -1,5 +1,16 @@
 <template>
-  <div>
+  <div class="relative">
+    <div
+      v-if="alert.show"
+      class="fixed top-20 right-5 z-99999 w-full max-w-sm transition-all duration-300 ease-in-out"
+    >
+      <Alert
+        :variant="alert.type"
+        :title="alert.title"
+        :message="alert.message"
+      />
+    </div>
+
     <div class="flex justify-end mb-4">
       <button @click="openAddModal"
         class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600">
@@ -52,7 +63,6 @@
               </td>
               <td class="px-5 py-4 text-center sm:px-6">
                 <div class="flex items-center justify-center gap-2">
-
                   <button @click="openEditModal(item)"
                     class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:text-blue-600 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-400 shadow-theme-xs"
                     title="Edit">
@@ -72,7 +82,6 @@
                     </svg>
                     Delete
                   </button>
-
                 </div>
               </td>
             </tr>
@@ -131,8 +140,8 @@
           <h4 class="mb-4 text-xl font-semibold text-gray-800 dark:text-white/90">Konfirmasi Hapus</h4>
           <p class="mb-8 text-sm text-gray-500 dark:text-gray-400">
             Apakah Anda yakin ingin menghapus data program studi
-            <br/> <strong class="text-gray-800 dark:text-white text-lg">"{{ itemToDelete?.nama_prodi }}"</strong>?
-            <br/><br/> Data yang sudah dihapus tidak dapat dikembalikan.
+            <br /> <strong class="text-gray-800 dark:text-white text-lg">"{{ itemToDelete?.nama_prodi }}"</strong>?
+            <br /><br /> Data yang sudah dihapus tidak dapat dikembalikan.
           </p>
           <div class="flex items-center justify-center gap-3">
             <button @click="closeDeleteModal"
@@ -154,13 +163,29 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import Modal from '../modal/Modal.vue'
+import Alert from '@/components/ui/Alert.vue'
 
 interface Prodi {
   id: number;
   nama_prodi: string;
 }
 
-// --- STATE UTAMA ---
+// --- STATE ALERT ---
+const alert = ref({
+  show: false,
+  type: 'success' as 'success' | 'error' | 'warning' | 'info',
+  title: '',
+  message: ''
+})
+
+const showAlert = (type: 'success' | 'error' | 'warning' | 'info', title: string, message: string) => {
+  alert.value = { show: true, type, title, message }
+
+  setTimeout(() => {
+    alert.value.show = false
+  }, 3000)
+}
+
 const prodiList = ref<Prodi[]>([])
 const isLoading = ref(true)
 
@@ -178,8 +203,7 @@ const isDeleteModalOpen = ref(false)
 const itemToDelete = ref<Prodi | null>(null)
 const isDeleting = ref(false)
 
-
-// --- 1. GET DATA PRODI ---
+// --- GET DATA PRODI ---
 const fetchProdi = async () => {
   isLoading.value = true
   try {
@@ -192,12 +216,13 @@ const fetchProdi = async () => {
     if (result.success) prodiList.value = result.data
   } catch (error) {
     console.error("Gagal fetch data:", error)
+    showAlert('error', 'Gagal!', 'Terjadi kesalahan jaringan saat memuat data.')
   } finally {
     isLoading.value = false
   }
 }
 
-// --- 2. FUNGSI FORM MODAL ---
+// --- FUNGSI FORM MODAL ---
 const openAddModal = () => {
   isEditing.value = false
   formData.value = { id: null, nama_prodi: '' }
@@ -233,17 +258,19 @@ const submitForm = async () => {
     if (response.ok) {
       closeModal()
       fetchProdi()
+      showAlert('success', 'Berhasil!', `Data Program Studi berhasil ${isEditing.value ? 'diperbarui' : 'ditambahkan'}.`)
     } else {
-      alert("Gagal menyimpan data!")
+      showAlert('error', 'Gagal!', 'Terdapat kesalahan saat menyimpan data.')
     }
   } catch (error) {
     console.error("Error simpan data:", error)
+    showAlert('error', 'Gagal Server!', 'Pastikan server backend sedang menyala.')
   } finally {
     isSaving.value = false
   }
 }
 
-// --- 3. FUNGSI DELETE MODAL ---
+// --- FUNGSI DELETE MODAL ---
 const openDeleteModal = (item: Prodi) => {
   itemToDelete.value = item
   isDeleteModalOpen.value = true
@@ -268,11 +295,13 @@ const confirmDelete = async () => {
     if (response.ok) {
       closeDeleteModal()
       fetchProdi()
+      showAlert('success', 'Dihapus!', 'Data Program Studi berhasil dihapus permanen.')
     } else {
-      alert("Gagal menghapus data!")
+      showAlert('error', 'Gagal!', 'Terdapat kesalahan saat menghapus data.')
     }
   } catch (error) {
     console.error("Error hapus data:", error)
+    showAlert('error', 'Gagal Server!', 'Pastikan server backend sedang menyala.')
   } finally {
     isDeleting.value = false
   }
