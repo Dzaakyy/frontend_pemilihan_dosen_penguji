@@ -162,7 +162,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import Modal from './Modal.vue'
+import Modal from '../modal/Modal.vue'
 
 const isProfileAddressModal = ref(false)
 

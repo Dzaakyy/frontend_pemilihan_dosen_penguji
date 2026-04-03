@@ -27,6 +27,14 @@ const router = createRouter({
       },
     },
     {
+      path: '/prodi',
+      name: 'Prodi',
+      component: () => import('../views/Admin/ProdiView.vue'),
+      meta: {
+        title: 'Data Program Studi',
+      },
+    },
+    {
       path: '/calendar',
       name: 'Calendar',
       component: () => import('../views/Others/Calendar.vue'),
