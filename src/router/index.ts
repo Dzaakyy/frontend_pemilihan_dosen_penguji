@@ -29,7 +29,7 @@ const router = createRouter({
     {
       path: '/prodi',
       name: 'Prodi',
-      component: () => import('../views/Admin/ProdiView.vue'),
+      component: () => import('../views/Admin/prodi/ProdiView.vue'),
       meta: {
         title: 'Data Program Studi',
       },

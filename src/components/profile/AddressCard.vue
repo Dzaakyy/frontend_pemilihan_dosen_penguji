@@ -56,7 +56,6 @@
       </div>
     </div>
     <Modal v-if="isProfileAddressModal" @close="isProfileAddressModal = false">
-      <template #body>
         <div
           class="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11"
         >
@@ -155,12 +154,11 @@
             </div>
           </form>
         </div>
-      </template>
     </Modal>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import Modal from '../modal/Modal.vue'
 
@@ -169,7 +167,7 @@ const isProfileAddressModal = ref(false)
 const saveProfile = () => {
   // Implement save profile logic here
   console.log('Profile saved')
-  isProfileInfoModal.value = false
+  isProfileAddressModal.value = false
 }
 </script>
 

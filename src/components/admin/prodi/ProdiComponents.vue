@@ -91,7 +91,6 @@
     </div>
 
     <Modal v-if="isModalOpen" @close="closeModal">
-      <template #body>
         <div
           class="no-scrollbar relative w-full max-w-[500px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11 mx-auto mt-10">
           <button @click="closeModal"
@@ -131,11 +130,9 @@
             </div>
           </form>
         </div>
-      </template>
     </Modal>
 
     <Modal v-if="isDeleteModalOpen" @close="closeDeleteModal">
-      <template #body>
         <div class="w-full max-w-[400px] rounded-3xl bg-white p-6 dark:bg-gray-900 text-center mx-auto mt-20 z-50">
           <h4 class="mb-4 text-xl font-semibold text-gray-800 dark:text-white/90">Konfirmasi Hapus</h4>
           <p class="mb-8 text-sm text-gray-500 dark:text-gray-400">
@@ -154,7 +151,6 @@
             </button>
           </div>
         </div>
-      </template>
     </Modal>
 
   </div>
@@ -162,7 +158,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import Modal from '../modal/Modal.vue'
+import Modal from '@/components/modal/Modal.vue'
 import Alert from '@/components/ui/Alert.vue'
 
 interface Prodi {

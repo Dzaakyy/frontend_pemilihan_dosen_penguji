@@ -5,10 +5,13 @@
       aria-hidden="true"
       @click="$emit('close')"
     ></div>
-    <slot name="body"></slot>
+    <slot></slot>
   </div>
 </template>
 
-<script setup>
-// No additional setup needed
+<script setup lang="ts">
+defineOptions({
+  name: 'BaseModal'
+})
+defineEmits(['close'])
 </script>
