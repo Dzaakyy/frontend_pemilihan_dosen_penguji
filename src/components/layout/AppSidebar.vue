@@ -8,7 +8,7 @@
       '-translate-x-full': !isMobileOpen,
       'lg:translate-x-0': true,
     },
-  ]" @mouseenter="!isExpanded && (isHovered = true)" @mouseleave="isHovered = false">
+  ]" @mouseenter="handleMouseEnter" @mouseleave="isHovered = false">
     <div :class="[
       'py-8 flex',
       !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start',
@@ -144,17 +144,15 @@
   </aside>
 </template>
 
-<script setup>
-import { ref, computed } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import { useRoute } from "vue-router";
+import type { Component } from "vue";
 
 import {
   GridIcon,
   CalenderIcon,
   UserCircleIcon,
-  ChatIcon,
-  MailIcon,
-  DocsIcon,
   PieChartIcon,
   ChevronDownIcon,
   HorizontalDots,
@@ -167,11 +165,29 @@ import SidebarWidget from "./SidebarWidget.vue";
 import BoxCubeIcon from "@/icons/BoxCubeIcon.vue";
 import { useSidebar } from "@/composables/useSidebar";
 
-const route = useRoute();
+interface MenuSubItem {
+  name: string;
+  path: string;
+  pro?: boolean;
+  new?: boolean;
+}
 
+interface MenuItem {
+  icon?: Component;
+  name: string;
+  path?: string;
+  subItems?: MenuSubItem[];
+}
+
+interface MenuGroup {
+  title: string;
+  items: MenuItem[];
+}
+
+const route = useRoute();
 const { isExpanded, isMobileOpen, isHovered, openSubmenu } = useSidebar();
 
-const menuGroups = [
+const menuGroups: MenuGroup[] = [
   {
     title: "Menu",
     items: [
@@ -184,6 +200,11 @@ const menuGroups = [
         icon: ListIcon,
         name: "Data Prodi",
         path: "/prodi",
+      },
+       {
+        icon: UserCircleIcon,
+        name: "User",
+        subItems: [{ name: "Dosen", path: "/dosen", pro: false }],
       },
       {
         icon: CalenderIcon,
@@ -249,14 +270,19 @@ const menuGroups = [
           { name: "Signup", path: "/signup", pro: false },
         ],
       },
-      // ... Add other menu items here
     ],
   },
 ];
 
-const isActive = (path) => route.path === path;
+const handleMouseEnter = () => {
+  if (!isExpanded.value) {
+    isHovered.value = true;
+  }
+};
 
-const toggleSubmenu = (groupIndex, itemIndex) => {
+const isActive = (path: string) => route.path === path;
+
+const toggleSubmenu = (groupIndex: number, itemIndex: number) => {
   const key = `${groupIndex}-${itemIndex}`;
   openSubmenu.value = openSubmenu.value === key ? null : key;
 };
@@ -270,7 +296,7 @@ const isAnySubmenuRouteActive = computed(() => {
   );
 });
 
-const isSubmenuOpen = (groupIndex, itemIndex) => {
+const isSubmenuOpen = (groupIndex: number, itemIndex: number) => {
   const key = `${groupIndex}-${itemIndex}`;
   return (
     openSubmenu.value === key ||
@@ -281,15 +307,21 @@ const isSubmenuOpen = (groupIndex, itemIndex) => {
   );
 };
 
-const startTransition = (el) => {
-  el.style.height = "auto";
-  const height = el.scrollHeight;
-  el.style.height = "0px";
-  el.offsetHeight; // force reflow
-  el.style.height = height + "px";
+const startTransition = (el: Element) => {
+  const htmlEl = el as HTMLElement;
+
+  htmlEl.style.height = "auto";
+  const height = htmlEl.scrollHeight;
+  htmlEl.style.height = "0px";
+
+  void htmlEl.offsetHeight;
+
+  htmlEl.style.height = height + "px";
 };
 
-const endTransition = (el) => {
-  el.style.height = "";
+const endTransition = (el: Element) => {
+  const htmlEl = el as HTMLElement;
+  htmlEl.style.height = "";
 };
+
 </script>

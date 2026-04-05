@@ -35,6 +35,14 @@ const router = createRouter({
       },
     },
     {
+      path: '/dosen',
+      name: 'Dosen',
+      component: () => import('../views/Admin/user/DosenView.vue'),
+      meta: {
+        title: 'Dosen',
+      },
+    },
+    {
       path: '/calendar',
       name: 'Calendar',
       component: () => import('../views/Others/Calendar.vue'),
