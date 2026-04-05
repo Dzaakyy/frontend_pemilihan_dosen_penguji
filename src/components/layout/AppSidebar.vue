@@ -201,10 +201,13 @@ const menuGroups: MenuGroup[] = [
         name: "Data Prodi",
         path: "/prodi",
       },
-       {
+      {
         icon: UserCircleIcon,
         name: "User",
-        subItems: [{ name: "Dosen", path: "/dosen", pro: false }],
+        subItems: [
+          { name: "Dosen", path: "/dosen", pro: false },
+          { name: "Mahasiswa", path: "/mahasiswa", pro: false }
+        ],
       },
       {
         icon: CalenderIcon,

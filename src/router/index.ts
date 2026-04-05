@@ -43,6 +43,14 @@ const router = createRouter({
       },
     },
     {
+      path: '/mahasiswa',
+      name: 'Mahasiswa',
+      component: () => import('../views/Admin/user/MahasiswaView.vue'),
+      meta: {
+        title: 'Mahasiswa',
+      },
+    },
+    {
       path: '/calendar',
       name: 'Calendar',
       component: () => import('../views/Others/Calendar.vue'),
