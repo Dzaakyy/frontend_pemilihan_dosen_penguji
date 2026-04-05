@@ -315,6 +315,10 @@ import CommonGridShape from '@/components/common/CommonGridShape.vue'
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
+defineOptions({
+  name: 'SignUpView'
+})
+
 const firstName = ref('')
 const lastName = ref('')
 const email = ref('')

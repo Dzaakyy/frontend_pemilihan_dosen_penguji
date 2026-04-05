@@ -101,6 +101,10 @@ import { useRouter } from 'vue-router'
 import CommonGridShape from '@/components/common/CommonGridShape.vue'
 import FullScreenLayout from '@/components/layout/FullScreenLayout.vue'
 
+defineOptions({
+  name: 'SignInView'
+})
+
 const router = useRouter()
 const username = ref('')
 const password = ref('')
@@ -139,6 +143,7 @@ const handleSubmit = async () => {
       errorMessage.value = result.message || 'Gagal login, periksa username dan password Anda.'
     }
   } catch (error) {
+    console.error('Terjadi kesalahan saat login:', error)
     errorMessage.value = 'Tidak dapat terhubung ke server (Pastikan server backend nyala).'
   } finally {
     isLoading.value = false
