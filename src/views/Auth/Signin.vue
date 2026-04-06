@@ -135,8 +135,13 @@ const handleSubmit = async () => {
 
     const result = await response.json()
 
-    if (response.ok && result.success) {
+   if (response.ok && result.success) {
       localStorage.setItem('isLoggedIn', 'true')
+
+      localStorage.setItem('username', result.data.username)
+
+      const userRoles = result.data.roles ? result.data.roles.map((r: { nama: string }) => r.nama).join(', ') : 'User'
+      localStorage.setItem('userRoles', userRoles)
 
       router.push('/dashboard')
     } else {
