@@ -34,12 +34,20 @@ const router = createRouter({
         title: 'Data Program Studi',
       },
     },
-        {
+    {
       path: '/topik-ta',
       name: 'Topik TA',
       component: () => import('../views/Admin/topik_ta/TopikTaView.vue'),
       meta: {
         title: 'Data Topik TA',
+      },
+    },
+    {
+      path: '/keahlian-dosen',
+      name: 'Keahlian Dosen',
+      component: () => import('../views/Admin/keahlian_dosen/KeahlianDosenView.vue'),
+      meta: {
+        title: 'Data Keahlian Dosen',
       },
     },
     {

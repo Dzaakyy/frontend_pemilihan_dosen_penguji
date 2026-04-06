@@ -157,7 +157,7 @@ import {
   ChevronDownIcon,
   HorizontalDots,
   PageIcon,
-  // TableIcon,
+  TableIcon,
   ListIcon,
   // PlugInIcon,
 } from "../../icons";
@@ -205,6 +205,11 @@ const menuGroups: MenuGroup[] = [
         icon: PageIcon,
         name: "Topik TA",
         path: "/topik-ta",
+      },
+            {
+        icon: TableIcon,
+        name: "Keahlian Dosen",
+        path: "/keahlian-dosen",
       },
       {
         icon: UserCircleIcon,
