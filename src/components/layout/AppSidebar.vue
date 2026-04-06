@@ -156,7 +156,7 @@ import {
   // PieChartIcon,
   ChevronDownIcon,
   HorizontalDots,
-  // PageIcon,
+  PageIcon,
   // TableIcon,
   ListIcon,
   // PlugInIcon,
@@ -200,6 +200,11 @@ const menuGroups: MenuGroup[] = [
         icon: ListIcon,
         name: "Data Prodi",
         path: "/prodi",
+      },
+      {
+        icon: PageIcon,
+        name: "Topik TA",
+        path: "/topik-ta",
       },
       {
         icon: UserCircleIcon,
