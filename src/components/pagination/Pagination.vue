@@ -74,7 +74,8 @@ const visiblePages = computed(() => {
   const maxVisible = 5
 
   let start = Math.max(1, props.currentPage - Math.floor(maxVisible / 2))
-  let end = Math.min(totalPages.value, start + maxVisible - 1)
+
+  const end = Math.min(totalPages.value, start + maxVisible - 1)
 
   if (end - start < maxVisible - 1) {
     start = Math.max(1, end - maxVisible + 1)
