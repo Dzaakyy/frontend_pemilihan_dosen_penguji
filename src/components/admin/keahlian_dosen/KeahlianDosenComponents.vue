@@ -67,7 +67,7 @@
 
               <td class="px-5 py-4 sm:px-6 align-top pt-5">
                 <div class="flex flex-wrap gap-2">
-                  <span v-for="keahlian in group.keahlian" :key="keahlian.id"
+                  <span v-for="keahlian in group.keahlian" :key="keahlian.id_keahlian"
                     class="inline-flex items-center justify-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
                     {{ keahlian.topik_ta?.nama_topik || '-' }}
                   </span>
@@ -119,7 +119,7 @@
 
               <ul v-if="showDosenDropdown && filteredDosenOptions.length > 0"
                   class="absolute w-full mt-1 max-h-60 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-200 rounded-lg shadow-xl">
-                <li v-for="dosen in filteredDosenOptions" :key="dosen.id" @click="selectDosen(dosen)"
+                <li v-for="dosen in filteredDosenOptions" :key="dosen.id_dosen" @click="selectDosen(dosen)"
                     class="px-4 py-2 cursor-pointer hover:bg-brand-50 text-sm text-gray-800 border-b border-gray-100 last:border-0">
                   {{ dosen.nama_dosen }}
                 </li>
@@ -156,10 +156,10 @@
             </div>
 
             <div v-if="showTopikDropdown" class="absolute w-full mt-1 max-h-56 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-xl">
-              <div v-for="topik in topikList" :key="topik.id" @click="toggleTopik(topik.id)"
+              <div v-for="topik in topikList" :key="topik.id_topik" @click="toggleTopik(topik.id_topik)"
                 class="px-4 py-2.5 cursor-pointer hover:bg-brand-50 text-sm text-gray-800 border-b border-gray-100 last:border-0 flex items-center justify-between transition-colors">
                 <span>{{ topik.nama_topik }}</span>
-                <svg v-if="formData.topik_ids.includes(topik.id)" class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                <svg v-if="formData.topik_ids.includes(topik.id_topik)" class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
               </div>
             </div>
 
@@ -204,9 +204,9 @@ import Alert from '@/components/ui/Alert.vue'
 
 type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 
-interface Dosen { id: number; nama_dosen: string; }
-interface Topik { id: number; nama_topik: string; }
-interface Keahlian { id: number; dosen_id: number; topik_id: number; dosen?: Dosen; topik_ta?: Topik; }
+interface Dosen { id_dosen: number; nama_dosen: string; }
+interface Topik { id_topik: number; nama_topik: string; }
+interface Keahlian { id_keahlian: number; dosen_id: number; topik_id: number; dosen?: Dosen; topik_ta?: Topik; }
 
 // Struktur Group
 interface GroupedKeahlian {
@@ -287,8 +287,8 @@ const filteredDosenOptions = computed(() => {
   const dosenIdsWithKeahlian = groupedKeahlian.value.map(group => group.dosen_id);
 
   let availableDosen = dosenList.value.filter(dosen =>
-    !dosenIdsWithKeahlian.includes(dosen.id) ||
-    (isEditing.value && dosen.id === formData.value.dosen_id)
+    !dosenIdsWithKeahlian.includes(dosen.id_dosen) ||
+    (isEditing.value && dosen.id_dosen === formData.value.dosen_id)
   );
 
   if (dosenSearchTerm.value) {
@@ -299,7 +299,7 @@ const filteredDosenOptions = computed(() => {
   return availableDosen;
 })
 const selectDosen = (dosen: Dosen) => {
-  formData.value.dosen_id = dosen.id
+  formData.value.dosen_id = dosen.id_dosen
   dosenSearchTerm.value = dosen.nama_dosen
   showDosenDropdown.value = false
 }
@@ -314,7 +314,7 @@ const toggleTopik = (id: number) => {
 }
 
 const getTopikName = (id: number) => {
-  const topik = topikList.value.find(t => t.id === id)
+  const topik = topikList.value.find(t => t.id_topik === id)
   return topik ? topik.nama_topik : ''
 }
 

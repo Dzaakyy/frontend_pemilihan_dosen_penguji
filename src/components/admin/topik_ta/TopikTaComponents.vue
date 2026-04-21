@@ -49,7 +49,7 @@
                 Belum ada data topik TA.
               </td>
             </tr>
-            <tr v-else v-for="(item, index) in topikList" :key="item.id"
+            <tr v-else v-for="(item, index) in topikList" :key="item.id_topik"
               class="border-t border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.02]">
               <td class="px-5 py-4 sm:px-6">
                 <span class="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
@@ -162,7 +162,7 @@ import Modal from '@/components/modal/Modal.vue'
 import Alert from '@/components/ui/Alert.vue'
 
 interface Topik {
-  id: number;
+  id_topik: number;
   nama_topik: string;
 }
 
@@ -189,7 +189,7 @@ const isModalOpen = ref(false)
 const isEditing = ref(false)
 const isSaving = ref(false)
 const formData = ref({
-  id: null as number | null,
+  id_topik: null as number | null,
   nama_topik: ''
 })
 
@@ -220,13 +220,13 @@ const fetchTopik = async () => {
 // --- FUNGSI FORM MODAL ---
 const openAddModal = () => {
   isEditing.value = false
-  formData.value = { id: null, nama_topik: '' }
+  formData.value = { id_topik: null, nama_topik: '' }
   isModalOpen.value = true
 }
 
 const openEditModal = (item: Topik) => {
   isEditing.value = true
-  formData.value = { id: item.id, nama_topik: item.nama_topik }
+  formData.value = { id_topik: item.id_topik, nama_topik: item.nama_topik }
   isModalOpen.value = true
 }
 
@@ -238,7 +238,7 @@ const submitForm = async () => {
   isSaving.value = true
   try {
     const url = isEditing.value
-      ? `http://localhost:3000/api/topik-ta/${formData.value.id}`
+      ? `http://localhost:3000/api/topik-ta/${formData.value.id_topik}`
       : 'http://localhost:3000/api/topik-ta'
 
     const method = isEditing.value ? 'PUT' : 'POST'
@@ -281,7 +281,7 @@ const confirmDelete = async () => {
 
   isDeleting.value = true
   try {
-    const response = await fetch(`http://localhost:3000/api/topik-ta/${itemToDelete.value.id}`, {
+    const response = await fetch(`http://localhost:3000/api/topik-ta/${itemToDelete.value.id_topik}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'

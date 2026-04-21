@@ -29,12 +29,12 @@
 
         <select v-model="filterProdi" class="h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
           <option value="">Semua Prodi</option>
-          <option v-for="prodi in listProdi" :key="prodi.id" :value="prodi.id">{{ prodi.nama_prodi }}</option>
+          <option v-for="prodi in listProdi" :key="prodi.id_prodi" :value="prodi.id_prodi">{{ prodi.nama_prodi }}</option>
         </select>
 
         <select v-model="filterTopik" class="h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
           <option value="">Semua Topik TA</option>
-          <option v-for="topik in listTopik" :key="topik.id" :value="topik.id">{{ topik.nama_topik }}</option>
+          <option v-for="topik in listTopik" :key="topik.id_topik" :value="topik.id_topik">{{ topik.nama_topik }}</option>
         </select>
 
         <select v-model="sortOrder" class="h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
@@ -68,7 +68,7 @@
               <td colspan="7" class="px-5 py-8 text-center text-gray-500 text-theme-sm">Data tidak ditemukan sesuai filter.</td>
             </tr>
 
-            <tr v-else v-for="(item, index) in paginatedList" :key="item.id" class="border-t border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.02]">
+            <tr v-else v-for="(item, index) in paginatedList" :key="item.id_mahasiswa" class="border-t border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.02]">
               <td class="px-5 py-4 sm:px-6 align-top">
                 <span class="block font-medium text-gray-800 text-theme-sm dark:text-white/90 mt-1">
                   {{ (currentPage - 1) * itemsPerPage + index + 1 }}
@@ -156,14 +156,14 @@
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Program Studi <span class="text-red-500">*</span></label>
               <select v-model="formData.prodi_id" class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3" required>
                 <option value="" disabled>Pilih Program Studi</option>
-                <option v-for="prodi in listProdi" :key="prodi.id" :value="prodi.id">{{ prodi.nama_prodi }}</option>
+                <option v-for="prodi in listProdi" :key="prodi.id_prodi" :value="prodi.id_prodi">{{ prodi.nama_prodi }}</option>
               </select>
             </div>
             <div>
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Topik TA</label>
               <select v-model="formData.topik_id" class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3">
                 <option value="" disabled>Pilih Topik</option>
-                <option v-for="topik in listTopik" :key="topik.id" :value="topik.id">{{ topik.nama_topik }}</option>
+                <option v-for="topik in listTopik" :key="topik.id_topik" :value="topik.id_topik">{{ topik.nama_topik }}</option>
               </select>
             </div>
           </div>
@@ -225,11 +225,11 @@ import Alert from '@/components/ui/Alert.vue'
 
 type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 
-interface Prodi { id: number; nama_prodi: string; }
-interface Topik { id: number; nama_topik: string; }
+interface Prodi { id_prodi: number; nama_prodi: string; }
+interface Topik { id_topik: number; nama_topik: string; }
 
 interface Mahasiswa {
-  id: number;
+  id_mahasiswa: number;
   nama_mahasiswa: string;
   nim: string;
   judul_ta: string;
@@ -237,7 +237,7 @@ interface Mahasiswa {
   topik_id: number;
   prodi?: Prodi;
   topik_ta?: Topik;
-  user?: { id: number; username: string; };
+  user?: { id_user: number; username: string; };
 }
 
 interface MahasiswaPayload {
@@ -397,7 +397,7 @@ const openAddModal = () => {
 const openEditModal = (item: Mahasiswa) => {
   isEditing.value = true
   formData.value = {
-    id: item.id,
+    id: item.id_mahasiswa,
     nama_mahasiswa: item.nama_mahasiswa,
     nim: item.nim,
     judul_ta: item.judul_ta,
@@ -469,7 +469,7 @@ const confirmDelete = async () => {
   if (itemToDelete.value === null) return;
   isDeleting.value = true
   try {
-    const response = await fetch(`http://localhost:3000/api/mahasiswa/${itemToDelete.value.id}`, {
+    const response = await fetch(`http://localhost:3000/api/mahasiswa/${itemToDelete.value.id_mahasiswa}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'

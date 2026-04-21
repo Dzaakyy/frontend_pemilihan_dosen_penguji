@@ -49,7 +49,7 @@
                 Belum ada data prodi.
               </td>
             </tr>
-            <tr v-else v-for="(item, index) in prodiList" :key="item.id"
+            <tr v-else v-for="(item, index) in prodiList" :key="item.id_prodi"
               class="border-t border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.02]">
               <td class="px-5 py-4 sm:px-6">
                 <span class="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
@@ -162,7 +162,7 @@ import Modal from '@/components/modal/Modal.vue'
 import Alert from '@/components/ui/Alert.vue'
 
 interface Prodi {
-  id: number;
+  id_prodi: number;
   nama_prodi: string;
 }
 
@@ -190,7 +190,7 @@ const isModalOpen = ref(false)
 const isEditing = ref(false)
 const isSaving = ref(false)
 const formData = ref({
-  id: null as number | null,
+  id_prodi: null as number | null,
   nama_prodi: ''
 })
 
@@ -221,13 +221,13 @@ const fetchProdi = async () => {
 // --- FUNGSI FORM MODAL ---
 const openAddModal = () => {
   isEditing.value = false
-  formData.value = { id: null, nama_prodi: '' }
+  formData.value = { id_prodi: null, nama_prodi: '' }
   isModalOpen.value = true
 }
 
 const openEditModal = (item: Prodi) => {
   isEditing.value = true
-  formData.value = { id: item.id, nama_prodi: item.nama_prodi }
+  formData.value = { id_prodi: item.id_prodi, nama_prodi: item.nama_prodi }
   isModalOpen.value = true
 }
 
@@ -239,7 +239,7 @@ const submitForm = async () => {
   isSaving.value = true
   try {
     const url = isEditing.value
-      ? `http://localhost:3000/api/prodi/${formData.value.id}`
+      ? `http://localhost:3000/api/prodi/${formData.value.id_prodi}`
       : 'http://localhost:3000/api/prodi'
 
     const method = isEditing.value ? 'PUT' : 'POST'
@@ -282,7 +282,7 @@ const confirmDelete = async () => {
 
   isDeleting.value = true
   try {
-    const response = await fetch(`http://localhost:3000/api/prodi/${itemToDelete.value.id}`, {
+    const response = await fetch(`http://localhost:3000/api/prodi/${itemToDelete.value.id_prodi}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'

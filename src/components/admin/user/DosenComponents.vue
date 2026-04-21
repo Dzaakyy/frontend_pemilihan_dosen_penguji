@@ -30,7 +30,7 @@
 
         <select v-model="filterProdi" class="h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
           <option value="">Semua Prodi</option>
-          <option v-for="prodi in listProdi" :key="prodi.id" :value="prodi.id">{{ prodi.nama_prodi }}</option>
+          <option v-for="prodi in listProdi" :key="prodi.id_prodi" :value="prodi.id_prodi">{{ prodi.nama_prodi }}</option>
         </select>
 
         <select v-model="filterGrupRiset" class="h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
@@ -74,7 +74,7 @@
               <td colspan="8" class="px-5 py-8 text-center text-gray-500 text-theme-sm">Data tidak ditemukan sesuai filter.</td>
             </tr>
 
-            <tr v-else v-for="(item, index) in paginatedList" :key="item.id" class="border-t border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.02]">
+            <tr v-else v-for="(item, index) in paginatedList" :key="item.id_dosen" class="border-t border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.02]">
               <td class="px-5 py-4 sm:px-6">
                 <span class="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
                   {{ (currentPage - 1) * itemsPerPage + index + 1 }}
@@ -89,7 +89,7 @@
               <td class="px-5 py-4 text-center sm:px-6">
                 <div class="flex flex-wrap items-center justify-center gap-1">
                   <span v-if="!item.user?.role || item.user.role.length === 0" class="inline-flex items-center justify-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">-</span>
-                  <span v-else v-for="role in item.user.role" :key="role.id" :class="['inline-flex items-center justify-center rounded-full px-2 py-0.5 text-xs font-medium', role.id === 2 ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800']">
+                  <span v-else v-for="role in item.user.role" :key="role.id_role" :class="['inline-flex items-center justify-center rounded-full px-2 py-0.5 text-xs font-medium', role.id_role === 2 ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800']">
                     {{ role.nama || role.nama_role }}
                   </span>
                 </div>
@@ -151,7 +151,7 @@
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Program Studi <span class="text-red-500">*</span></label>
               <select v-model="formData.prodi_id" class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3" required>
                 <option value="" disabled>Pilih Program Studi</option>
-                <option v-for="prodi in listProdi" :key="prodi.id" :value="prodi.id">{{ prodi.nama_prodi }}</option>
+                <option v-for="prodi in listProdi" :key="prodi.id_prodi" :value="prodi.id_prodi">{{ prodi.nama_prodi }}</option>
               </select>
             </div>
             <div>
@@ -244,11 +244,11 @@ import Alert from '@/components/ui/Alert.vue'
 
 type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 
-interface Prodi { id: number; nama_prodi: string; }
-interface Role { id: number; nama?: string; nama_role?: string; }
+interface Prodi { id_prodi: number; nama_prodi: string; }
+interface Role { id_role: number; nama?: string; nama_role?: string; }
 
 interface Dosen {
-  id: number;
+  id_dosen: number;
   nama_dosen: string;
   nidn: string;
   prodi_id: number;
@@ -256,7 +256,7 @@ interface Dosen {
   kuota_menguji: number;
   prodi?: Prodi;
   user?: {
-    id: number;
+    id_user: number;
     username: string;
     role?: Role[];
   };
@@ -406,10 +406,10 @@ const openAddModal = () => {
 
 const openEditModal = (item: Dosen) => {
   isEditing.value = true
-  const existingRoleIds = item.user?.role?.map((r: Role) => r.id) || []
+  const existingRoleIds = item.user?.role?.map((r: Role) => r.id_role) || []
 
   formData.value = {
-    id: item.id,
+    id: item.id_dosen,
     nama_dosen: item.nama_dosen,
     nidn: item.nidn,
     prodi_id: item.prodi_id,
@@ -484,7 +484,7 @@ const confirmDelete = async () => {
   if (itemToDelete.value === null) return;
   isDeleting.value = true
   try {
-    const response = await fetch(`http://localhost:3000/api/dosen/${itemToDelete.value.id}`, {
+    const response = await fetch(`http://localhost:3000/api/dosen/${itemToDelete.value.id_dosen}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'
