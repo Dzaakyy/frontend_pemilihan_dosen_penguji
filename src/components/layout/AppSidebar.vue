@@ -145,7 +145,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import type { Component } from "vue";
 
@@ -299,25 +299,35 @@ const toggleSubmenu = (groupIndex: number, itemIndex: number) => {
   openSubmenu.value = openSubmenu.value === key ? null : key;
 };
 
-const isAnySubmenuRouteActive = computed(() => {
-  return menuGroups.some((group) =>
-    group.items.some(
-      (item) =>
-        item.subItems && item.subItems.some((subItem) => isActive(subItem.path))
-    )
-  );
-});
+
+const updateActiveSubmenu = () => {
+  let found = false;
+  menuGroups.forEach((group, gIndex) => {
+    group.items.forEach((item, iIndex) => {
+      if (item.subItems && item.subItems.some((subItem) => isActive(subItem.path))) {
+        openSubmenu.value = `${gIndex}-${iIndex}`; // Buka menu ini!
+        found = true;
+      }
+    });
+  });
+
+  if (!found) {
+    openSubmenu.value = null;
+  }
+};
 
 const isSubmenuOpen = (groupIndex: number, itemIndex: number) => {
-  const key = `${groupIndex}-${itemIndex}`;
-  return (
-    openSubmenu.value === key ||
-    (isAnySubmenuRouteActive.value &&
-      menuGroups[groupIndex].items[itemIndex].subItems?.some((subItem) =>
-        isActive(subItem.path)
-      ))
-  );
+  return openSubmenu.value === `${groupIndex}-${itemIndex}`;
 };
+
+watch(() => route.path, () => {
+  updateActiveSubmenu();
+});
+
+onMounted(() => {
+  updateActiveSubmenu();
+});
+
 
 const startTransition = (el: Element) => {
   const htmlEl = el as HTMLElement;
@@ -335,5 +345,4 @@ const endTransition = (el: Element) => {
   const htmlEl = el as HTMLElement;
   htmlEl.style.height = "";
 };
-
 </script>
