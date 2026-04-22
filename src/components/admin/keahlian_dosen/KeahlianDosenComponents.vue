@@ -10,7 +10,7 @@
           class="h-10 w-full sm:w-64 rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
       </div>
 
-      <button @click="openAddModal"
+      <button v-if="isAdmin" @click="openAddModal"
         class="flex items-center justify-center px-4 h-10 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600 w-full sm:w-auto">
         <svg class="w-4 h-4 mr-2 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
           <path d="M10.8333 9.16667V2.5H9.16667V9.16667H2.5V10.8333H9.16667V17.5H10.8333V10.8333H17.5V9.16667H10.8333Z" />
@@ -33,7 +33,7 @@
               <th class="px-5 py-3 sm:px-6">
                 <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Topik Keahlian</p>
               </th>
-              <th class="px-5 py-3 text-center w-40 sm:px-6">
+              <th v-if="isAdmin" class="px-5 py-3 text-center w-40 sm:px-6">
                 <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Aksi</p>
               </th>
             </tr>
@@ -74,7 +74,7 @@
                 </div>
               </td>
 
-              <td class="px-5 py-4 text-center sm:px-6 align-top pt-4">
+              <td v-if="isAdmin" class="px-5 py-4 text-center sm:px-6 align-top pt-4">
                 <div class="flex justify-center gap-2">
                   <button @click="openEditModal(group)" class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:text-blue-600 shadow-theme-xs" title="Edit">
                     <svg class="fill-current w-4 h-4" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.0911 2.78206C14.2125 1.90338 12.7878 1.90338 11.9092 2.78206L4.57524 10.116C4.26682 10.4244 4.0547 10.8158 3.96468 11.2426L3.31231 14.3352C3.25997 14.5833 3.33653 14.841 3.51583 15.0203C3.69512 15.1996 3.95286 15.2761 4.20096 15.2238L7.29355 14.5714C7.72031 14.4814 8.11172 14.2693 8.42013 13.9609L15.7541 6.62695C16.6327 5.74827 16.6327 4.32365 15.7541 3.44497L15.0911 2.78206ZM12.9698 3.84272C13.2627 3.54982 13.7376 3.54982 14.0305 3.84272L14.6934 4.50563C14.9863 4.79852 14.9863 5.2734 14.6934 5.56629L14.044 6.21573L12.3204 4.49215L12.9698 3.84272ZM11.2597 5.55281L5.6359 11.1766C5.53309 11.2794 5.46238 11.4099 5.43238 11.5522L5.01758 13.5185L6.98394 13.1037C7.1262 13.0737 7.25666 13.003 7.35947 12.9002L12.9833 7.27639L11.2597 5.55281Z" /></svg>
@@ -221,6 +221,11 @@ const showAlert = (type: AlertVariant, title: string, message: string) => {
   setTimeout(() => { alert.value.show = false }, 3000)
 }
 
+const userRoles = ref<string[]>([])
+const isAdmin = computed(() => {
+  return userRoles.value.some(role => role.toLowerCase() === 'admin')
+})
+
 const keahlianList = ref<Keahlian[]>([])
 const dosenList = ref<Dosen[]>([])
 const topikList = ref<Topik[]>([])
@@ -271,6 +276,11 @@ const handleClickOutside = (event: MouseEvent) => {
 }
 
 onMounted(() => {
+  try {
+    userRoles.value = JSON.parse(localStorage.getItem('userRoles') || '[]')
+  } catch {
+    userRoles.value = (localStorage.getItem('userRoles') || '').split(',').map(r => r.trim())
+  }
   document.addEventListener('mousedown', handleClickOutside)
   fetchKeahlian()
   fetchDosenList()

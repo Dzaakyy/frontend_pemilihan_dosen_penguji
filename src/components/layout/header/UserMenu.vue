@@ -107,8 +107,26 @@ const handleClickOutside = (event: MouseEvent) => {
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
 
+  // Ambil data username
   currentUsername.value = localStorage.getItem('username') || 'Guest'
-  currentRoles.value = localStorage.getItem('userRoles') || 'User'
+
+  // --- PERBAIKAN: Format ulang tampilan Role ---
+  const storedRoles = localStorage.getItem('userRoles');
+  if (storedRoles) {
+    try {
+      const parsedRoles = JSON.parse(storedRoles);
+
+      if (Array.isArray(parsedRoles) && parsedRoles.length > 0) {
+        currentRoles.value = parsedRoles.join(', ');
+      } else {
+        currentRoles.value = 'User';
+      }
+    } catch {
+      currentRoles.value = storedRoles;
+    }
+  } else {
+    currentRoles.value = 'User';
+  }
 })
 
 onUnmounted(() => {
