@@ -4,22 +4,65 @@
       <Alert :variant="alert.type" :title="alert.title" :message="alert.message" />
     </div>
 
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
-      <div class="flex items-center gap-2">
-        <input v-model="searchKeahlianQuery" type="text" placeholder="Cari nama dosen..."
-          class="h-10 w-full sm:w-64 rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
-      </div>
+    <div class="flex flex-col gap-4 mb-6 p-5 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] shadow-sm">
+      <div class="flex flex-col xl:flex-row items-center justify-between gap-4">
 
-      <button v-if="isAdmin" @click="openAddModal"
-        class="flex items-center justify-center px-4 h-10 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600 w-full sm:w-auto">
-        <svg class="w-4 h-4 mr-2 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10.8333 9.16667V2.5H9.16667V9.16667H2.5V10.8333H9.16667V17.5H10.8333V10.8333H17.5V9.16667H10.8333Z" />
-        </svg>
-        Tambah Keahlian Dosen
-      </button>
+        <div class="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto">
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <span class="text-sm text-gray-500 dark:text-gray-400">Tampilkan</span>
+            <select v-model="itemsPerPage" class="h-9 rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:text-white/90">
+              <option :value="5">5</option>
+              <option :value="10">10</option>
+              <option :value="20">20</option>
+              <option :value="50">50</option>
+            </select>
+            <span class="text-sm text-gray-500 dark:text-gray-400 hidden sm:inline">data</span>
+          </div>
+
+          <div class="relative w-full sm:w-auto min-w-[220px]" ref="topikFilterDropdownRef">
+            <button type="button" @click="isTopikFilterDropdownOpen = !isTopikFilterDropdownOpen"
+              class="flex items-center justify-between h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
+              <span class="truncate pr-4 font-medium">{{ selectedTopikFilterLabel }}</span>
+              <svg :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': isTopikFilterDropdownOpen }]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+
+            <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
+              <div v-if="isTopikFilterDropdownOpen"
+                class="absolute z-[100] w-full mt-1.5 top-full bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
+                <ul class="max-h-60 overflow-y-auto custom-scrollbar py-1">
+                  <li @click="selectFilterTopik('')"
+                    class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors border-b border-gray-100 dark:border-gray-700 font-medium">
+                    Semua Topik Keahlian
+                  </li>
+                  <li v-for="topik in topikList" :key="topik.id_topik" @click="selectFilterTopik(topik.id_topik)"
+                    class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors border-b border-gray-50 last:border-0 dark:border-gray-700/50">
+                    {{ topik.nama_topik }}
+                  </li>
+                </ul>
+              </div>
+            </transition>
+          </div>
+
+          <div class="relative w-full sm:w-64">
+            <input v-model="searchKeahlianQuery" type="text" placeholder="Cari nama dosen..."
+              class="h-10 w-full rounded-lg border border-gray-300 bg-white pl-10 pr-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          </div>
+        </div>
+
+        <button v-if="isAdmin" @click="openAddModal"
+          class="flex items-center justify-center px-5 h-10 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600 w-full xl:w-auto shadow-theme-xs">
+          <svg class="w-4 h-4 mr-2 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10.8333 9.16667V2.5H9.16667V9.16667H2.5V10.8333H9.16667V17.5H10.8333V10.8333H17.5V9.16667H10.8333Z" />
+          </svg>
+          Tambah Keahlian
+        </button>
+      </div>
     </div>
 
-    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] shadow-sm">
       <div class="max-w-full overflow-x-auto custom-scrollbar">
         <table class="w-full text-left border-collapse">
           <thead>
@@ -40,41 +83,44 @@
           </thead>
           <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
             <tr v-if="isLoading">
-              <td colspan="4" class="px-5 py-8 text-center text-gray-500 text-theme-sm">
-                Memuat data keahlian dosen...
+              <td :colspan="isAdmin ? 4 : 3" class="px-5 py-12 text-center text-gray-500 text-theme-sm">
+                <div class="flex items-center justify-center gap-3">
+                  <svg class="animate-spin h-5 w-5 text-brand-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                  Memuat data keahlian dosen...
+                </div>
               </td>
             </tr>
-            <tr v-else-if="filteredGroupedKeahlian.length === 0">
-              <td colspan="4" class="px-5 py-8 text-center text-gray-500 text-theme-sm">
-                Belum ada data keahlian dosen.
+            <tr v-else-if="paginatedGroups.length === 0">
+              <td :colspan="isAdmin ? 4 : 3" class="px-5 py-12 text-center text-gray-500 text-theme-sm">
+                Belum ada data atau dosen tidak ditemukan sesuai filter.
               </td>
             </tr>
 
-            <tr v-else v-for="(group, index) in filteredGroupedKeahlian" :key="group.dosen_id"
+            <tr v-else v-for="(group, index) in paginatedGroups" :key="group.dosen_id"
               class="border-t border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.02]">
 
-              <td class="px-5 py-4 sm:px-6 align-top pt-5">
+              <td class="px-5 py-4 sm:px-6 align-middle">
                 <span class="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                  {{ index + 1 }}
+                  {{ (currentPage - 1) * itemsPerPage + index + 1 }}
                 </span>
               </td>
 
-              <td class="px-5 py-4 sm:px-6 align-top pt-5">
-                <span class="block text-gray-800 text-theme-sm dark:text-white/90 font-medium">
+              <td class="px-5 py-4 sm:px-6 align-middle">
+                <span class="block font-semibold text-gray-800 text-theme-sm dark:text-white/90">
                   {{ group.nama_dosen }}
                 </span>
               </td>
 
-              <td class="px-5 py-4 sm:px-6 align-top pt-5">
+              <td class="px-5 py-4 sm:px-6 align-middle">
                 <div class="flex flex-wrap gap-2">
                   <span v-for="keahlian in group.keahlian" :key="keahlian.id_keahlian"
-                    class="inline-flex items-center justify-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+                    class="inline-flex items-center justify-center rounded-md bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-600 border border-blue-100">
                     {{ keahlian.topik_ta?.nama_topik || '-' }}
                   </span>
                 </div>
               </td>
 
-              <td v-if="isAdmin" class="px-5 py-4 text-center sm:px-6 align-top pt-4">
+              <td v-if="isAdmin" class="px-5 py-4 text-center sm:px-6 align-middle">
                 <div class="flex justify-center gap-2">
                   <button @click="openEditModal(group)" class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:text-blue-600 shadow-theme-xs" title="Edit">
                     <svg class="fill-current w-4 h-4" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.0911 2.78206C14.2125 1.90338 12.7878 1.90338 11.9092 2.78206L4.57524 10.116C4.26682 10.4244 4.0547 10.8158 3.96468 11.2426L3.31231 14.3352C3.25997 14.5833 3.33653 14.841 3.51583 15.0203C3.69512 15.1996 3.95286 15.2761 4.20096 15.2238L7.29355 14.5714C7.72031 14.4814 8.11172 14.2693 8.42013 13.9609L15.7541 6.62695C16.6327 5.74827 16.6327 4.32365 15.7541 3.44497L15.0911 2.78206ZM12.9698 3.84272C13.2627 3.54982 13.7376 3.54982 14.0305 3.84272L14.6934 4.50563C14.9863 4.79852 14.9863 5.2734 14.6934 5.56629L14.044 6.21573L12.3204 4.49215L12.9698 3.84272ZM11.2597 5.55281L5.6359 11.1766C5.53309 11.2794 5.46238 11.4099 5.43238 11.5522L5.01758 13.5185L6.98394 13.1037C7.1262 13.0737 7.25666 13.003 7.35947 12.9002L12.9833 7.27639L11.2597 5.55281Z" /></svg>
@@ -91,6 +137,15 @@
         </table>
       </div>
     </div>
+
+    <Pagination
+      v-if="!isLoading && totalItems > 0"
+      :current-page="currentPage"
+      :total-items="totalItems"
+      :items-per-page="itemsPerPage"
+      @update:currentPage="currentPage = $event"
+      class="mt-4"
+    />
 
     <Modal v-if="isModalOpen" @close="closeModal">
       <div class="relative w-full max-w-[600px] rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11 mx-auto mt-10 shadow-2xl">
@@ -198,9 +253,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import Modal from '@/components/modal/Modal.vue'
 import Alert from '@/components/ui/Alert.vue'
+import Pagination from '@/components/pagination/Pagination.vue'
 
 type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 
@@ -231,7 +287,25 @@ const dosenList = ref<Dosen[]>([])
 const topikList = ref<Topik[]>([])
 const isLoading = ref(true)
 
+// --- STATE PAGINATION & SEARCH ---
 const searchKeahlianQuery = ref('')
+const filterTopik = ref<number | ''>('')
+const currentPage = ref(1)
+const itemsPerPage = ref(10)
+
+const isTopikFilterDropdownOpen = ref(false)
+const topikFilterDropdownRef = ref<HTMLElement | null>(null)
+
+const selectedTopikFilterLabel = computed(() => {
+  if (filterTopik.value === '') return 'Semua Topik Keahlian';
+  const found = topikList.value.find(t => t.id_topik === filterTopik.value);
+  return found ? found.nama_topik : 'Semua Topik Keahlian';
+})
+
+const selectFilterTopik = (val: number | '') => {
+  filterTopik.value = val;
+  isTopikFilterDropdownOpen.value = false;
+}
 
 const groupedKeahlian = computed(() => {
   const groups: Record<number, GroupedKeahlian> = {}
@@ -246,9 +320,36 @@ const groupedKeahlian = computed(() => {
 })
 
 const filteredGroupedKeahlian = computed(() => {
-  if (!searchKeahlianQuery.value) return groupedKeahlian.value;
-  const q = searchKeahlianQuery.value.toLowerCase()
-  return groupedKeahlian.value.filter(g => g.nama_dosen.toLowerCase().includes(q))
+  let result = groupedKeahlian.value;
+
+  // 1. Filter by Topik Keahlian
+  if (filterTopik.value !== '') {
+    result = result.filter(group =>
+      group.keahlian.some(k => k.topik_id === filterTopik.value)
+    );
+  }
+
+  // 2. Filter by Search Query (Nama Dosen)
+  if (searchKeahlianQuery.value) {
+    const q = searchKeahlianQuery.value.toLowerCase();
+    result = result.filter(group => group.nama_dosen.toLowerCase().includes(q));
+  }
+
+  return result;
+})
+
+const totalItems = computed(() => filteredGroupedKeahlian.value.length)
+
+// --- PAGINATED GROUPS ---
+const paginatedGroups = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  const end = start + itemsPerPage.value
+  return filteredGroupedKeahlian.value.slice(start, end)
+})
+
+// Watcher untuk kembali ke halaman 1 jika search, filter, atau itemPerPage berubah
+watch([searchKeahlianQuery, filterTopik, itemsPerPage], () => {
+  currentPage.value = 1
 })
 
 const isModalOpen = ref(false)
@@ -272,6 +373,9 @@ const handleClickOutside = (event: MouseEvent) => {
   }
   if (topikDropdownContainer.value && !topikDropdownContainer.value.contains(target)) {
     showTopikDropdown.value = false
+  }
+  if (topikFilterDropdownRef.value && !topikFilterDropdownRef.value.contains(target)) {
+    isTopikFilterDropdownOpen.value = false
   }
 }
 
@@ -308,6 +412,7 @@ const filteredDosenOptions = computed(() => {
 
   return availableDosen;
 })
+
 const selectDosen = (dosen: Dosen) => {
   formData.value.dosen_id = dosen.id_dosen
   dosenSearchTerm.value = dosen.nama_dosen

@@ -162,7 +162,7 @@ import {
   // PlugInIcon,
 } from "../../icons";
 // import SidebarWidget from "./SidebarWidget.vue";
-// import BoxCubeIcon from "@/icons/BoxCubeIcon.vue";
+import BoxCubeIcon from "@/icons/BoxCubeIcon.vue";
 import { useSidebar } from "@/composables/useSidebar";
 
 interface MenuSubItem {
@@ -234,6 +234,15 @@ const menuGroups: MenuGroup[] = [
         subItems: [
           { name: "Dosen", path: "/dosen", pro: false },
           { name: "Mahasiswa", path: "/mahasiswa", pro: false }
+        ],
+      },
+      {
+        icon: BoxCubeIcon,
+        name: "Penguji TA",
+        roles: ['Kaprodi'],
+        subItems: [
+          { name: "Matching TA", path: "/matching-ta", pro: false },
+          // { name: "Penugasan Penguji", path: "/penugasan-penguji", pro: false }
         ],
       },
       // {
