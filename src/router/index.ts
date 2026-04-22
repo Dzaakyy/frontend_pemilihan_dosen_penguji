@@ -32,6 +32,7 @@ const router = createRouter({
       component: () => import('../views/Admin/prodi/ProdiView.vue'),
       meta: {
         title: 'Data Program Studi',
+        roles: ['Admin']
       },
     },
     {
@@ -40,6 +41,7 @@ const router = createRouter({
       component: () => import('../views/Admin/topik_ta/TopikTaView.vue'),
       meta: {
         title: 'Data Topik TA',
+        roles: ['Admin']
       },
     },
     {
@@ -48,6 +50,7 @@ const router = createRouter({
       component: () => import('../views/Admin/keahlian_dosen/KeahlianDosenView.vue'),
       meta: {
         title: 'Data Keahlian Dosen',
+        roles: ['Admin', 'Kaprodi', 'Dosen']
       },
     },
     {
@@ -56,6 +59,7 @@ const router = createRouter({
       component: () => import('../views/Admin/user/DosenView.vue'),
       meta: {
         title: 'Dosen',
+        roles: ['Admin', 'Kaprodi']
       },
     },
     {
@@ -64,6 +68,7 @@ const router = createRouter({
       component: () => import('../views/Admin/user/MahasiswaView.vue'),
       meta: {
         title: 'Mahasiswa',
+        roles: ['Admin', 'Kaprodi']
       },
     },
     {
@@ -195,6 +200,15 @@ router.beforeEach((to, from, next) => {
 
   const isAuthenticated = localStorage.getItem('isLoggedIn') === 'true'
 
+  let userRoles: string[] = []
+  if (isAuthenticated) {
+    try {
+      userRoles = JSON.parse(localStorage.getItem('userRoles') || '[]')
+    } catch {
+      userRoles = (localStorage.getItem('userRoles') || '').split(',').map(r => r.trim())
+    }
+  }
+
   if (to.name !== 'Signin' && to.name !== 'Signup' && !isAuthenticated) {
     next({ name: 'Signin' })
   }
@@ -202,6 +216,15 @@ router.beforeEach((to, from, next) => {
     next({ name: 'Ecommerce' })
   }
   else {
+    if (to.meta.roles) {
+      const requiredRoles = to.meta.roles as string[]
+      const hasAccess = userRoles.some(role => requiredRoles.includes(role))
+
+      if (!hasAccess) {
+        alert('Akses Ditolak! Kanjeng Ratu tidak memiliki izin ke halaman ini.')
+        return next({ name: 'Ecommerce' })
+      }
+    }
     next()
   }
 })

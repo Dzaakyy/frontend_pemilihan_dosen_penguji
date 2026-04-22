@@ -37,7 +37,7 @@
               <HorizontalDots v-else />
             </h2>
             <ul class="flex flex-col gap-4">
-              <li v-for="(item, index) in menuGroup.items" :key="item.name">
+              <li v-for="(item, index) in menuGroup.items" :key="item.name" v-show="canViewMenu(item.roles)">
                 <button v-if="item.subItems" @click="toggleSubmenu(groupIndex, index)" :class="[
                   'menu-item group w-full',
                   {
@@ -145,7 +145,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted } from "vue";
+import { watch, ref } from "vue";
 import { useRoute } from "vue-router";
 import type { Component } from "vue";
 
@@ -170,6 +170,7 @@ interface MenuSubItem {
   path: string;
   pro?: boolean;
   new?: boolean;
+  roles?: string[];
 }
 
 interface MenuItem {
@@ -177,6 +178,7 @@ interface MenuItem {
   name: string;
   path?: string;
   subItems?: MenuSubItem[];
+  roles?: string[];
 }
 
 interface MenuGroup {
@@ -186,6 +188,17 @@ interface MenuGroup {
 
 const route = useRoute();
 const { isExpanded, isMobileOpen, isHovered, openSubmenu } = useSidebar();
+const getStoredRoles = () => {
+  const stored = localStorage.getItem('userRoles');
+  try {
+    const parsed = JSON.parse(stored || '[]');
+    return Array.isArray(parsed) ? parsed : [parsed];
+  } catch {
+    return (stored || '').split(',').map(r => r.trim());
+  }
+};
+
+const userRoles = ref<string[]>(getStoredRoles());
 
 const menuGroups: MenuGroup[] = [
   {
@@ -200,20 +213,24 @@ const menuGroups: MenuGroup[] = [
         icon: ListIcon,
         name: "Data Prodi",
         path: "/prodi",
+        roles: ['Admin']
       },
       {
         icon: PageIcon,
         name: "Topik TA",
         path: "/topik-ta",
+        roles: ['Admin']
       },
             {
         icon: TableIcon,
         name: "Keahlian Dosen",
         path: "/keahlian-dosen",
+        roles: ['Admin', 'Kaprodi', 'Dosen']
       },
       {
         icon: UserCircleIcon,
         name: "User",
+        roles: ['Admin', 'Kaprodi'],
         subItems: [
           { name: "Dosen", path: "/dosen", pro: false },
           { name: "Mahasiswa", path: "/mahasiswa", pro: false }
@@ -286,6 +303,12 @@ const menuGroups: MenuGroup[] = [
   // },
 ];
 
+const canViewMenu = (roles?: string[]) => {
+  if (!roles || roles.length === 0) return true;
+  const userRolesLower = userRoles.value.map(r => typeof r === 'string' ? r.toLowerCase() : '');
+  return roles.some((role) => userRolesLower.includes(role.toLowerCase()));
+};
+
 const handleMouseEnter = () => {
   if (!isExpanded.value) {
     isHovered.value = true;
@@ -322,11 +345,7 @@ const isSubmenuOpen = (groupIndex: number, itemIndex: number) => {
 
 watch(() => route.path, () => {
   updateActiveSubmenu();
-});
-
-onMounted(() => {
-  updateActiveSubmenu();
-});
+}, { immediate: true });
 
 
 const startTransition = (el: Element) => {
