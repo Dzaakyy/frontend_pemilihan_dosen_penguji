@@ -111,6 +111,10 @@
                       <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
                         {{ group.judul_ta || 'Belum ada judul / Topik belum diajukan' }}
                       </p>
+                       <span class="block text-xs font-semibold text-gray-400 dark:text-gray-500 mb-1 mt-3 uppercase tracking-wider">Topik Tugas Akhir:</span>
+                      <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
+                        {{ group.nama_topik || 'Belum ada judul / Topik belum diajukan' }}
+                      </p>
                     </div>
                   </div>
                 </td>
@@ -200,7 +204,8 @@ import Alert from '@/components/ui/Alert.vue'
 
 type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 
-interface Mahasiswa { id_mahasiswa: number; nama_mahasiswa: string; judul_ta: string; nim: string; }
+interface TopikTA { nama_topik: string; }
+interface Mahasiswa { id_mahasiswa: number; nama_mahasiswa: string; judul_ta: string; nim: string; topik_ta?: TopikTA }
 interface Dosen { id_dosen: number; nama_dosen: string; nidn: string; kuota_menguji: number; }
 interface Rekomendasi {
   id_rekomendasi: number;
@@ -213,11 +218,11 @@ interface Rekomendasi {
   mahasiswa?: Mahasiswa;
 }
 
-// Interface Baru untuk Grouping (1 Mahasiswa memiliki banyak Rekomendasi Dosen)
 interface GroupedMahasiswa {
   mahasiswa_id: number;
   nama_mahasiswa: string;
   judul_ta: string;
+  nama_topik: string;
   nim: string;
   rekomendasi: Rekomendasi[];
 }
@@ -278,6 +283,7 @@ const groupedRekomendasi = computed(() => {
         mahasiswa_id: rek.mahasiswa_id,
         nama_mahasiswa: rek.mahasiswa.nama_mahasiswa,
         judul_ta: rek.mahasiswa.judul_ta,
+        nama_topik: rek.mahasiswa.topik_ta?.nama_topik || '',
         nim: rek.mahasiswa.nim,
         rekomendasi: []
       };
