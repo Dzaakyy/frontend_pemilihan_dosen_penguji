@@ -90,19 +90,37 @@ const router = createRouter({
       },
     },
     {
-      path: '/calendar',
-      name: 'Calendar',
-      component: () => import('../views/Others/Calendar.vue'),
-      meta: {
-        title: 'Calendar',
-      },
-    },
-    {
       path: '/profile',
       name: 'Profile',
       component: () => import('../views/Others/UserProfile.vue'),
       meta: {
         title: 'Profile',
+      },
+    },
+    {
+      path: '/mahasiswa-diuji',
+      name: 'Mahasiswa',
+      component: () => import('../views/Dosen/MahasiswaDiujiView.vue'),
+      meta: {
+        title: 'Mahasiswa',
+        roles: ['Dosen']
+      },
+    },
+    {
+      path: '/dosen-penguji',
+      name: 'Tugas Akhir',
+      component: () => import('../views/Mahasiswa/DosenPengujiView.vue'),
+      meta: {
+        title: 'Tugas Akhir',
+        roles: ['Mahasiswa']
+      },
+    },
+    {
+      path: '/calendar',
+      name: 'Calendar',
+      component: () => import('../views/Others/Calendar.vue'),
+      meta: {
+        title: 'Calendar',
       },
     },
     {
@@ -239,7 +257,7 @@ router.beforeEach((to, from, next) => {
       const hasAccess = userRoles.some(role => requiredRoles.includes(role))
 
       if (!hasAccess) {
-        alert('Akses Ditolak! Kanjeng Ratu tidak memiliki izin ke halaman ini.')
+        alert('Akses Ditolak! User tidak memiliki izin ke halaman ini.')
         return next({ name: 'Ecommerce' })
       }
     }

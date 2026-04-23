@@ -159,7 +159,7 @@ import {
   PageIcon,
   TableIcon,
   ListIcon,
-  // PlugInIcon,
+  PlugInIcon,
 } from "../../icons";
 // import SidebarWidget from "./SidebarWidget.vue";
 import BoxCubeIcon from "@/icons/BoxCubeIcon.vue";
@@ -221,7 +221,7 @@ const menuGroups: MenuGroup[] = [
         path: "/topik-ta",
         roles: ['Admin']
       },
-            {
+      {
         icon: TableIcon,
         name: "Keahlian Dosen",
         path: "/keahlian-dosen",
@@ -244,6 +244,18 @@ const menuGroups: MenuGroup[] = [
           { name: "Matching TA", path: "/matching-ta", pro: false },
           { name: "Penugasan Penguji", path: "/penugasan-penguji", pro: false }
         ],
+      },
+      {
+        icon: PlugInIcon,
+        name: "Mahasiswa",
+        path: "/mahasiswa-diuji",
+        roles: ['Dosen']
+      },
+      {
+        icon: PlugInIcon,
+        name: "Tugas Akhir",
+        path: "/dosen-penguji",
+        roles: ['Mahasiswa']
       },
       // {
       //   icon: CalenderIcon,

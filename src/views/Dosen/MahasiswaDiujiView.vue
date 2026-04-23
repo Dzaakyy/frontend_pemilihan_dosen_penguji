@@ -2,8 +2,8 @@
   <AdminLayout>
     <PageBreadcrumb :pageTitle="currentPageTitle" />
     <div class="space-y-5 sm:space-y-6">
-      <ComponentCard title="Daftar Mahasiswa">
-        <MahasiswaComponents />
+      <ComponentCard title="Mahasiswa Yang Diuji">
+        <MahasiswaDiujiComponents />
       </ComponentCard>
     </div>
   </AdminLayout>
@@ -14,6 +14,6 @@ import { ref } from "vue";
 import PageBreadcrumb from "@/components/common/PageBreadcrumb.vue";
 import AdminLayout from "@/components/layout/AdminLayout.vue";
 import ComponentCard from "@/components/common/ComponentCard.vue";
-import MahasiswaComponents from "@/components/admin/user/MahasiswaComponents.vue";
-const currentPageTitle = ref("Mahasiswa");
+import MahasiswaDiujiComponents from "@/components/dosen/MahasiswaDiujiComponent.vue";
+const currentPageTitle = ref("Mahasiswa Yang Diuji");
 </script>
