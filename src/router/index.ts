@@ -99,7 +99,7 @@ const router = createRouter({
     },
     {
       path: '/mahasiswa-diuji',
-      name: 'Mahasiswa',
+      name: 'Mahasiswa Diuji',
       component: () => import('../views/Dosen/MahasiswaDiujiView.vue'),
       meta: {
         title: 'Mahasiswa',

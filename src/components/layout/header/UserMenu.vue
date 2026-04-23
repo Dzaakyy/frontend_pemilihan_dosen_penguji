@@ -107,10 +107,8 @@ const handleClickOutside = (event: MouseEvent) => {
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
 
-  // Ambil data username
   currentUsername.value = localStorage.getItem('username') || 'Guest'
 
-  // --- PERBAIKAN: Format ulang tampilan Role ---
   const storedRoles = localStorage.getItem('userRoles');
   if (storedRoles) {
     try {

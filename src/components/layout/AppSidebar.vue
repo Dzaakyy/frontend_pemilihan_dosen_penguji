@@ -225,7 +225,7 @@ const menuGroups: MenuGroup[] = [
         icon: TableIcon,
         name: "Keahlian Dosen",
         path: "/keahlian-dosen",
-        roles: ['Admin', 'Kaprodi', 'Dosen']
+        roles: ['Admin', 'Kaprodi']
       },
       {
         icon: UserCircleIcon,
