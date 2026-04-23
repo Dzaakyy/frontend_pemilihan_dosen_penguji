@@ -71,12 +71,21 @@ const router = createRouter({
         roles: ['Admin', 'Kaprodi']
       },
     },
-        {
+    {
       path: '/matching-ta',
       name: 'Matching TA',
       component: () => import('../views/kaprodi/matching_ta/MatchingTAView.vue'),
       meta: {
         title: 'Matching TA',
+        roles: ['Kaprodi']
+      },
+    },
+    {
+      path: '/penugasan-penguji',
+      name: 'Penugasan Penguji',
+      component: () => import('../views/kaprodi/penugasan/PenugasanDosenView.vue'),
+      meta: {
+        title: 'Penugasan Penguji',
         roles: ['Kaprodi']
       },
     },

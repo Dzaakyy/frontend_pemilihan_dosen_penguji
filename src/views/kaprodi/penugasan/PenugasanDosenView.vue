@@ -2,8 +2,8 @@
   <AdminLayout>
     <PageBreadcrumb :pageTitle="currentPageTitle" />
     <div class="space-y-5 sm:space-y-6">
-      <ComponentCard title="Matching TA">
-        <MatchingTAComponents />
+      <ComponentCard title="Penugasan Dosen">
+        <PenugasanDosenComponents />
       </ComponentCard>
     </div>
   </AdminLayout>
@@ -14,6 +14,6 @@ import { ref } from "vue";
 import PageBreadcrumb from "@/components/common/PageBreadcrumb.vue";
 import AdminLayout from "@/components/layout/AdminLayout.vue";
 import ComponentCard from "@/components/common/ComponentCard.vue";
-import MatchingTAComponents from "@/components/kaprodi/mathcing_ta/MatchingTAComponent.vue";
-const currentPageTitle = ref("Matching TA");
+import PenugasanDosenComponents from "@/components/kaprodi/penugasan/PenugasanDosenComponent.vue";
+const currentPageTitle = ref("Penugasan Dosen");
 </script>

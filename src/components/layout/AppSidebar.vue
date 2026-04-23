@@ -242,7 +242,7 @@ const menuGroups: MenuGroup[] = [
         roles: ['Kaprodi'],
         subItems: [
           { name: "Matching TA", path: "/matching-ta", pro: false },
-          // { name: "Penugasan Penguji", path: "/penugasan-penguji", pro: false }
+          { name: "Penugasan Penguji", path: "/penugasan-penguji", pro: false }
         ],
       },
       // {
