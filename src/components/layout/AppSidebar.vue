@@ -207,6 +207,7 @@ const menuGroups: MenuGroup[] = [
       {
         icon: GridIcon,
         name: "Dashboard",
+        roles: ['Admin', 'Kaprodi'],
         subItems: [{ name: "Dashboard", path: "/dashboard", pro: false }],
       },
       {

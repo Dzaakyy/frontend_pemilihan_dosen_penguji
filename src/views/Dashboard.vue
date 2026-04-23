@@ -2,7 +2,6 @@
   <admin-layout>
 
     <div v-if="isAdmin" class="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
-
       <div class="lg:col-span-6 xl:col-span-7">
         <DashboardMetrics
           :isAdmin="true"
@@ -58,6 +57,7 @@
           :totalProdi="0"
           :totalUser="0"
           :dosenDitugaskan="jumlahDosenDitugaskan"
+          :averageScore="rataRataSkorMatching"
         />
       </div>
 
@@ -144,6 +144,7 @@ interface Penugasan { id_penugasan: number; mahasiswa_id: number; sekretaris: nu
 interface Prodi { id_prodi: number; nama_prodi: string; }
 interface Topik { id_topik: number; nama_topik: string; }
 interface Keahlian { id_keahlian: number; dosen_id: number; topik_id: number; }
+interface Matching { id_rekomendasi: number; nilai_fitness: number; rank: string; }
 
 const isLoading = ref(true)
 const userRoles = ref<string[]>([])
@@ -154,6 +155,8 @@ const penugasanList = ref<Penugasan[]>([])
 const prodiList = ref<Prodi[]>([])
 const topikList = ref<Topik[]>([])
 const keahlianList = ref<Keahlian[]>([])
+const matchingList = ref<Matching[]>([])
+
 const totalUserAsli = ref(0)
 
 const isAdmin = computed(() => userRoles.value.some(role => role.toLowerCase() === 'admin'))
@@ -166,6 +169,19 @@ const jumlahDosenDitugaskan = computed(() => {
     if(p.penguji_2) assignedIds.add(p.penguji_2);
   });
   return assignedIds.size;
+})
+
+const rataRataSkorMatching = computed(() => {
+  if (matchingList.value.length === 0) return 0;
+
+  const rank1Matches = matchingList.value.filter(m => String(m.rank) === '1');
+
+  if (rank1Matches.length === 0) return 0;
+
+  const totalFitness = rank1Matches.reduce((sum, item) => sum + (Number(item.nilai_fitness) || 0), 0);
+  const average = totalFitness / rank1Matches.length;
+
+  return Number(average.toFixed(1));
 })
 
 const unassignedMahasiswa = computed(() => {
@@ -204,14 +220,15 @@ const fetchAllData = async () => {
   try {
     const opts = { credentials: 'include' as RequestCredentials };
 
-    const [resDosen, resMhs, resPenugasan, resProdi, resTopik, resKeahlian, resAuthList] = await Promise.all([
+    const [resDosen, resMhs, resPenugasan, resProdi, resTopik, resKeahlian, resAuthList, resMatching] = await Promise.all([
       fetch('http://localhost:3000/api/dosen', opts).then(r => r.json()).catch(() => ({})),
       fetch('http://localhost:3000/api/mahasiswa', opts).then(r => r.json()).catch(() => ({})),
       fetch('http://localhost:3000/api/penugasan', opts).then(r => r.json()).catch(() => ({})),
       fetch('http://localhost:3000/api/prodi', opts).then(r => r.json()).catch(() => ({})),
       fetch('http://localhost:3000/api/topik-ta', opts).then(r => r.json()).catch(() => ({})),
       fetch('http://localhost:3000/api/keahlian-dosen', opts).then(r => r.json()).catch(() => ({})),
-      fetch('http://localhost:3000/api/auth/users', opts).then(r => r.json()).catch(() => ({}))
+      fetch('http://localhost:3000/api/auth/users', opts).then(r => r.json()).catch(() => ({})),
+      fetch('http://localhost:3000/api/matching-ta', opts).then(r => r.json()).catch(() => ({}))
     ]);
 
     if (resDosen.success) dosenList.value = resDosen.data.rows || resDosen.data || [];
@@ -220,6 +237,10 @@ const fetchAllData = async () => {
     if (resProdi.success) prodiList.value = resProdi.data || [];
     if (resTopik.success) topikList.value = resTopik.data || [];
     if (resKeahlian.success) keahlianList.value = resKeahlian.data.rows || resKeahlian.data || [];
+
+    if (resMatching.success) {
+      matchingList.value = resMatching.data.rows || resMatching.data || [];
+    }
 
     if (resAuthList.success && resAuthList.data) {
         totalUserAsli.value = resAuthList.data.length || resAuthList.data.rows?.length || 0;

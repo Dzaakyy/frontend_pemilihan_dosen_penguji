@@ -141,15 +141,18 @@ const handleSubmit = async () => {
       localStorage.setItem('namaAsli', result.data.nama_asli || result.data.username)
       localStorage.setItem('identitas', result.data.identitas || '-')
 
+      const userId = result.data.id || result.data.id_user;
+      if (userId) {
+          localStorage.setItem('userData', JSON.stringify({ id_user: userId }));
+      }
+
       let rolesArray: string[] = [];
       const userRolesData = result.data.roles || result.data.role;
 
       if (userRolesData) {
         if (Array.isArray(userRolesData)) {
           rolesArray = userRolesData.map((r: { nama?: string } | string) => {
-            if (typeof r === 'object' && r !== null && r.nama) {
-              return r.nama;
-            }
+            if (typeof r === 'object' && r !== null && r.nama) return r.nama;
             return String(r);
           });
         } else if (typeof userRolesData === 'string') {
@@ -158,10 +161,20 @@ const handleSubmit = async () => {
       }
 
       if (rolesArray.length === 0) rolesArray = ['User'];
-
       localStorage.setItem('userRoles', JSON.stringify(rolesArray));
 
-      router.push('/dashboard')
+      const rolesLower = rolesArray.map(r => r.toLowerCase());
+
+      if (rolesLower.includes('admin') || rolesLower.includes('kaprodi')) {
+        router.push('/dashboard');
+      } else if (rolesLower.includes('dosen')) {
+        router.push('/mahasiswa-diuji');
+      } else if (rolesLower.includes('mahasiswa')) {
+        router.push('/dosen-penguji');
+      } else {
+        router.push('/profile');
+      }
+
     } else {
       errorMessage.value = result.message || 'Gagal login, periksa username dan password Anda.'
     }

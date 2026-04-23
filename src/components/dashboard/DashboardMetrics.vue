@@ -45,9 +45,11 @@
         </span>
         <div class="flex items-end gap-2 mt-1">
           <h4 class="font-bold text-gray-800 text-3xl dark:text-white/90">
-            {{ isAdmin ? totalUser : '92.5%' }}
+            {{ isAdmin ? totalUser : (averageScore || 0) + '%' }}
           </h4>
-          <span v-if="!isAdmin" class="flex items-center text-[10px] font-bold text-success-600 bg-success-50 px-2 py-1 rounded-full mb-1">↑ Sangat Baik</span>
+          <span v-if="!isAdmin && averageScore && averageScore > 0" class="flex items-center text-[10px] font-bold text-success-600 bg-success-50 px-2 py-1 rounded-full mb-1">
+            ↑ Baik
+          </span>
         </div>
       </div>
     </div>
@@ -56,13 +58,13 @@
 </template>
 
 <script setup lang="ts">
-
 defineProps({
   isAdmin: Boolean,
   totalDosen: Number,
   totalMahasiswa: Number,
   totalProdi: Number,
   totalUser: Number,
-  dosenDitugaskan: Number
+  dosenDitugaskan: Number,
+  averageScore: Number
 })
 </script>

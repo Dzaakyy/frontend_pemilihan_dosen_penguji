@@ -20,10 +20,11 @@ const router = createRouter({
     },
     {
       path: '/dashboard',
-      name: 'Ecommerce',
+      name: 'Dashboard',
       component: () => import('../views/Dashboard.vue'),
       meta: {
-        title: 'eCommerce Dashboard',
+        title: 'Dashboard',
+        roles: ['Admin', 'Kaprodi']
       },
     },
     {
@@ -239,28 +240,51 @@ router.beforeEach((to, from, next) => {
   let userRoles: string[] = []
   if (isAuthenticated) {
     try {
-      userRoles = JSON.parse(localStorage.getItem('userRoles') || '[]')
+      const rolesRaw = JSON.parse(localStorage.getItem('userRoles') || '[]')
+      userRoles = Array.isArray(rolesRaw) ? rolesRaw : [rolesRaw]
     } catch {
       userRoles = (localStorage.getItem('userRoles') || '').split(',').map(r => r.trim())
     }
   }
 
+  const rolesLower = userRoles.map(r => r.toLowerCase());
+
   if (to.name !== 'Signin' && to.name !== 'Signup' && !isAuthenticated) {
     next({ name: 'Signin' })
   }
   else if ((to.name === 'Signin' || to.name === 'Signup') && isAuthenticated) {
-    next({ name: 'Ecommerce' })
+    if (rolesLower.includes('admin') || rolesLower.includes('kaprodi')) {
+      next({ name: 'Dashboard' })
+    } else if (rolesLower.includes('dosen')) {
+      next({ name: 'Mahasiswa Diuji' })
+    } else if (rolesLower.includes('mahasiswa')) {
+      next({ name: 'Tugas Akhir' })
+    } else {
+      next({ name: 'Profile' })
+    }
   }
   else {
     if (to.meta.roles) {
       const requiredRoles = to.meta.roles as string[]
-      const hasAccess = userRoles.some(role => requiredRoles.includes(role))
+      const reqRolesLower = requiredRoles.map(r => r.toLowerCase())
+
+      const hasAccess = rolesLower.some(role => reqRolesLower.includes(role))
 
       if (!hasAccess) {
-        alert('Akses Ditolak! User tidak memiliki izin ke halaman ini.')
-        return next({ name: 'Ecommerce' })
+        alert('Akses Ditolak! Anda tidak memiliki izin ke halaman ini.')
+
+        if (rolesLower.includes('admin') || rolesLower.includes('kaprodi')) {
+          return next({ name: 'Dashboard' })
+        } else if (rolesLower.includes('dosen')) {
+          return next({ name: 'Mahasiswa Diuji' })
+        } else if (rolesLower.includes('mahasiswa')) {
+          return next({ name: 'Tugas Akhir' })
+        } else {
+          return next({ name: 'Profile' })
+        }
       }
     }
+
     next()
   }
 })
