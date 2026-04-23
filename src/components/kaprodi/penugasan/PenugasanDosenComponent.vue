@@ -1,16 +1,13 @@
 <template>
   <div class="relative w-full">
-    <div v-if="alert.show"
-      class="fixed top-20 right-5 z-[99999] w-full max-w-sm transition-all duration-300 ease-in-out">
+    <div v-if="alert.show" class="fixed top-20 right-5 z-[99999] w-full max-w-sm transition-all duration-300 ease-in-out">
       <Alert :variant="alert.type" :title="alert.title" :message="alert.message" />
     </div>
 
-    <div
-      class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 p-5 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] shadow-sm transition-colors">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 p-5 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] shadow-sm transition-colors">
       <div class="flex items-center gap-2 w-full sm:w-auto">
         <span class="text-sm text-gray-500 dark:text-gray-400">Tampilkan</span>
-        <select v-model="itemsPerPage"
-          class="h-9 rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:text-white/90 transition-colors">
+        <select v-model="itemsPerPage" class="h-9 rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:text-white/90 transition-colors">
           <option :value="5">5</option>
           <option :value="10">10</option>
           <option :value="20">20</option>
@@ -18,400 +15,254 @@
         <span class="text-sm text-gray-500 dark:text-gray-400">data</span>
       </div>
 
-      <button v-if="canManage" @click="openAddModal"
-        class="flex items-center justify-center px-5 h-10 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600 w-full sm:w-auto shadow-theme-xs">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg">
+      <button v-if="canManage" @click="openAddModal" class="flex items-center justify-center px-5 h-10 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600 w-full sm:w-auto shadow-theme-xs">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
         Buat Penugasan Baru
       </button>
     </div>
 
-    <div
-      class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] shadow-sm transition-colors">
-      <div
-        class="px-5 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-transparent transition-colors">
-        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90 transition-colors">Daftar Penugasan Dosen
-          Penguji</h3>
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] shadow-sm transition-colors">
+      <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-transparent transition-colors">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90 transition-colors">Daftar Penugasan Dosen Penguji</h3>
       </div>
       <div class="max-w-full overflow-x-auto custom-scrollbar">
         <table class="min-w-full border-collapse">
           <thead>
             <tr class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-white/[0.02] transition-colors">
-              <th class="px-5 py-4 text-left w-16">
-                <p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">No</p>
-              </th>
-              <th class="px-5 py-4 text-left w-1/4">
-                <p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">Data
-                  Mahasiswa</p>
-              </th>
-              <th class="px-5 py-4 text-left">
-                <p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">Sekretaris
-                </p>
-              </th>
-              <th class="px-5 py-4 text-left">
-                <p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">Penguji 1
-                </p>
-              </th>
-              <th class="px-5 py-4 text-left">
-                <p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">Penguji 2
-                </p>
-              </th>
-              <th v-if="canManage" class="px-5 py-4 text-center w-32">
-                <p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">Aksi</p>
-              </th>
+              <th class="px-5 py-4 text-left w-16"><p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">No</p></th>
+              <th class="px-5 py-4 text-left w-1/4"><p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">Data Mahasiswa</p></th>
+              <th class="px-5 py-4 text-left"><p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">Sekretaris</p></th>
+              <th class="px-5 py-4 text-left"><p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">Penguji 1</p></th>
+              <th class="px-5 py-4 text-left"><p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">Penguji 2</p></th>
+              <th v-if="canManage" class="px-5 py-4 text-center w-32"><p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">Aksi</p></th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-200 dark:divide-gray-700 transition-colors">
-            <tr v-if="isLoading">
-              <td :colspan="canManage ? 6 : 5" class="px-5 py-12 text-center text-gray-500 text-sm transition-colors">
-                <svg class="animate-spin h-6 w-6 mx-auto text-brand-500 mb-3" xmlns="http://www.w3.org/2000/svg"
-                  fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                  </path>
-                </svg>
-                Memuat data penugasan...
-              </td>
-            </tr>
-            <tr v-else-if="paginatedList.length === 0">
-              <td :colspan="canManage ? 6 : 5" class="px-5 py-12 text-center text-gray-500 text-sm transition-colors">
-                Belum ada data penugasan.</td>
-            </tr>
+         <tbody class="divide-y divide-gray-200 dark:divide-gray-700 transition-colors">
+  <tr v-if="isLoading">
+    <td :colspan="canManage ? 6 : 5" class="px-5 py-12 text-center text-gray-500 text-sm transition-colors">
+      <svg class="animate-spin h-6 w-6 mx-auto text-brand-500 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+      Memuat data penugasan...
+    </td>
+  </tr>
+  <tr v-else-if="paginatedList.length === 0">
+    <td :colspan="canManage ? 6 : 5" class="px-5 py-12 text-center text-gray-500 text-sm transition-colors">Belum ada data penugasan.</td>
+  </tr>
 
-            <tr v-else v-for="(item, index) in paginatedList" :key="item.id_penugasan"
-              class="border-t border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
-              <td class="px-5 py-4 sm:px-6 align-top">
-                <span class="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                  {{ (currentPage - 1) * itemsPerPage + index + 1 }}
-                </span>
-              </td>
+  <tr v-else v-for="(item, index) in paginatedList" :key="item.id_penugasan" class="border-t border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
+    <td class="px-5 py-4 sm:px-6 align-top">
+      <span class="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+        {{ (currentPage - 1) * itemsPerPage + index + 1 }}
+      </span>
+    </td>
 
-              <td class="px-5 py-4 sm:px-6 align-top">
-                <span class="block font-bold text-gray-800 text-sm dark:text-white/90">{{ item.mahasiswa?.nama_mahasiswa
-                  }}</span>
-                <span class="block text-xs font-medium text-brand-500 dark:text-brand-400 mt-0.5">NIM: {{
-                  item.mahasiswa?.nim }}</span>
+    <td class="px-5 py-4 sm:px-6 align-top">
+      <span class="block font-bold text-gray-800 text-sm dark:text-white/90">{{ item.mahasiswa?.nama_mahasiswa }}</span>
+      <span class="block text-xs font-medium text-brand-500 dark:text-brand-400 mt-0.5">NIM: {{ item.mahasiswa?.nim }}</span>
 
-                <div class="mt-3 space-y-1">
-                  <span class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Judul:</span>
-                  <span class="block text-xs text-gray-600 dark:text-gray-300 line-clamp-2"
-                    :title="item.mahasiswa?.judul_ta">{{ item.mahasiswa?.judul_ta || 'Belum ada judul' }}</span>
-                </div>
+      <div class="mt-3 space-y-1">
+        <span class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Judul:</span>
+        <span class="block text-xs text-gray-600 dark:text-gray-300 line-clamp-2" :title="item.mahasiswa?.judul_ta">{{ item.mahasiswa?.judul_ta || 'Belum ada judul' }}</span>
+      </div>
 
-                <div class="mt-2 space-y-1">
-                  <span class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Topik:</span>
-                  <span
-                    class="inline-flex items-center justify-center rounded-md bg-purple-50 dark:bg-purple-500/10 px-2 py-0.5 text-[11px] font-semibold text-purple-700 dark:text-purple-400 border border-purple-100 dark:border-purple-500/20">
-                    {{ item.mahasiswa?.topik_ta?.nama_topik || 'Belum ada topik' }}
-                  </span>
-                </div>
-              </td>
+      <div class="mt-2 space-y-1">
+        <span class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Topik:</span>
+        <span class="inline-flex items-center justify-center rounded-md bg-purple-50 dark:bg-purple-500/10 px-2 py-0.5 text-[11px] font-semibold text-purple-700 dark:text-purple-400 border border-purple-100 dark:border-purple-500/20">
+          {{ item.mahasiswa?.topik_ta?.nama_topik || 'Belum ada topik' }}
+        </span>
+      </div>
+    </td>
 
-              <td class="px-5 py-4 sm:px-6 align-top">
-                <span class="block font-semibold text-gray-800 text-theme-sm dark:text-white/90">{{
-                  item.dosen_sekretaris?.nama_dosen }}</span>
-                <span class="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">NIDN: {{ item.dosen_sekretaris?.nidn
-                  }}</span>
-              </td>
-              <td class="px-5 py-4 sm:px-6 align-top">
-                <span class="block font-semibold text-gray-800 text-theme-sm dark:text-white/90">{{
-                  item.dosen_penguji_1?.nama_dosen }}</span>
-                <span class="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">NIDN: {{ item.dosen_penguji_1?.nidn
-                  }}</span>
-              </td>
-              <td class="px-5 py-4 sm:px-6 align-top">
-                <span class="block font-semibold text-gray-800 text-theme-sm dark:text-white/90">{{
-                  item.dosen_penguji_2?.nama_dosen }}</span>
-                <span class="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">NIDN: {{ item.dosen_penguji_2?.nidn
-                  }}</span>
-              </td>
+    <td class="px-5 py-4 sm:px-6 align-top">
+      <span class="block font-semibold text-gray-800 text-theme-sm dark:text-white/90">{{ item.dosen_sekretaris?.nama_dosen }}</span>
+      <span class="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">NIDN: {{ item.dosen_sekretaris?.nidn }}</span>
+    </td>
+    <td class="px-5 py-4 sm:px-6 align-top">
+      <span class="block font-semibold text-gray-800 text-theme-sm dark:text-white/90">{{ item.dosen_penguji_1?.nama_dosen }}</span>
+      <span class="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">NIDN: {{ item.dosen_penguji_1?.nidn }}</span>
+    </td>
+    <td class="px-5 py-4 sm:px-6 align-top">
+      <span class="block font-semibold text-gray-800 text-theme-sm dark:text-white/90">{{ item.dosen_penguji_2?.nama_dosen }}</span>
+      <span class="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">NIDN: {{ item.dosen_penguji_2?.nidn }}</span>
+    </td>
 
-              <td v-if="canManage" class="px-5 py-4 text-center sm:px-6 align-top">
-                <div class="flex items-center justify-center gap-2">
-                  <button @click="openEditModal(item)"
-                    class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:text-blue-600 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-400 shadow-theme-xs"
-                    title="Edit">
-                    <svg class="fill-current w-4 h-4" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M15.0911 2.78206C14.2125 1.90338 12.7878 1.90338 11.9092 2.78206L4.57524 10.116C4.26682 10.4244 4.0547 10.8158 3.96468 11.2426L3.31231 14.3352C3.25997 14.5833 3.33653 14.841 3.51583 15.0203C3.69512 15.1996 3.95286 15.2761 4.20096 15.2238L7.29355 14.5714C7.72031 14.4814 8.11172 14.2693 8.42013 13.9609L15.7541 6.62695C16.6327 5.74827 16.6327 4.32365 15.7541 3.44497L15.0911 2.78206ZM12.9698 3.84272C13.2627 3.54982 13.7376 3.54982 14.0305 3.84272L14.6934 4.50563C14.9863 4.79852 14.9863 5.2734 14.6934 5.56629L14.044 6.21573L12.3204 4.49215L12.9698 3.84272ZM11.2597 5.55281L5.6359 11.1766C5.53309 11.2794 5.46238 11.4099 5.43238 11.5522L5.01758 13.5185L6.98394 13.1037C7.1262 13.0737 7.25666 13.003 7.35947 12.9002L12.9833 7.27639L11.2597 5.55281Z" />
-                    </svg>
-                    Edit
-                  </button>
+    <td v-if="canManage" class="px-5 py-4 text-center sm:px-6 align-top">
+      <div class="flex items-center justify-center gap-2">
+        <button @click="openEditModal(item)"
+          class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:text-blue-600 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-blue-400 shadow-theme-xs"
+          title="Edit">
+          <svg class="fill-current w-4 h-4" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M15.0911 2.78206C14.2125 1.90338 12.7878 1.90338 11.9092 2.78206L4.57524 10.116C4.26682 10.4244 4.0547 10.8158 3.96468 11.2426L3.31231 14.3352C3.25997 14.5833 3.33653 14.841 3.51583 15.0203C3.69512 15.1996 3.95286 15.2761 4.20096 15.2238L7.29355 14.5714C7.72031 14.4814 8.11172 14.2693 8.42013 13.9609L15.7541 6.62695C16.6327 5.74827 16.6327 4.32365 15.7541 3.44497L15.0911 2.78206ZM12.9698 3.84272C13.2627 3.54982 13.7376 3.54982 14.0305 3.84272L14.6934 4.50563C14.9863 4.79852 14.9863 5.2734 14.6934 5.56629L14.044 6.21573L12.3204 4.49215L12.9698 3.84272ZM11.2597 5.55281L5.6359 11.1766C5.53309 11.2794 5.46238 11.4099 5.43238 11.5522L5.01758 13.5185L6.98394 13.1037C7.1262 13.0737 7.25666 13.003 7.35947 12.9002L12.9833 7.27639L11.2597 5.55281Z" />
+          </svg>
+          Edit
+        </button>
 
-                  <button @click="openDeleteModal(item)"
-                    class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-red-400 shadow-theme-xs"
-                    title="Hapus">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M19 6.99998H16V5.99998C16 4.89541 15.1046 3.99998 14 3.99998H10C8.89543 3.99998 8 4.89541 8 5.99998V6.99998H5V8.99998H6V19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19V8.99998H19V6.99998ZM10 5.99998H14V6.99998H10V5.99998ZM16 19H8V8.99998H16V19Z" />
-                    </svg>
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
+        <button @click="openDeleteModal(item)"
+          class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-red-400 shadow-theme-xs"
+          title="Hapus">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M19 6.99998H16V5.99998C16 4.89541 15.1046 3.99998 14 3.99998H10C8.89543 3.99998 8 4.89541 8 5.99998V6.99998H5V8.99998H6V19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19V8.99998H19V6.99998ZM10 5.99998H14V6.99998H10V5.99998ZM16 19H8V8.99998H16V19Z" />
+          </svg>
+          Delete
+        </button>
+      </div>
+    </td>
+  </tr>
+</tbody>
         </table>
       </div>
     </div>
 
-    <Pagination v-if="!isLoading && totalItems > 0" :current-page="currentPage" :total-items="totalItems"
-      :items-per-page="itemsPerPage" @update:currentPage="currentPage = $event" class="mt-4" />
+    <Pagination
+      v-if="!isLoading && totalItems > 0"
+      :current-page="currentPage"
+      :total-items="totalItems"
+      :items-per-page="itemsPerPage"
+      @update:currentPage="currentPage = $event"
+      class="mt-4"
+    />
 
     <Modal v-if="isModalOpen" @close="closeModal">
-      <div
-        class="relative w-full max-w-[650px] max-h-[90vh] overflow-y-auto custom-scrollbar rounded-3xl bg-white p-6 dark:bg-gray-900 mx-auto mt-10 shadow-2xl transition-colors">
-        <button @click="closeModal"
-          class="absolute right-5 top-5 z-[100] flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 dark:bg-white/[0.05] dark:hover:bg-white/[0.07] dark:text-gray-400 dark:hover:text-gray-300 transition-colors">
-          <svg class="fill-current" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M6.04289 16.5418C5.65237 16.9323 5.65237 17.5655 6.04289 17.956C6.43342 18.3465 7.06658 18.3465 7.45711 17.956L11.9987 13.4144L16.5408 17.9565C16.9313 18.347 17.5645 18.347 17.955 17.9565C18.3455 17.566 18.3455 16.9328 17.955 16.5423L13.4129 12.0002L17.955 7.45808C18.3455 7.06756 18.3455 6.43439 17.955 6.04387C17.5645 5.65335 16.9313 5.65335 16.5408 6.04387L11.9987 10.586L7.45711 6.04439C7.06658 5.65386 6.43342 5.65386 6.04289 6.04439C5.65237 6.43491 5.65237 7.06808 6.04289 7.4586L10.5845 12.0002L6.04289 16.5418Z" />
-          </svg>
+      <div class="relative w-full max-w-[650px] max-h-[90vh] overflow-y-auto custom-scrollbar rounded-3xl bg-white p-6 dark:bg-gray-900 mx-auto mt-10 shadow-2xl transition-colors">
+        <button @click="closeModal" class="absolute right-5 top-5 z-[100] flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 dark:bg-white/[0.05] dark:hover:bg-white/[0.07] dark:text-gray-400 dark:hover:text-gray-300 transition-colors">
+          <svg class="fill-current" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.04289 16.5418C5.65237 16.9323 5.65237 17.5655 6.04289 17.956C6.43342 18.3465 7.06658 18.3465 7.45711 17.956L11.9987 13.4144L16.5408 17.9565C16.9313 18.347 17.5645 18.347 17.955 17.9565C18.3455 17.566 18.3455 16.9328 17.955 16.5423L13.4129 12.0002L17.955 7.45808C18.3455 7.06756 18.3455 6.43439 17.955 6.04387C17.5645 5.65335 16.9313 5.65335 16.5408 6.04387L11.9987 10.586L7.45711 6.04439C7.06658 5.65386 6.43342 5.65386 6.04289 6.04439C5.65237 6.43491 5.65237 7.06808 6.04289 7.4586L10.5845 12.0002L6.04289 16.5418Z" /></svg>
         </button>
 
         <div class="mb-6 border-b border-gray-100 pb-4 dark:border-gray-800 transition-colors">
           <h4 class="text-2xl font-bold text-gray-800 dark:text-white/90">
             {{ isEditing ? 'Edit Penugasan Penguji' : 'Buat Penugasan Penguji' }}
           </h4>
-          <p class="text-sm text-gray-500 mt-1 dark:text-gray-400">Sistem otomatis memprioritaskan Top 5 Dosen
-            Rekomendasi di pilihan teratas.</p>
+          <p class="text-sm text-gray-500 mt-1 dark:text-gray-400">Sistem otomatis memprioritaskan Top 5 Dosen Rekomendasi di pilihan teratas.</p>
         </div>
 
         <form @submit.prevent="submitForm" class="flex flex-col gap-5 pb-32">
 
           <div class="relative w-full z-[60]" ref="mahasiswaFormRef">
-            <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Pilih Mahasiswa <span
-                class="text-red-500">*</span></label>
-            <button type="button" @click="!isEditing && toggleDropdown('mahasiswa')"
-              :class="['flex items-center justify-between h-11 w-full rounded-lg border border-gray-300 px-4 text-sm text-left transition-colors dark:border-gray-700', isEditing ? 'bg-gray-100 text-gray-500 cursor-not-allowed dark:bg-gray-800/50' : 'bg-white text-gray-800 focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20 dark:bg-gray-900 dark:text-white/90']">
-              <span class="truncate pr-4 font-medium">{{ getMahasiswaLabel(formData.mahasiswa_id) || 'Pilih mahasiswa
-                yang akan ditugaskan...' }}</span>
-              <svg v-if="!isEditing"
-                :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': openDropdown === 'mahasiswa' }]"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-              </svg>
+            <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Pilih Mahasiswa <span class="text-red-500">*</span></label>
+            <button type="button" @click="!isEditing && toggleDropdown('mahasiswa')" :class="['flex items-center justify-between h-11 w-full rounded-lg border border-gray-300 px-4 text-sm text-left transition-colors dark:border-gray-700', isEditing ? 'bg-gray-100 text-gray-500 cursor-not-allowed dark:bg-gray-800/50' : 'bg-white text-gray-800 focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20 dark:bg-gray-900 dark:text-white/90']">
+              <span class="truncate pr-4 font-medium">{{ getMahasiswaLabel(formData.mahasiswa_id) || 'Pilih mahasiswa yang akan ditugaskan...' }}</span>
+              <svg v-if="!isEditing" :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': openDropdown === 'mahasiswa' }]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
 
-            <transition enter-active-class="transition duration-100 ease-out"
-              enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100"
-              leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100"
-              leave-to-class="transform scale-95 opacity-0">
-              <div v-if="openDropdown === 'mahasiswa' && !isEditing"
-                class="absolute w-full mt-1 top-full bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+            <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
+              <div v-if="openDropdown === 'mahasiswa' && !isEditing" class="absolute w-full mt-1 top-full bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden dark:bg-gray-800 dark:border-gray-700">
                 <div class="p-2 border-b border-gray-100 bg-gray-50 dark:bg-gray-900 dark:border-gray-700">
-                  <input v-model="searchMhsQuery" type="text" placeholder="Cari nama atau NIM..."
-                    class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+                  <input v-model="searchMhsQuery" type="text" placeholder="Cari nama atau NIM..." class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
                 </div>
                 <ul class="max-h-56 overflow-y-auto custom-scrollbar py-1">
-                  <li v-if="filteredMahasiswaOptions.length === 0" class="px-4 py-3 text-sm text-gray-500 text-center">
-                    Data tidak ditemukan</li>
-                  <li v-else v-for="mhs in filteredMahasiswaOptions" :key="mhs.id_mahasiswa"
-                    @click="selectMahasiswa(mhs.id_mahasiswa)"
-                    class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 text-gray-800 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50">
-                    {{ mhs.nama_mahasiswa }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">({{
-                      mhs.nim }})</span>
+                  <li v-if="filteredMahasiswaOptions.length === 0" class="px-4 py-3 text-sm text-gray-500 text-center">Data tidak ditemukan</li>
+                  <li v-else v-for="mhs in filteredMahasiswaOptions" :key="mhs.id_mahasiswa" @click="selectMahasiswa(mhs.id_mahasiswa)" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 text-gray-800 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50">
+                    {{ mhs.nama_mahasiswa }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">({{ mhs.nim }})</span>
                   </li>
                 </ul>
               </div>
             </transition>
           </div>
 
-          <div v-if="isLoadingRekomendasi"
-            class="text-sm text-brand-600 bg-brand-50 p-3 rounded-lg flex items-center gap-2 dark:bg-brand-500/10 dark:text-brand-400 transition-colors">
-            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-              </path>
-            </svg>
+          <div v-if="isLoadingRekomendasi" class="text-sm text-brand-600 bg-brand-50 p-3 rounded-lg flex items-center gap-2 dark:bg-brand-500/10 dark:text-brand-400 transition-colors">
+            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
             Mengambil data rekomendasi dosen...
           </div>
 
-          <div v-if="formData.mahasiswa_id && !isLoadingRekomendasi"
-            class="flex flex-col gap-5 border-t border-gray-100 pt-5 dark:border-gray-800 transition-colors">
+          <div v-if="formData.mahasiswa_id && !isLoadingRekomendasi" class="flex flex-col gap-5 border-t border-gray-100 pt-5 dark:border-gray-800 transition-colors">
 
             <div class="relative w-full z-[50]" ref="sekretarisRef">
-              <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Sekretaris<span
-                  class="text-red-500">*</span></label>
-              <button type="button" @click="toggleDropdown('sekretaris')"
-                class="flex items-center justify-between h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20 text-left transition-colors dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
-                <span class="truncate pr-4 font-medium">{{ getDosenLabel(formData.sekretaris) || 'Pilih Dosen
-                  Sekretaris...' }}</span>
-                <svg
-                  :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': openDropdown === 'sekretaris' }]"
-                  fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+              <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Sekretaris<span class="text-red-500">*</span></label>
+              <button type="button" @click="toggleDropdown('sekretaris')" class="flex items-center justify-between h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20 text-left transition-colors dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                <span class="truncate pr-4 font-medium">{{ getDosenLabel(formData.sekretaris) || 'Pilih Dosen Sekretaris...' }}</span>
+                <svg :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': openDropdown === 'sekretaris' }]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
               </button>
 
-              <transition enter-active-class="transition duration-100 ease-out"
-                enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100"
-                leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100"
-                leave-to-class="transform scale-95 opacity-0">
-                <div v-if="openDropdown === 'sekretaris'"
-                  class="absolute w-full mt-1 top-full bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+              <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
+                <div v-if="openDropdown === 'sekretaris'" class="absolute w-full mt-1 top-full bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden dark:bg-gray-800 dark:border-gray-700">
                   <div class="p-2 border-b border-gray-100 bg-gray-50 dark:bg-gray-900 dark:border-gray-700">
-                    <input v-model="searchDosenQuery" type="text" placeholder="Cari nama dosen..."
-                      class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+                    <input v-model="searchDosenQuery" type="text" placeholder="Cari nama dosen..." class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
                   </div>
                   <ul class="max-h-56 overflow-y-auto custom-scrollbar py-1">
                     <template v-if="filteredRecommendedDosen.length > 0">
-                      <li
-                        class="px-3 py-2 bg-brand-50 text-brand-600 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-brand-100 dark:bg-brand-900/40 dark:text-brand-400 dark:border-brand-800">
-                        🌟 Top 5 Rekomendasi PSO</li>
-                      <li v-for="d in filteredRecommendedDosen" :key="'sek_rek_' + d.dosen_id"
-                        @click="selectDosenFor('sekretaris', d.dosen_id)"
-                        class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 text-gray-800 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50"
-                        :class="{ 'opacity-50 cursor-not-allowed': isDosenSelected(d.dosen_id) && formData.sekretaris !== d.dosen_id }">
-                        <span class="text-brand-600 dark:text-brand-400 font-bold mr-1">#{{ d.rank }}</span> - {{
-                        d.nama_dosen }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">(Sisa
-                          Kuota: {{ d.kuota }})</span>
-                        <span v-if="isDosenSelected(d.dosen_id) && formData.sekretaris !== d.dosen_id"
-                          class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
+                      <li class="px-3 py-2 bg-brand-50 text-brand-600 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-brand-100 dark:bg-brand-900/40 dark:text-brand-400 dark:border-brand-800">🌟 Top 5 Rekomendasi PSO</li>
+                      <li v-for="d in filteredRecommendedDosen" :key="'sek_rek_'+d.dosen_id" @click="selectDosenFor('sekretaris', d.dosen_id)" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 text-gray-800 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50" :class="{'opacity-50 cursor-not-allowed': isDosenSelected(d.dosen_id) && formData.sekretaris !== d.dosen_id}">
+                        <span class="text-brand-600 dark:text-brand-400 font-bold mr-1">#{{ d.rank }}</span> - {{ d.nama_dosen }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">(Sisa Kuota: {{ d.kuota }})</span>
+                        <span v-if="isDosenSelected(d.dosen_id) && formData.sekretaris !== d.dosen_id" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
                       </li>
                     </template>
                     <template v-if="filteredOtherDosen.length > 0">
-                      <li
-                        class="px-3 py-2 bg-gray-100 text-gray-500 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-gray-200 mt-1 dark:bg-gray-900 dark:text-gray-400 dark:border-gray-800">
-                        Daftar Dosen Lainnya</li>
-                      <li v-for="d in filteredOtherDosen" :key="'sek_oth_' + d.id_dosen"
-                        @click="selectDosenFor('sekretaris', d.id_dosen)"
-                        class="px-4 py-2.5 text-sm cursor-pointer hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50"
-                        :class="{ 'opacity-50 cursor-not-allowed': isDosenSelected(d.id_dosen) && formData.sekretaris !== d.id_dosen }">
-                        {{ d.nama_dosen }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">(Sisa
-                          Kuota: {{ d.kuota_menguji }})</span>
-                        <span v-if="isDosenSelected(d.id_dosen) && formData.sekretaris !== d.id_dosen"
-                          class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
+                      <li class="px-3 py-2 bg-gray-100 text-gray-500 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-gray-200 mt-1 dark:bg-gray-900 dark:text-gray-400 dark:border-gray-800">Daftar Dosen Lainnya</li>
+                      <li v-for="d in filteredOtherDosen" :key="'sek_oth_'+d.id_dosen" @click="selectDosenFor('sekretaris', d.id_dosen)" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50" :class="{'opacity-50 cursor-not-allowed': isDosenSelected(d.id_dosen) && formData.sekretaris !== d.id_dosen}">
+                        {{ d.nama_dosen }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">(Sisa Kuota: {{ d.kuota_menguji }})</span>
+                        <span v-if="isDosenSelected(d.id_dosen) && formData.sekretaris !== d.id_dosen" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
                       </li>
                     </template>
-                    <li v-if="filteredRecommendedDosen.length === 0 && filteredOtherDosen.length === 0"
-                      class="px-4 py-3 text-sm text-gray-500 text-center">Dosen tidak ditemukan</li>
+                    <li v-if="filteredRecommendedDosen.length === 0 && filteredOtherDosen.length === 0" class="px-4 py-3 text-sm text-gray-500 text-center">Dosen tidak ditemukan</li>
                   </ul>
                 </div>
               </transition>
             </div>
 
             <div class="relative w-full z-[40]" ref="penguji1Ref">
-              <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Penguji 1 <span
-                  class="text-red-500">*</span></label>
-              <button type="button" @click="toggleDropdown('penguji1')"
-                class="flex items-center justify-between h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20 text-left transition-colors dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
-                <span class="truncate pr-4 font-medium">{{ getDosenLabel(formData.penguji_1) || 'Pilih Dosen Penguji
-                  1...' }}</span>
-                <svg
-                  :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': openDropdown === 'penguji1' }]"
-                  fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+              <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Penguji 1 <span class="text-red-500">*</span></label>
+              <button type="button" @click="toggleDropdown('penguji1')" class="flex items-center justify-between h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20 text-left transition-colors dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                <span class="truncate pr-4 font-medium">{{ getDosenLabel(formData.penguji_1) || 'Pilih Dosen Penguji 1...' }}</span>
+                <svg :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': openDropdown === 'penguji1' }]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
               </button>
 
-              <transition enter-active-class="transition duration-100 ease-out"
-                enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100"
-                leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100"
-                leave-to-class="transform scale-95 opacity-0">
-                <div v-if="openDropdown === 'penguji1'"
-                  class="absolute w-full mt-1 top-full bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+              <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
+                <div v-if="openDropdown === 'penguji1'" class="absolute w-full mt-1 top-full bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden dark:bg-gray-800 dark:border-gray-700">
                   <div class="p-2 border-b border-gray-100 bg-gray-50 dark:bg-gray-900 dark:border-gray-700">
-                    <input v-model="searchDosenQuery" type="text" placeholder="Cari nama dosen..."
-                      class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+                    <input v-model="searchDosenQuery" type="text" placeholder="Cari nama dosen..." class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
                   </div>
                   <ul class="max-h-56 overflow-y-auto custom-scrollbar py-1">
                     <template v-if="filteredRecommendedDosen.length > 0">
-                      <li
-                        class="px-3 py-2 bg-brand-50 text-brand-600 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-brand-100 dark:bg-brand-900/40 dark:text-brand-400 dark:border-brand-800">
-                        🌟 Top 5 Rekomendasi PSO</li>
-                      <li v-for="d in filteredRecommendedDosen" :key="'p1_rek_' + d.dosen_id"
-                        @click="selectDosenFor('penguji_1', d.dosen_id)"
-                        class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 text-gray-800 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50"
-                        :class="{ 'opacity-50 cursor-not-allowed': isDosenSelected(d.dosen_id) && formData.penguji_1 !== d.dosen_id }">
-                        <span class="text-brand-600 dark:text-brand-400 font-bold mr-1">#{{ d.rank }}</span> - {{
-                        d.nama_dosen }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">(Sisa
-                          Kuota: {{ d.kuota }})</span>
-                        <span v-if="isDosenSelected(d.dosen_id) && formData.penguji_1 !== d.dosen_id"
-                          class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
+                      <li class="px-3 py-2 bg-brand-50 text-brand-600 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-brand-100 dark:bg-brand-900/40 dark:text-brand-400 dark:border-brand-800">🌟 Top 5 Rekomendasi PSO</li>
+                      <li v-for="d in filteredRecommendedDosen" :key="'p1_rek_'+d.dosen_id" @click="selectDosenFor('penguji_1', d.dosen_id)" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 text-gray-800 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50" :class="{'opacity-50 cursor-not-allowed': isDosenSelected(d.dosen_id) && formData.penguji_1 !== d.dosen_id}">
+                        <span class="text-brand-600 dark:text-brand-400 font-bold mr-1">#{{ d.rank }}</span> - {{ d.nama_dosen }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">(Sisa Kuota: {{ d.kuota }})</span>
+                        <span v-if="isDosenSelected(d.dosen_id) && formData.penguji_1 !== d.dosen_id" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
                       </li>
                     </template>
                     <template v-if="filteredOtherDosen.length > 0">
-                      <li
-                        class="px-3 py-2 bg-gray-100 text-gray-500 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-gray-200 mt-1 dark:bg-gray-900 dark:text-gray-400 dark:border-gray-800">
-                        Daftar Dosen Lainnya</li>
-                      <li v-for="d in filteredOtherDosen" :key="'p1_oth_' + d.id_dosen"
-                        @click="selectDosenFor('penguji_1', d.id_dosen)"
-                        class="px-4 py-2.5 text-sm cursor-pointer hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50"
-                        :class="{ 'opacity-50 cursor-not-allowed': isDosenSelected(d.id_dosen) && formData.penguji_1 !== d.id_dosen }">
-                        {{ d.nama_dosen }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">(Sisa
-                          Kuota: {{ d.kuota_menguji }})</span>
-                        <span v-if="isDosenSelected(d.id_dosen) && formData.penguji_1 !== d.id_dosen"
-                          class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
+                      <li class="px-3 py-2 bg-gray-100 text-gray-500 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-gray-200 mt-1 dark:bg-gray-900 dark:text-gray-400 dark:border-gray-800">Daftar Dosen Lainnya</li>
+                      <li v-for="d in filteredOtherDosen" :key="'p1_oth_'+d.id_dosen" @click="selectDosenFor('penguji_1', d.id_dosen)" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50" :class="{'opacity-50 cursor-not-allowed': isDosenSelected(d.id_dosen) && formData.penguji_1 !== d.id_dosen}">
+                        {{ d.nama_dosen }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">(Sisa Kuota: {{ d.kuota_menguji }})</span>
+                        <span v-if="isDosenSelected(d.id_dosen) && formData.penguji_1 !== d.id_dosen" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
                       </li>
                     </template>
-                    <li v-if="filteredRecommendedDosen.length === 0 && filteredOtherDosen.length === 0"
-                      class="px-4 py-3 text-sm text-gray-500 text-center">Dosen tidak ditemukan</li>
+                    <li v-if="filteredRecommendedDosen.length === 0 && filteredOtherDosen.length === 0" class="px-4 py-3 text-sm text-gray-500 text-center">Dosen tidak ditemukan</li>
                   </ul>
                 </div>
               </transition>
             </div>
 
             <div class="relative w-full z-[30]" ref="penguji2Ref">
-              <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Penguji 2 <span
-                  class="text-red-500">*</span></label>
-              <button type="button" @click="toggleDropdown('penguji2')"
-                class="flex items-center justify-between h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20 text-left transition-colors dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
-                <span class="truncate pr-4 font-medium">{{ getDosenLabel(formData.penguji_2) || 'Pilih Dosen Penguji
-                  2...' }}</span>
-                <svg
-                  :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': openDropdown === 'penguji2' }]"
-                  fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+              <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Penguji 2 <span class="text-red-500">*</span></label>
+              <button type="button" @click="toggleDropdown('penguji2')" class="flex items-center justify-between h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20 text-left transition-colors dark:border-gray-700 dark:bg-gray-900 dark:text-white/90">
+                <span class="truncate pr-4 font-medium">{{ getDosenLabel(formData.penguji_2) || 'Pilih Dosen Penguji 2...' }}</span>
+                <svg :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': openDropdown === 'penguji2' }]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
               </button>
 
-              <transition enter-active-class="transition duration-100 ease-out"
-                enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100"
-                leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100"
-                leave-to-class="transform scale-95 opacity-0">
-                <div v-if="openDropdown === 'penguji2'"
-                  class="absolute w-full mt-1 top-full bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+              <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
+                <div v-if="openDropdown === 'penguji2'" class="absolute w-full mt-1 top-full bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden dark:bg-gray-800 dark:border-gray-700">
                   <div class="p-2 border-b border-gray-100 bg-gray-50 dark:bg-gray-900 dark:border-gray-700">
-                    <input v-model="searchDosenQuery" type="text" placeholder="Cari nama dosen..."
-                      class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+                    <input v-model="searchDosenQuery" type="text" placeholder="Cari nama dosen..." class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
                   </div>
                   <ul class="max-h-56 overflow-y-auto custom-scrollbar py-1">
                     <template v-if="filteredRecommendedDosen.length > 0">
-                      <li
-                        class="px-3 py-2 bg-brand-50 text-brand-600 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-brand-100 dark:bg-brand-900/40 dark:text-brand-400 dark:border-brand-800">
-                        🌟 Top 5 Rekomendasi PSO</li>
-                      <li v-for="d in filteredRecommendedDosen" :key="'p2_rek_' + d.dosen_id"
-                        @click="selectDosenFor('penguji_2', d.dosen_id)"
-                        class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 text-gray-800 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50"
-                        :class="{ 'opacity-50 cursor-not-allowed': isDosenSelected(d.dosen_id) && formData.penguji_2 !== d.dosen_id }">
-                        <span class="text-brand-600 dark:text-brand-400 font-bold mr-1">#{{ d.rank }}</span> - {{
-                        d.nama_dosen }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">(Sisa
-                          Kuota: {{ d.kuota }})</span>
-                        <span v-if="isDosenSelected(d.dosen_id) && formData.penguji_2 !== d.dosen_id"
-                          class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
+                      <li class="px-3 py-2 bg-brand-50 text-brand-600 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-brand-100 dark:bg-brand-900/40 dark:text-brand-400 dark:border-brand-800">🌟 Top 5 Rekomendasi PSO</li>
+                      <li v-for="d in filteredRecommendedDosen" :key="'p2_rek_'+d.dosen_id" @click="selectDosenFor('penguji_2', d.dosen_id)" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 text-gray-800 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50" :class="{'opacity-50 cursor-not-allowed': isDosenSelected(d.dosen_id) && formData.penguji_2 !== d.dosen_id}">
+                        <span class="text-brand-600 dark:text-brand-400 font-bold mr-1">#{{ d.rank }}</span> - {{ d.nama_dosen }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">(Sisa Kuota: {{ d.kuota }})</span>
+                        <span v-if="isDosenSelected(d.dosen_id) && formData.penguji_2 !== d.dosen_id" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
                       </li>
                     </template>
                     <template v-if="filteredOtherDosen.length > 0">
-                      <li
-                        class="px-3 py-2 bg-gray-100 text-gray-500 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-gray-200 mt-1 dark:bg-gray-900 dark:text-gray-400 dark:border-gray-800">
-                        Daftar Dosen Lainnya</li>
-                      <li v-for="d in filteredOtherDosen" :key="'p2_oth_' + d.id_dosen"
-                        @click="selectDosenFor('penguji_2', d.id_dosen)"
-                        class="px-4 py-2.5 text-sm cursor-pointer hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50"
-                        :class="{ 'opacity-50 cursor-not-allowed': isDosenSelected(d.id_dosen) && formData.penguji_2 !== d.id_dosen }">
-                        {{ d.nama_dosen }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">(Sisa
-                          Kuota: {{ d.kuota_menguji }})</span>
-                        <span v-if="isDosenSelected(d.id_dosen) && formData.penguji_2 !== d.id_dosen"
-                          class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
+                      <li class="px-3 py-2 bg-gray-100 text-gray-500 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-gray-200 mt-1 dark:bg-gray-900 dark:text-gray-400 dark:border-gray-800">Daftar Dosen Lainnya</li>
+                      <li v-for="d in filteredOtherDosen" :key="'p2_oth_'+d.id_dosen" @click="selectDosenFor('penguji_2', d.id_dosen)" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50" :class="{'opacity-50 cursor-not-allowed': isDosenSelected(d.id_dosen) && formData.penguji_2 !== d.id_dosen}">
+                        {{ d.nama_dosen }} <span class="text-gray-400 ml-1 text-xs font-normal dark:text-gray-500">(Sisa Kuota: {{ d.kuota_menguji }})</span>
+                        <span v-if="isDosenSelected(d.id_dosen) && formData.penguji_2 !== d.id_dosen" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
                       </li>
                     </template>
-                    <li v-if="filteredRecommendedDosen.length === 0 && filteredOtherDosen.length === 0"
-                      class="px-4 py-3 text-sm text-gray-500 text-center">Dosen tidak ditemukan</li>
+                    <li v-if="filteredRecommendedDosen.length === 0 && filteredOtherDosen.length === 0" class="px-4 py-3 text-sm text-gray-500 text-center">Dosen tidak ditemukan</li>
                   </ul>
                 </div>
               </transition>
@@ -419,13 +270,9 @@
 
           </div>
 
-          <div
-            class="flex items-center gap-3 mt-6 border-t border-gray-100 pt-5 dark:border-gray-800 transition-colors">
-            <button @click="closeModal" type="button"
-              class="flex-1 justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] transition-colors">Batal</button>
-            <button type="submit"
-              :disabled="isSaving || !formData.sekretaris || !formData.penguji_1 || !formData.penguji_2"
-              class="flex-1 flex justify-center items-center rounded-lg bg-brand-500 px-4 py-3 text-sm font-bold text-white hover:bg-brand-600 disabled:opacity-50 transition-colors">
+          <div class="flex items-center gap-3 mt-6 border-t border-gray-100 pt-5 dark:border-gray-800 transition-colors">
+            <button @click="closeModal" type="button" class="flex-1 justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] transition-colors">Batal</button>
+            <button type="submit" :disabled="isSaving || !formData.sekretaris || !formData.penguji_1 || !formData.penguji_2" class="flex-1 flex justify-center items-center rounded-lg bg-brand-500 px-4 py-3 text-sm font-bold text-white hover:bg-brand-600 disabled:opacity-50 transition-colors">
               {{ isSaving ? 'Menyimpan...' : 'Simpan Penugasan' }}
             </button>
           </div>
@@ -434,26 +281,24 @@
     </Modal>
 
     <Modal v-if="isDeleteModalOpen" @close="closeDeleteModal">
-      <div
-        class="w-full max-w-[450px] rounded-3xl bg-white p-6 dark:bg-gray-900 text-center mx-auto mt-20 z-50 shadow-2xl border border-gray-100 dark:border-gray-800 transition-colors">
-        <h4 class="mb-4 text-xl font-bold text-gray-800 dark:text-white/90 transition-colors">Konfirmasi Hapus</h4>
-        <p class="mb-8 text-sm text-gray-500 dark:text-gray-400 transition-colors">
-          Apakah Anda yakin ingin menghapus data penugasan mahasiswa
-          <br /> <strong class="text-gray-800 dark:text-white text-lg">"{{ itemToDelete?.mahasiswa?.nama_mahasiswa
-            }}"</strong>?
-          <br /><br /> Kuota menguji ketiga dosen tersebut akan dikembalikan secara otomatis.
-        </p>
-        <div class="flex items-center justify-center gap-3">
-          <button @click="closeDeleteModal"
-            class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto transition-colors">
-            Batal
-          </button>
-          <button @click="confirmDelete" :disabled="isDeleting"
-            class="flex w-full justify-center rounded-lg bg-red-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-600 disabled:opacity-50 sm:w-auto transition-colors">
-            {{ isDeleting ? 'Menghapus...' : 'Ya, Hapus' }}
-          </button>
+        <div class="w-full max-w-[450px] rounded-3xl bg-white p-6 dark:bg-gray-900 text-center mx-auto mt-20 z-50 shadow-2xl border border-gray-100 dark:border-gray-800 transition-colors">
+          <h4 class="mb-4 text-xl font-bold text-gray-800 dark:text-white/90 transition-colors">Konfirmasi Hapus</h4>
+          <p class="mb-8 text-sm text-gray-500 dark:text-gray-400 transition-colors">
+            Apakah Anda yakin ingin menghapus data penugasan mahasiswa
+            <br /> <strong class="text-gray-800 dark:text-white text-lg">"{{ itemToDelete?.mahasiswa?.nama_mahasiswa }}"</strong>?
+            <br /><br /> Kuota menguji ketiga dosen tersebut akan dikembalikan secara otomatis.
+          </p>
+          <div class="flex items-center justify-center gap-3">
+            <button @click="closeDeleteModal"
+              class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto transition-colors">
+              Batal
+            </button>
+            <button @click="confirmDelete" :disabled="isDeleting"
+              class="flex w-full justify-center rounded-lg bg-red-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-600 disabled:opacity-50 sm:w-auto transition-colors">
+              {{ isDeleting ? 'Menghapus...' : 'Ya, Hapus' }}
+            </button>
+          </div>
         </div>
-      </div>
     </Modal>
 
   </div>
@@ -565,8 +410,8 @@ const selectMahasiswa = (id: number) => {
 // --- FILTER & LOGIKA GROUPING DOSEN ---
 const isDosenSelected = (id_dosen: number) => {
   return formData.value.sekretaris === id_dosen ||
-    formData.value.penguji_1 === id_dosen ||
-    formData.value.penguji_2 === id_dosen;
+         formData.value.penguji_1 === id_dosen ||
+         formData.value.penguji_2 === id_dosen;
 }
 
 const recommendedDosen = computed(() => {
