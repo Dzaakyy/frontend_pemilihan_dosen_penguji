@@ -55,21 +55,21 @@
 
         <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
           <div class="absolute top-0 left-0 w-full h-1.5 bg-blue-500"></div>
-          <span class="inline-block px-3 py-1 bg-blue-50 text-blue-600 text-xs font-bold rounded-full mb-3 border border-blue-100">Sekretaris (Penguji 3)</span>
+          <span class="inline-block px-3 py-1 bg-blue-50 text-blue-600 text-xs font-bold rounded-full mb-3 border border-blue-100">Sekretaris</span>
           <h4 class="text-lg font-bold text-gray-800">{{ penugasan.dosen_sekretaris?.nama_dosen }}</h4>
           <p class="text-sm text-gray-500 mt-1">NIDN: {{ penugasan.dosen_sekretaris?.nidn }}</p>
         </div>
 
         <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
           <div class="absolute top-0 left-0 w-full h-1.5 bg-emerald-500"></div>
-          <span class="inline-block px-3 py-1 bg-emerald-50 text-emerald-600 text-xs font-bold rounded-full mb-3 border border-emerald-100">Penguji Utama 1</span>
+          <span class="inline-block px-3 py-1 bg-emerald-50 text-emerald-600 text-xs font-bold rounded-full mb-3 border border-emerald-100">Penguji 1</span>
           <h4 class="text-lg font-bold text-gray-800">{{ penugasan.dosen_penguji_1?.nama_dosen }}</h4>
           <p class="text-sm text-gray-500 mt-1">NIDN: {{ penugasan.dosen_penguji_1?.nidn }}</p>
         </div>
 
         <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
           <div class="absolute top-0 left-0 w-full h-1.5 bg-violet-500"></div>
-          <span class="inline-block px-3 py-1 bg-violet-50 text-violet-600 text-xs font-bold rounded-full mb-3 border border-violet-100">Penguji Utama 2</span>
+          <span class="inline-block px-3 py-1 bg-violet-50 text-violet-600 text-xs font-bold rounded-full mb-3 border border-violet-100">Penguji 2</span>
           <h4 class="text-lg font-bold text-gray-800">{{ penugasan.dosen_penguji_2?.nama_dosen }}</h4>
           <p class="text-sm text-gray-500 mt-1">NIDN: {{ penugasan.dosen_penguji_2?.nidn }}</p>
         </div>
@@ -83,10 +83,8 @@
 import { ref, onMounted } from 'vue'
 import Alert from '@/components/ui/Alert.vue'
 
-// Definisikan Tipe Data Alert
 type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 
-// Definisikan Struktur Data
 interface TopikTA {
   id_topik: number;
   nama_topik: string;

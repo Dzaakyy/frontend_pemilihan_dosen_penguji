@@ -33,7 +33,7 @@
             <tr class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-white/[0.02]">
               <th class="px-5 py-3 text-left w-16"><p class="font-bold text-gray-700 text-theme-xs uppercase tracking-wider">No</p></th>
               <th class="px-5 py-3 text-left w-1/4"><p class="font-bold text-gray-700 text-theme-xs uppercase tracking-wider">Data Mahasiswa</p></th>
-              <th class="px-5 py-3 text-left"><p class="font-bold text-gray-700 text-theme-xs uppercase tracking-wider">Sekretaris (Penguji 3)</p></th>
+              <th class="px-5 py-3 text-left"><p class="font-bold text-gray-700 text-theme-xs uppercase tracking-wider">Sekretaris</p></th>
               <th class="px-5 py-3 text-left"><p class="font-bold text-gray-700 text-theme-xs uppercase tracking-wider">Penguji 1</p></th>
               <th class="px-5 py-3 text-left"><p class="font-bold text-gray-700 text-theme-xs uppercase tracking-wider">Penguji 2</p></th>
               <th v-if="canManage" class="px-5 py-3 text-center w-32"><p class="font-bold text-gray-700 text-theme-xs uppercase tracking-wider">Aksi</p></th>
@@ -151,7 +151,7 @@
           <div v-if="formData.mahasiswa_id && !isLoadingRekomendasi" class="flex flex-col gap-5 border-t border-gray-100 pt-5 dark:border-gray-800">
 
             <div class="relative w-full z-[50]" ref="sekretarisRef">
-              <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Sekretaris (Penguji 3) <span class="text-red-500">*</span></label>
+              <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Sekretaris<span class="text-red-500">*</span></label>
               <button type="button" @click="toggleDropdown('sekretaris')" class="flex items-center justify-between h-11 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20 text-left transition-colors">
                 <span class="truncate pr-4 font-medium">{{ getDosenLabel(formData.sekretaris) || 'Pilih Dosen Sekretaris...' }}</span>
                 <svg :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': openDropdown === 'sekretaris' }]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
