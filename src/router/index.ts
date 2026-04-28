@@ -233,7 +233,7 @@ const router = createRouter({
 export default router
 
 router.beforeEach((to, from, next) => {
-  document.title = `Vue.js ${to.meta.title || 'App'} | System Pemilihan Penguji TA`
+  document.title = `${to.meta.title || 'App'} | System Pemilihan Penguji TA`
 
   const isAuthenticated = localStorage.getItem('isLoggedIn') === 'true'
 
