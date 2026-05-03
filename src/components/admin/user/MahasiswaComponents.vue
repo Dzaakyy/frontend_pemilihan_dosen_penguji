@@ -1,20 +1,35 @@
 <template>
-  <div class="relative w-full">
+  <div class="relative">
     <div v-if="alert.show" class="fixed top-20 right-5 z-[99999] w-full max-w-sm transition-all duration-300 ease-in-out">
       <Alert :variant="alert.type" :title="alert.title" :message="alert.message" />
     </div>
 
-    <div class="flex flex-col gap-5 mb-6 p-5 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 shadow-sm relative z-20">
+    <div class="flex flex-col gap-4 mb-6 p-5 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 shadow-sm relative z-20">
 
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-2 w-full sm:w-auto">
+        <div class="flex items-center gap-2 w-full sm:w-auto" ref="itemsPerPageDropdownRef">
           <span class="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">Tampilkan</span>
-          <select v-model="itemsPerPage" class="h-9 rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:text-white/90 dark:bg-gray-800">
-            <option :value="5">5</option>
-            <option :value="10">10</option>
-            <option :value="20">20</option>
-            <option :value="50">50</option>
-          </select>
+
+          <div class="relative">
+            <button type="button" @click="isItemsPerPageDropdownOpen = !isItemsPerPageDropdownOpen"
+              class="flex items-center justify-between h-9 w-[70px] rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
+              <span class="font-medium">{{ itemsPerPage }}</span>
+              <svg :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': isItemsPerPageDropdownOpen }]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+
+            <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
+              <div v-if="isItemsPerPageDropdownOpen" class="absolute z-[100] w-full min-w-[70px] mt-1.5 top-full bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 overflow-hidden left-0">
+                <ul class="py-1">
+                  <li v-for="val in [5, 10, 20, 50]" :key="val" @click="selectItemsPerPage(val)"
+                    class="px-3 py-2 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-center"
+                    :class="itemsPerPage === val ? 'text-brand-600 dark:text-brand-400 font-bold bg-brand-50 dark:bg-gray-700' : 'text-gray-700 dark:text-gray-300'">
+                    {{ val }}
+                  </li>
+                </ul>
+              </div>
+            </transition>
+          </div>
+
           <span class="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">data</span>
         </div>
 
@@ -26,7 +41,7 @@
 
       <hr class="border-gray-100 dark:border-gray-800" />
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full">
         <div class="relative w-full">
           <input v-model="searchQuery" type="text" placeholder="Cari nama, NIM, judul..."
             class="h-10 w-full rounded-lg border border-gray-300 bg-white pl-10 pr-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
@@ -85,8 +100,7 @@
       </div>
     </div>
 
-    <!-- Tabel Data -->
-    <div class="w-full overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 relative z-10">
+    <div class="w-full overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
       <div class="max-w-full overflow-x-auto custom-scrollbar">
         <table class="w-full min-w-[900px] text-left border-collapse">
           <thead>
@@ -120,11 +134,13 @@
               <td class="px-5 py-4 sm:px-6 align-top">
                 <span class="block text-gray-500 text-theme-sm dark:text-gray-400 mt-1">{{ item.nim }}</span>
               </td>
+
               <td class="px-5 py-4 sm:px-6 align-top">
                 <span class="block text-gray-500 text-theme-sm dark:text-gray-400 whitespace-normal break-words leading-relaxed mt-1">
                   {{ item.judul_ta || '-' }}
                 </span>
               </td>
+
               <td class="px-5 py-4 sm:px-6 align-top">
                 <span class="block text-gray-500 text-theme-sm dark:text-gray-400 whitespace-normal break-words mt-1">{{ item.prodi?.nama_prodi || '-' }}</span>
               </td>
@@ -159,7 +175,6 @@
       @update:currentPage="currentPage = $event"
     />
 
-    <!-- MODAL FORM MAHASISWA -->
     <Modal v-if="isModalOpen" @close="closeModal">
       <div class="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 border dark:border-gray-700 lg:p-11 mx-auto mt-10 shadow-2xl">
         <button @click="closeModal" class="transition-color absolute right-5 top-5 z-[100] flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200">
@@ -178,7 +193,7 @@
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 mb-4">
             <div>
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Nama Lengkap <span class="text-red-500">*</span></label>
-              <input v-model="formData.nama_mahasiswa" type="text" placeholder="Misal: Surya" class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200" required />
+              <input v-model="formData.nama_mahasiswa" type="text" placeholder="Misal: Anton Surya" class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200" required />
             </div>
             <div>
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">NIM <span class="text-red-500">*</span></label>
@@ -210,6 +225,7 @@
               </transition>
             </div>
 
+            <!-- 2. Custom Dropdown Topik TA di Form Modal -->
             <div class="relative w-full" ref="formTopikDropdownRef">
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Topik TA</label>
               <button type="button" @click="isFormTopikDropdownOpen = !isFormTopikDropdownOpen"
@@ -338,12 +354,14 @@ const sortOrder = ref<'asc' | 'desc' | ''>('')
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 
+const itemsPerPageDropdownRef = ref<HTMLElement | null>(null)
 const prodiDropdownRef = ref<HTMLElement | null>(null)
 const topikDropdownRef = ref<HTMLElement | null>(null)
 const sortDropdownRef = ref<HTMLElement | null>(null)
 const formProdiDropdownRef = ref<HTMLElement | null>(null)
 const formTopikDropdownRef = ref<HTMLElement | null>(null)
 
+const isItemsPerPageDropdownOpen = ref(false)
 const isProdiDropdownOpen = ref(false)
 const isTopikDropdownOpen = ref(false)
 const isSortDropdownOpen = ref(false)
@@ -380,6 +398,7 @@ const selectedFormTopikLabel = computed(() => {
   return found ? found.nama_topik : 'Pilih Topik'
 })
 
+const selectItemsPerPage = (val: number) => { itemsPerPage.value = val; isItemsPerPageDropdownOpen.value = false; }
 const selectFilterProdi = (val: number | '') => { filterProdi.value = val; isProdiDropdownOpen.value = false; }
 const selectFilterTopik = (val: number | '') => { filterTopik.value = val; isTopikDropdownOpen.value = false; }
 const selectSortOrder = (val: 'asc' | 'desc' | '') => { sortOrder.value = val; isSortDropdownOpen.value = false; }
@@ -389,6 +408,7 @@ const selectFormTopik = (val: number | '') => { formData.value.topik_id = val; i
 
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as Node
+  if (itemsPerPageDropdownRef.value && !itemsPerPageDropdownRef.value.contains(target)) isItemsPerPageDropdownOpen.value = false
   if (prodiDropdownRef.value && !prodiDropdownRef.value.contains(target)) isProdiDropdownOpen.value = false
   if (topikDropdownRef.value && !topikDropdownRef.value.contains(target)) isTopikDropdownOpen.value = false
   if (sortDropdownRef.value && !sortDropdownRef.value.contains(target)) isSortDropdownOpen.value = false
