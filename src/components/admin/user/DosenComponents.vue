@@ -227,7 +227,7 @@
 
           <div class="mb-6">
             <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Kuota Menguji <span class="text-red-500">*</span></label>
-            <input v-model="formData.kuota_menguji" type="number" placeholder="Misal: 10" class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200" required />
+            <input v-model="formData.kuota_menguji" type="number" placeholder="Misal: 5" class="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200" required />
           </div>
 
           <div>
