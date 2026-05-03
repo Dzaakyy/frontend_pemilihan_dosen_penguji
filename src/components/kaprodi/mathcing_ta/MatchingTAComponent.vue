@@ -7,13 +7,26 @@
     <div class="flex flex-col gap-4 mb-6 p-5 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] shadow-sm">
 
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-2 w-full sm:w-auto">
+        <div class="flex items-center gap-2 w-full sm:w-auto" ref="itemsPerPageDropdownRef">
           <span class="text-sm text-gray-500 dark:text-gray-400">Tampilkan</span>
-          <select v-model="itemsPerPage" class="h-9 rounded-lg border border-gray-300 bg-transparent px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:text-white/90">
-            <option :value="5">5 Mahasiswa</option>
-            <option :value="10">10 Mahasiswa</option>
-            <option :value="20">20 Mahasiswa</option>
-          </select>
+          <div class="relative">
+            <button type="button" @click="isItemsPerPageDropdownOpen = !isItemsPerPageDropdownOpen"
+              class="flex items-center justify-between h-9 min-w-[130px] rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
+              <span class="font-medium">{{ itemsPerPage }} Mahasiswa</span>
+              <svg :class="['w-4 h-4 text-gray-400 transition-transform duration-200 ml-2', { 'rotate-180': isItemsPerPageDropdownOpen }]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
+              <div v-if="isItemsPerPageDropdownOpen" class="absolute z-[100] w-full mt-1.5 top-full bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 overflow-hidden left-0">
+                <ul class="py-1">
+                  <li v-for="val in [5, 10, 20]" :key="val" @click="selectItemsPerPage(val)"
+                    class="px-3 py-2 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 transition-colors flex items-center"
+                    :class="itemsPerPage === val ? 'text-brand-600 dark:text-brand-400 font-bold bg-brand-50 dark:bg-gray-700' : 'text-gray-700 dark:text-gray-300'">
+                    {{ val }} Mahasiswa
+                  </li>
+                </ul>
+              </div>
+            </transition>
+          </div>
           <span class="text-sm text-gray-500 dark:text-gray-400">per halaman</span>
         </div>
 
@@ -111,7 +124,7 @@
                       <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
                         {{ group.judul_ta || 'Belum ada judul / Topik belum diajukan' }}
                       </p>
-                       <span class="block text-xs font-semibold text-gray-400 dark:text-gray-500 mb-1 mt-3 uppercase tracking-wider">Topik Tugas Akhir:</span>
+                        <span class="block text-xs font-semibold text-gray-400 dark:text-gray-500 mb-1 mt-3 uppercase tracking-wider">Topik Tugas Akhir:</span>
                       <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed font-medium">
                         {{ group.nama_topik || 'Belum ada judul / Topik belum diajukan' }}
                       </p>
@@ -243,10 +256,15 @@ const semuaRekomendasi = ref<Rekomendasi[]>([])
 // --- STATE DROPDOWN & FILTER ---
 const isMahasiswaDropdownOpen = ref(false)
 const mahasiswaDropdownRef = ref<HTMLElement | null>(null)
+const isItemsPerPageDropdownOpen = ref(false)
+const itemsPerPageDropdownRef = ref<HTMLElement | null>(null)
+
 const selectedMahasiswaFilter = ref<number | ''>('')
 const searchQuery = ref('')
 const currentPage = ref(1)
 const itemsPerPage = ref(5)
+
+const selectItemsPerPage = (val: number) => { itemsPerPage.value = val; isItemsPerPageDropdownOpen.value = false; }
 
 const userRoles = ref<string[]>([])
 const canManageMatching = computed(() => {
@@ -257,6 +275,9 @@ const canManageMatching = computed(() => {
 const handleDropdownClickOutside = (event: MouseEvent) => {
   if (mahasiswaDropdownRef.value && !mahasiswaDropdownRef.value.contains(event.target as Node)) {
     isMahasiswaDropdownOpen.value = false;
+  }
+  if (itemsPerPageDropdownRef.value && !itemsPerPageDropdownRef.value.contains(event.target as Node)) {
+    isItemsPerPageDropdownOpen.value = false;
   }
 }
 
