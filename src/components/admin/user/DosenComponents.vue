@@ -366,7 +366,7 @@
                   </label>
                   <label class="relative flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 p-3 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800">
                     <input type="checkbox" v-model="formData.role_ids" :value="3" class="h-5 w-5 rounded border-gray-300 text-brand-500 focus:ring-brand-500 dark:bg-gray-900 dark:border-gray-600" />
-                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Dosen Penguji</span>
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Dosen</span>
                   </label>
                 </div>
                 <p v-if="formData.role_ids.length === 0" class="mt-2 text-xs text-red-500">Pilih minimal 1 peran.</p>

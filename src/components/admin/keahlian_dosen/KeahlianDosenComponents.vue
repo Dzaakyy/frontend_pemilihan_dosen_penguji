@@ -6,35 +6,58 @@
 
     <div class="flex flex-col gap-4 mb-6 p-5 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 shadow-sm relative z-20">
 
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2 w-full sm:w-auto" ref="itemsPerPageDropdownRef">
+        <span class="text-sm text-gray-500 dark:text-gray-400">Tampilkan</span>
+        <div class="relative">
+          <button type="button" @click="isItemsPerPageDropdownOpen = !isItemsPerPageDropdownOpen"
+            class="flex items-center justify-between h-9 w-[70px] rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
+            <span class="font-medium">{{ itemsPerPage }}</span>
+            <svg :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': isItemsPerPageDropdownOpen }]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+          <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
+            <div v-if="isItemsPerPageDropdownOpen" class="absolute z-[100] w-full min-w-[70px] mt-1.5 top-full bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 overflow-hidden left-0">
+              <ul class="py-1">
+                <li v-for="val in [5, 10, 20, 50]" :key="val" @click="selectItemsPerPage(val)"
+                  class="px-3 py-2 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-center"
+                  :class="itemsPerPage === val ? 'text-brand-600 dark:text-brand-400 font-bold bg-brand-50 dark:bg-gray-700' : 'text-gray-700 dark:text-gray-300'">
+                  {{ val }}
+                </li>
+              </ul>
+            </div>
+          </transition>
+        </div>
+        <span class="text-sm text-gray-500 dark:text-gray-400">data</span>
+      </div>
 
-        <div class="flex items-center gap-2 w-full sm:w-auto" ref="itemsPerPageDropdownRef">
-          <span class="text-sm text-gray-500 dark:text-gray-400">Tampilkan</span>
+      <hr class="border-gray-100 dark:border-gray-800" />
 
-          <div class="relative">
-            <button type="button" @click="isItemsPerPageDropdownOpen = !isItemsPerPageDropdownOpen"
-              class="flex items-center justify-between h-9 w-[70px] rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
-              <span class="font-medium">{{ itemsPerPage }}</span>
-              <svg :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': isItemsPerPageDropdownOpen }]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+
+        <div class="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-3/5">
+          <div class="relative w-full sm:w-1/2">
+            <input v-model="searchKeahlianQuery" type="text" placeholder="Cari nama dosen..."
+              class="h-10 w-full rounded-lg border border-gray-300 bg-white pl-10 pr-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          </div>
+
+          <div class="relative w-full sm:w-1/2" ref="grupRisetDropdownRef">
+            <button type="button" @click="isGrupRisetDropdownOpen = !isGrupRisetDropdownOpen"
+              class="flex items-center justify-between h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
+              <span class="truncate pr-4 font-medium">{{ selectedGrupRisetLabel }}</span>
+              <svg :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': isGrupRisetDropdownOpen }]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
-
             <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
-              <div v-if="isItemsPerPageDropdownOpen" class="absolute z-[100] w-full min-w-[70px] mt-1.5 top-full bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 overflow-hidden left-0">
-                <ul class="py-1">
-                  <li v-for="val in [5, 10, 20, 50]" :key="val" @click="selectItemsPerPage(val)"
-                    class="px-3 py-2 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-center"
-                    :class="itemsPerPage === val ? 'text-brand-600 dark:text-brand-400 font-bold bg-brand-50 dark:bg-gray-700' : 'text-gray-700 dark:text-gray-300'">
-                    {{ val }}
-                  </li>
+              <div v-if="isGrupRisetDropdownOpen" class="absolute z-[100] w-full mt-1.5 top-full bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
+                <ul class="max-h-60 overflow-y-auto custom-scrollbar py-1">
+                  <li @click="selectFilterGrupRiset('')" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors border-b border-gray-100 dark:border-gray-700 font-medium">Semua Grup Riset</li>
+                  <li v-for="grup in grupRisetList" :key="grup" @click="selectFilterGrupRiset(grup)" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors border-b border-gray-50 last:border-0 dark:border-gray-700/50">{{ grup }}</li>
                 </ul>
               </div>
             </transition>
           </div>
-
-          <span class="text-sm text-gray-500 dark:text-gray-400">data</span>
         </div>
 
-        <div class="flex items-center gap-3 w-full sm:w-auto">
+        <div class="flex items-center gap-3 w-full lg:w-auto sm:justify-end">
           <button v-if="isAdmin" @click="syncAllScholar" :disabled="isSyncingAll"
             class="flex-1 sm:flex-none flex items-center justify-center px-4 h-10 text-sm font-medium text-brand-600 transition rounded-lg bg-brand-50 border border-brand-200 hover:bg-brand-100 shadow-theme-xs disabled:opacity-50 dark:bg-brand-900/20 dark:border-brand-800/50 dark:text-brand-400 dark:hover:bg-brand-900/40">
             <svg v-if="!isSyncingAll" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
@@ -48,54 +71,10 @@
             <span class="whitespace-nowrap">Tambah Keahlian</span>
           </button>
         </div>
-      </div>
 
-      <hr class="border-gray-100 dark:border-gray-800" />
-
-      <div class="flex flex-col lg:flex-row items-center gap-4">
-        <div class="relative w-full lg:w-1/3" ref="grupRisetDropdownRef">
-          <button type="button" @click="isGrupRisetDropdownOpen = !isGrupRisetDropdownOpen"
-            class="flex items-center justify-between h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
-            <span class="truncate pr-4 font-medium">{{ selectedGrupRisetLabel }}</span>
-            <svg :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': isGrupRisetDropdownOpen }]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-          </button>
-
-          <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
-            <div v-if="isGrupRisetDropdownOpen" class="absolute z-[100] w-full mt-1.5 top-full bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
-              <ul class="max-h-60 overflow-y-auto custom-scrollbar py-1">
-                <li @click="selectFilterGrupRiset('')" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors border-b border-gray-100 dark:border-gray-700 font-medium">Semua Grup Riset</li>
-                <li v-for="grup in grupRisetList" :key="grup" @click="selectFilterGrupRiset(grup)" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors border-b border-gray-50 last:border-0 dark:border-gray-700/50">{{ grup }}</li>
-              </ul>
-            </div>
-          </transition>
-        </div>
-
-        <div class="relative w-full lg:w-1/3" ref="topikFilterDropdownRef">
-          <button type="button" @click="isTopikFilterDropdownOpen = !isTopikFilterDropdownOpen"
-            class="flex items-center justify-between h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
-            <span class="truncate pr-4 font-medium">{{ selectedTopikFilterLabel }}</span>
-            <svg :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': isTopikFilterDropdownOpen }]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-          </button>
-
-          <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
-            <div v-if="isTopikFilterDropdownOpen" class="absolute z-[100] w-full mt-1.5 top-full bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
-              <ul class="max-h-60 overflow-y-auto custom-scrollbar py-1">
-                <li @click="selectFilterTopik('')" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors border-b border-gray-100 dark:border-gray-700 font-medium">Semua Topik Keahlian</li>
-                <li v-for="topik in topikList" :key="topik.id_topik" @click="selectFilterTopik(topik.id_topik)" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors border-b border-gray-50 last:border-0 dark:border-gray-700/50">{{ topik.nama_topik }}</li>
-              </ul>
-            </div>
-          </transition>
-        </div>
-
-        <div class="relative w-full lg:w-1/3">
-          <input v-model="searchKeahlianQuery" type="text" placeholder="Cari nama dosen..."
-            class="h-10 w-full rounded-lg border border-gray-300 bg-white pl-10 pr-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
-          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        </div>
       </div>
     </div>
 
-    <!-- Tabel Data -->
     <div class="rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 shadow-sm relative z-10">
       <div class="w-full overflow-visible">
         <table class="w-full text-left border-collapse">
@@ -103,7 +82,7 @@
             <tr class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-white/[0.02]">
               <th class="px-5 py-3 w-16 sm:px-6 rounded-tl-xl"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">No</p></th>
               <th class="px-5 py-3 sm:px-6 w-1/4"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Nama Dosen & Grup</p></th>
-              <th class="px-5 py-3 sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Topik Keahlian & Bukti Scholar</p></th>
+              <th class="px-5 py-3 sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Sub-Bidang Keahlian & Bukti Scholar</p></th>
               <th v-if="isAdmin" class="px-5 py-3 text-center w-52 sm:px-6 rounded-tr-xl"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Aksi</p></th>
             </tr>
           </thead>
@@ -131,14 +110,13 @@
                 <span class="block text-[11px] text-gray-500 dark:text-gray-400 mt-1">{{ group.grup_riset || 'Tidak Ada Grup' }}</span>
               </td>
 
-              <!-- BAGIAN TOPIK KEAHLIAN & TOOLTIP -->
               <td class="px-5 py-4 sm:px-6 align-middle">
                 <div class="flex flex-wrap gap-2">
                   <div v-for="keahlian in group.keahlian" :key="keahlian.id_keahlian" class="group relative inline-flex items-center justify-center">
 
                     <span class="inline-flex items-center gap-1.5 justify-center rounded-md bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 border border-blue-200 cursor-help transition-all hover:bg-blue-100 hover:border-blue-300 shadow-sm relative z-10 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 dark:hover:bg-blue-800/50">
                       <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477-4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                      {{ keahlian.topik_ta?.nama_topik || '-' }}
+                      {{ keahlian.bidang_keahlian || '-' }}
                     </span>
 
                     <div v-if="keahlian.keyword_jurnal"
@@ -203,7 +181,6 @@
     <Pagination v-if="!isLoading && totalItems > 0" :current-page="currentPage" :total-items="totalItems"
       :items-per-page="itemsPerPage" @update:currentPage="currentPage = $event" class="mt-4" />
 
-    <!-- MODAL TAMBAH/EDIT -->
     <Modal v-if="isModalOpen" @close="closeModal">
       <div class="relative w-full max-w-[600px] rounded-3xl bg-white p-4 dark:bg-gray-900 border dark:border-gray-700 lg:p-11 mx-auto mt-10 shadow-2xl">
         <button @click="closeModal" class="transition-color absolute right-5 top-5 z-[100] flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200">
@@ -229,17 +206,17 @@
           </div>
 
           <div class="mb-6 relative z-[50]" ref="topikDropdownContainer">
-            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Pilih Topik Keahlian (Bisa Lebih Dari Satu) <span class="text-red-500">*</span></label>
+            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Pilih Sub-Bidang Keahlian <span class="text-red-500">*</span></label>
 
             <div @click="showTopikDropdown = !showTopikDropdown"
                  class="min-h-[44px] w-full rounded-lg border border-gray-300 bg-white px-2 pr-10 py-1.5 text-sm text-gray-800 shadow-theme-xs cursor-pointer flex flex-wrap gap-2 items-center relative transition-colors focus-within:border-brand-300 dark:bg-gray-800 dark:border-gray-700">
 
-              <span v-if="formData.topik_ids.length === 0" class="text-gray-400 px-2 py-1">Pilih satu atau beberapa topik...</span>
+              <span v-if="formData.bidang_keahlian_list.length === 0" class="text-gray-400 px-2 py-1">Pilih sub-bidang keahlian...</span>
 
-              <span v-for="id in formData.topik_ids" :key="id"
+              <span v-for="kbk in formData.bidang_keahlian_list" :key="kbk"
                     class="inline-flex items-center gap-1.5 rounded-md bg-brand-50 pl-2.5 py-0.5 text-xs font-medium text-brand-700 border border-brand-200 dark:bg-brand-900/30 dark:text-brand-300 dark:border-brand-800">
-                {{ getTopikName(id) }}
-                <button @click.stop="toggleTopik(id)" type="button" class="p-1 hover:bg-brand-200 hover:text-red-500 rounded-r-md transition-colors text-brand-500 dark:hover:bg-brand-800 dark:text-brand-400 focus:outline-none">
+                {{ kbk }}
+                <button @click.stop="toggleKbk(kbk)" type="button" class="p-1 hover:bg-brand-200 hover:text-red-500 rounded-r-md transition-colors text-brand-500 dark:hover:bg-brand-800 dark:text-brand-400 focus:outline-none">
                   <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
               </span>
@@ -251,10 +228,15 @@
 
             <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
               <div v-if="showTopikDropdown" class="absolute z-[100] w-full mt-1 max-h-56 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 custom-scrollbar">
-                <div v-for="topik in topikList" :key="topik.id_topik" @click="toggleTopik(topik.id_topik)"
+
+                <div v-if="availableKbkList.length === 0" class="px-4 py-3 text-sm text-gray-500 italic text-center">
+                  Pilih dosen terlebih dahulu untuk melihat bidang keahliannya.
+                </div>
+
+                <div v-else v-for="kbk in availableKbkList" :key="kbk" @click="toggleKbk(kbk)"
                      class="px-4 py-2.5 cursor-pointer hover:bg-brand-50 text-sm text-gray-800 border-b border-gray-100 last:border-0 flex items-center justify-between dark:hover:bg-gray-700 dark:text-gray-200 dark:border-gray-700">
-                  <span>{{ topik.nama_topik }}</span>
-                  <svg v-if="formData.topik_ids.includes(topik.id_topik)" class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                  <span>{{ kbk }}</span>
+                  <svg v-if="formData.bidang_keahlian_list.includes(kbk)" class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                 </div>
               </div>
             </transition>
@@ -262,13 +244,12 @@
 
           <div class="flex items-center gap-3 lg:justify-end mt-4">
             <button @click="closeModal" type="button" class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 sm:w-auto dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">Batal</button>
-            <button type="submit" :disabled="isSaving || !formData.dosen_id || formData.topik_ids.length === 0" class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 sm:w-auto dark:bg-brand-600 dark:hover:bg-brand-500">{{ isSaving ? 'Menyimpan...' : 'Simpan' }}</button>
+            <button type="submit" :disabled="isSaving || !formData.dosen_id || formData.bidang_keahlian_list.length === 0" class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 sm:w-auto dark:bg-brand-600 dark:hover:bg-brand-500">{{ isSaving ? 'Menyimpan...' : 'Simpan' }}</button>
           </div>
         </form>
       </div>
     </Modal>
 
-    <!-- Modal Hapus -->
     <Modal v-if="isDeleteModalOpen" @close="closeDeleteModal">
       <div class="w-full max-w-[400px] rounded-3xl bg-white p-6 dark:bg-gray-900 border dark:border-gray-700 text-center mx-auto mt-20 z-50 shadow-xl">
         <h4 class="mb-4 text-xl font-semibold text-gray-800 dark:text-white/90">Konfirmasi Hapus</h4>
@@ -291,8 +272,7 @@ import Pagination from '@/components/pagination/Pagination.vue'
 type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 
 interface Dosen { id_dosen: number; nama_dosen: string; url_scholar?: string; grup_riset?: string; }
-interface Topik { id_topik: number; nama_topik: string; }
-interface Keahlian { id_keahlian: number; dosen_id: number; topik_id: number; keyword_jurnal?: string; dosen?: Dosen; topik_ta?: Topik; }
+interface Keahlian { id_keahlian: number; dosen_id: number; bidang_keahlian: string; keyword_jurnal?: string; dosen?: Dosen; }
 
 interface GroupedKeahlian {
   dosen_id: number;
@@ -313,14 +293,21 @@ const isAdmin = computed(() => userRoles.value.some(role => role.toLowerCase() =
 
 const keahlianList = ref<Keahlian[]>([])
 const dosenList = ref<Dosen[]>([])
-const topikList = ref<Topik[]>([])
 const isLoading = ref(true)
+
+// DAFTAR KEAHLIAN BERSARANG UNTUK FRONTEND (Harus sama dengan Backend)
+const DICTIONARY_FRONTEND: Record<string, string[]> = {
+    "Center of Artificial Intelligence": ["Machine Learning", "Data Science & Data Mining", "Jaringan Saraf Tiruan", "Sistem Pakar & Fuzzy Logic", "Computer Vision & NLP"],
+    "Center of Design, Animation and Multimedia": ["UI/UX Design", "HCI & Usability", "Desain Grafis & Animasi", "AR / VR & Gamifikasi"],
+    "Center of Programming": ["Pemrograman Web", "Pemrograman Mobile", "Rekayasa Perangkat Lunak", "Pengembangan API & Backend"],
+    "Center of Software Technology and Management": ["Manajemen Proyek IT", "Sistem Pendukung Keputusan", "Tata Kelola & Audit IT", "Evaluasi & Penerimaan Sistem"],
+    "Center of Network, Security, and Infrastructure": ["Jaringan Komputer", "Infrastruktur & Cloud", "Keamanan Siber & Kriptografi", "Internet of Things (IoT)"]
+};
 
 const isSyncingAll = ref(false)
 const isSyncingId = ref<number | null>(null)
 
 const searchKeahlianQuery = ref('')
-const filterTopik = ref<number | ''>('')
 const filterGrupRiset = ref('')
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
@@ -331,9 +318,6 @@ const selectItemsPerPage = (val: number) => {
   itemsPerPage.value = val;
   isItemsPerPageDropdownOpen.value = false;
 }
-
-const isTopikFilterDropdownOpen = ref(false)
-const topikFilterDropdownRef = ref<HTMLElement | null>(null)
 
 const isGrupRisetDropdownOpen = ref(false)
 const grupRisetDropdownRef = ref<HTMLElement | null>(null)
@@ -353,17 +337,6 @@ const selectedGrupRisetLabel = computed(() => {
 const selectFilterGrupRiset = (val: string) => {
   filterGrupRiset.value = val;
   isGrupRisetDropdownOpen.value = false;
-}
-
-const selectedTopikFilterLabel = computed(() => {
-  if (filterTopik.value === '') return 'Semua Topik Keahlian';
-  const found = topikList.value.find(t => t.id_topik === filterTopik.value);
-  return found ? found.nama_topik : 'Semua Topik Keahlian';
-})
-
-const selectFilterTopik = (val: number | '') => {
-  filterTopik.value = val;
-  isTopikFilterDropdownOpen.value = false;
 }
 
 const groupedKeahlian = computed(() => {
@@ -390,9 +363,6 @@ const filteredGroupedKeahlian = computed(() => {
   if (filterGrupRiset.value !== '') {
     result = result.filter(group => group.grup_riset === filterGrupRiset.value);
   }
-  if (filterTopik.value !== '') {
-    result = result.filter(group => group.keahlian.some(k => k.topik_id === filterTopik.value));
-  }
   if (searchKeahlianQuery.value) {
     const q = searchKeahlianQuery.value.toLowerCase();
     result = result.filter(group => group.nama_dosen.toLowerCase().includes(q));
@@ -409,7 +379,7 @@ const paginatedGroups = computed(() => {
   return filteredGroupedKeahlian.value.slice(start, end)
 })
 
-watch([searchKeahlianQuery, filterTopik, filterGrupRiset, itemsPerPage], () => {
+watch([searchKeahlianQuery, filterGrupRiset, itemsPerPage], () => {
   currentPage.value = 1
 })
 
@@ -434,16 +404,27 @@ const isModalOpen = ref(false)
 const isEditing = ref(false)
 const isSaving = ref(false)
 
-const formData = ref({ dosen_id: '' as number | '', topik_ids: [] as number[] })
+const formData = ref({ dosen_id: '' as number | '', bidang_keahlian_list: [] as string[] })
 const dosenSearchTerm = ref('')
 const showDosenDropdown = ref(false)
 const showTopikDropdown = ref(false)
+
+// KEAHLIAN YANG TERSEDIA BERDASARKAN DOSEN YANG DIPILIH
+const availableKbkList = computed(() => {
+  if (!formData.value.dosen_id) return [];
+
+  // Cari dosen yang dipilih
+  const selectedDosen = dosenList.value.find(d => d.id_dosen === formData.value.dosen_id);
+  if (!selectedDosen || !selectedDosen.grup_riset) return [];
+
+  // Kembalikan array sub-keahlian berdasarkan grup risetnya
+  return DICTIONARY_FRONTEND[selectedDosen.grup_riset] || [];
+})
 
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as Node
   if (dosenDropdownContainer.value && !dosenDropdownContainer.value.contains(target)) showDosenDropdown.value = false
   if (topikDropdownContainer.value && !topikDropdownContainer.value.contains(target)) showTopikDropdown.value = false
-  if (topikFilterDropdownRef.value && !topikFilterDropdownRef.value.contains(target)) isTopikFilterDropdownOpen.value = false
   if (grupRisetDropdownRef.value && !grupRisetDropdownRef.value.contains(target)) isGrupRisetDropdownOpen.value = false
   if (itemsPerPageDropdownRef.value && !itemsPerPageDropdownRef.value.contains(target)) isItemsPerPageDropdownOpen.value = false
 }
@@ -454,7 +435,6 @@ onMounted(() => {
   document.addEventListener('mousedown', handleClickOutside)
   fetchKeahlian()
   fetchDosenList()
-  fetchTopikList()
 })
 
 onBeforeUnmount(() => { document.removeEventListener('mousedown', handleClickOutside) })
@@ -471,9 +451,14 @@ const filteredDosenOptions = computed(() => {
   return availableDosen;
 })
 
-const selectDosen = (dosen: Dosen) => { formData.value.dosen_id = dosen.id_dosen; dosenSearchTerm.value = dosen.nama_dosen; showDosenDropdown.value = false }
-const toggleTopik = (id: number) => { const index = formData.value.topik_ids.indexOf(id); if (index === -1) formData.value.topik_ids.push(id); else formData.value.topik_ids.splice(index, 1) }
-const getTopikName = (id: number) => { const topik = topikList.value.find(t => t.id_topik === id); return topik ? topik.nama_topik : '' }
+const selectDosen = (dosen: Dosen) => {
+  formData.value.dosen_id = dosen.id_dosen;
+  dosenSearchTerm.value = dosen.nama_dosen;
+  // Reset array keahlian jika dosen ganti (supaya tidak salah grup)
+  if (!isEditing.value) formData.value.bidang_keahlian_list = [];
+  showDosenDropdown.value = false;
+}
+const toggleKbk = (kbk: string) => { const index = formData.value.bidang_keahlian_list.indexOf(kbk); if (index === -1) formData.value.bidang_keahlian_list.push(kbk); else formData.value.bidang_keahlian_list.splice(index, 1) }
 
 const isDeleteModalOpen = ref(false)
 const itemToDeleteGroup = ref<GroupedKeahlian | null>(null)
@@ -494,14 +479,6 @@ const fetchDosenList = async () => {
     const result = await response.json()
     if (result.success) dosenList.value = result.data.rows || result.data
   } catch (error) { console.error("Gagal fetch dosen:", error) }
-}
-
-const fetchTopikList = async () => {
-  try {
-    const response = await fetch('http://localhost:3000/api/topik-ta', { method: 'GET', credentials: 'include' })
-    const result = await response.json()
-    if (result.success) topikList.value = result.data
-  } catch (error) { console.error("Gagal fetch topik:", error) }
 }
 
 const syncOneScholar = async (id: number) => {
@@ -557,17 +534,25 @@ const syncAllScholar = async () => {
   }
 }
 
-const openAddModal = () => { isEditing.value = false; formData.value = { dosen_id: '', topik_ids: [] }; dosenSearchTerm.value = ''; showDosenDropdown.value = false; showTopikDropdown.value = false; isModalOpen.value = true }
-const openEditModal = (group: GroupedKeahlian) => { isEditing.value = true; formData.value = { dosen_id: group.dosen_id, topik_ids: group.keahlian.map(k => k.topik_id) }; dosenSearchTerm.value = group.nama_dosen; showDosenDropdown.value = false; showTopikDropdown.value = false; isModalOpen.value = true }
+const openAddModal = () => { isEditing.value = false; formData.value = { dosen_id: '', bidang_keahlian_list: [] }; dosenSearchTerm.value = ''; showDosenDropdown.value = false; showTopikDropdown.value = false; isModalOpen.value = true }
+const openEditModal = (group: GroupedKeahlian) => { isEditing.value = true; formData.value = { dosen_id: group.dosen_id, bidang_keahlian_list: group.keahlian.map(k => k.bidang_keahlian) }; dosenSearchTerm.value = group.nama_dosen; showDosenDropdown.value = false; showTopikDropdown.value = false; isModalOpen.value = true }
 const closeModal = () => { isModalOpen.value = false; showDosenDropdown.value = false; showTopikDropdown.value = false }
 
 const submitForm = async () => {
-  if (!formData.value.dosen_id || formData.value.topik_ids.length === 0) { showAlert('warning', 'Peringatan', 'Silakan pilih dosen dan minimal 1 topik.'); return; }
+  if (!formData.value.dosen_id || formData.value.bidang_keahlian_list.length === 0) { showAlert('warning', 'Peringatan', 'Silakan pilih dosen dan minimal 1 bidang keahlian.'); return; }
   isSaving.value = true
   try {
     const url = isEditing.value ? `http://localhost:3000/api/keahlian-dosen/${formData.value.dosen_id}` : 'http://localhost:3000/api/keahlian-dosen'
     const method = isEditing.value ? 'PUT' : 'POST'
-    const response = await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify({ dosen_id: Number(formData.value.dosen_id), topik_ids: formData.value.topik_ids }) })
+    const response = await fetch(url, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        dosen_id: Number(formData.value.dosen_id),
+        bidang_keahlian_list: formData.value.bidang_keahlian_list
+      })
+    })
     const result = await response.json()
     if (response.ok) { closeModal(); fetchKeahlian(); showAlert('success', 'Berhasil!', `Keahlian Dosen berhasil ${isEditing.value ? 'diperbarui' : 'ditambahkan'}.`) }
     else { showAlert('error', 'Gagal!', result.message || 'Terdapat kesalahan saat menyimpan data.') }
@@ -589,59 +574,3 @@ const confirmDelete = async () => {
   finally { isDeleting.value = false }
 }
 </script>
-
-<style scoped>
-.animate-fade-in-down {
-  animation: fadeInDown 0.2s ease-out forwards;
-}
-
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.2s ease-out forwards;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #4b5563;
-}
-
-.custom-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: #94a3b8;
-}
-</style>
