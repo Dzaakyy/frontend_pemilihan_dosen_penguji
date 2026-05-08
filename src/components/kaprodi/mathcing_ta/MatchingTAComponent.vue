@@ -29,17 +29,22 @@
           <span class="text-sm text-gray-500 dark:text-gray-400">per halaman</span>
         </div>
 
-        <button v-if="canManageMatching" @click="openGenerateModal" class="flex items-center justify-center px-5 h-10 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600 w-full sm:w-auto shadow-theme-xs">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
-          </svg>
-          Jalankan Matching PSO Massal
-        </button>
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <button v-if="canManageMatching && semuaRekomendasi.length > 0" @click="isDeleteAllModalOpen = true" class="flex-1 sm:flex-none flex items-center justify-center px-4 h-10 text-sm font-medium text-red-600 transition rounded-lg bg-red-50 border border-red-200 hover:bg-red-100 shadow-theme-xs dark:bg-red-900/20 dark:border-red-800/50 dark:text-red-400 dark:hover:bg-red-900/40">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            Hapus Semua
+          </button>
+
+          <button v-if="canManageMatching" @click="openGenerateModal" class="flex-1 sm:flex-none flex items-center justify-center px-5 h-10 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600 shadow-theme-xs">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+            Jalankan Matching PSO Massal
+          </button>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
         <div class="relative">
-          <input v-model="searchQuery" type="text" placeholder="Cari Nama Mahasiswa, NIM, atau Judul TA..."
+          <input v-model="searchQuery" type="text" placeholder="Cari Mahasiswa atau Dosen Penguji..."
             class="h-10 w-full rounded-lg border border-gray-300 bg-white pl-10 pr-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         </div>
@@ -166,7 +171,7 @@
 
                 <td class="px-5 py-3 text-center align-middle">
                   <span class="font-mono text-gray-800 dark:text-gray-300 font-bold text-sm bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md shadow-sm border border-gray-200 dark:border-gray-700">
-                    {{ item.nilai_fitness }}
+                    {{ item.nilai_fitness }}%
                   </span>
                 </td>
               </tr>
@@ -186,6 +191,17 @@
       class="mt-4"
     />
 
+    <Modal v-if="isDeleteAllModalOpen" @close="isDeleteAllModalOpen = false">
+      <div class="w-full max-w-[400px] rounded-3xl bg-white p-6 dark:bg-gray-900 border dark:border-gray-700 text-center mx-auto mt-20 z-50 shadow-xl">
+        <h4 class="mb-4 text-xl font-semibold text-gray-800 dark:text-white/90">Konfirmasi Hapus Semua</h4>
+        <p class="mb-8 text-sm text-gray-500 dark:text-gray-400">Apakah Anda yakin ingin menghapus <strong>seluruh data hasil rekomendasi (Matching TA)</strong> dari sistem? Tindakan ini tidak dapat dibatalkan.</p>
+        <div class="flex items-center justify-center gap-3">
+          <button @click="isDeleteAllModalOpen = false" class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 sm:w-auto dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">Batal</button>
+          <button @click="confirmDeleteAll" :disabled="isDeleting" class="flex w-full justify-center rounded-lg bg-red-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-600 disabled:opacity-50 sm:w-auto">{{ isDeleting ? 'Menghapus...' : 'Ya, Hapus Semua' }}</button>
+        </div>
+      </div>
+    </Modal>
+
     <Modal v-if="isGenerateModalOpen" @close="closeGenerateModal">
       <div class="relative w-full max-w-[500px] rounded-3xl bg-white p-6 dark:bg-gray-900 mx-auto mt-20 shadow-2xl">
         <div class="text-center mb-6">
@@ -196,7 +212,7 @@
           </div>
           <h4 class="text-2xl font-bold text-gray-800 dark:text-white/90">Automasi PSO Massal</h4>
           <p class="text-sm text-gray-500 mt-3 leading-relaxed">
-            Sistem akan mendeteksi seluruh mahasiswa yang belum memiliki dosen penguji. Tetapkan hyperparameter di bawah ini untuk mencari kombinasi partikel terbaik.
+            Sistem akan mendeteksi seluruh mahasiswa yang belum di-matching. Tetapkan hyperparameter di bawah ini untuk mencari kombinasi partikel terbaik.
           </p>
         </div>
 
@@ -262,7 +278,7 @@
               <span class="block text-[11px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Rekomendasi Dosen (Rank #{{ selectedRekomendasiDetail?.rank }})</span>
               <p class="font-bold text-gray-800 dark:text-white/90">{{ selectedRekomendasiDetail?.dosen?.nama_dosen }}</p>
               <div class="flex items-center gap-2 mt-1">
-                <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">Skor Total: {{ selectedRekomendasiDetail?.nilai_fitness }}</span>
+                <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">Skor Total: {{ selectedRekomendasiDetail?.nilai_fitness }}%</span>
                 <span class="text-xs font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded">Ditemukan di Iterasi: {{ selectedRekomendasiDetail?.iterasi_pso }}</span>
               </div>
             </div>
@@ -277,17 +293,17 @@
             <div class="space-y-4">
               <div class="flex flex-col bg-white dark:bg-gray-800 p-3 rounded border border-gray-100 dark:border-gray-700">
                 <div class="flex justify-between items-center mb-2">
-                  <span class="text-xs font-bold text-gray-500 dark:text-gray-400">1. Kemiripan Teks Judul & Jurnal Dosen (Max 60 Poin)</span>
+                  <span class="text-xs font-bold text-gray-500 dark:text-gray-400">1. Kemiripan Teks Mahasiswa & Keahlian Dosen (Max 60 Poin)</span>
                   <span class="font-bold text-blue-600">+ {{ parsedDetailKriteria.poin_teks }} Poin</span>
                 </div>
 
                 <div class="bg-gray-50 dark:bg-gray-900 p-2 rounded text-xs border border-gray-100 dark:border-gray-700">
-                  <p class="text-gray-600 dark:text-gray-400 mb-1"><strong>Keahlian Dosen Tercatat:</strong></p>
+                  <p class="text-gray-600 dark:text-gray-400 mb-1"><strong>Bidang Keahlian Dosen Tercatat:</strong></p>
                   <p class="text-gray-800 dark:text-gray-300 italic mb-2 break-words">
                     {{ parsedDetailKriteria.keahlian_dosen && parsedDetailKriteria.keahlian_dosen.length > 0 ? parsedDetailKriteria.keahlian_dosen.join(', ') : 'Belum ada data keahlian.' }}
                   </p>
 
-                  <p class="text-gray-600 dark:text-gray-400 mb-1"><strong>Kata yang Cocok dengan Judul:</strong></p>
+                  <p class="text-gray-600 dark:text-gray-400 mb-1"><strong>Kata yang Cocok (Matched Keywords):</strong></p>
                   <div class="flex flex-wrap gap-1">
                     <span v-if="parsedDetailKriteria.matched_words.length === 0" class="text-red-500 font-medium">Tidak ada kata kunci yang cocok.</span>
                     <span v-else v-for="kata in parsedDetailKriteria.matched_words" :key="kata" class="font-bold bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
@@ -301,6 +317,16 @@
                 <span class="text-xs font-bold text-gray-500 dark:text-gray-400">2. Ketersediaan Kuota Dosen (Max 40 Poin)</span>
                 <span class="font-bold text-orange-500 mt-1 sm:mt-0">+ {{ parsedDetailKriteria.poin_kuota }} Poin</span>
               </div>
+
+              <div class="flex flex-col sm:flex-row justify-between sm:items-center bg-red-50 dark:bg-red-900/20 p-3 rounded border border-red-100 dark:border-red-800">
+                <span class="text-xs font-bold text-red-600 dark:text-red-400 flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                  Angka Pelanggaran Kendala (Constraint Violation)
+                </span>
+                <span class="font-bold text-red-600 dark:text-red-400 mt-1 sm:mt-0">{{ parsedDetailKriteria.angka_pelanggaran }} Poin</span>
+              </div>
+              <p class="text-[10px] text-gray-400 italic text-right mt-1">*Semakin kecil pelanggaran, semakin baik (100 - Total Fitness)</p>
+
             </div>
           </div>
 
@@ -334,7 +360,7 @@ type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 interface TopikTA { nama_topik: string; }
 interface Mahasiswa { id_mahasiswa: number; nama_mahasiswa: string; judul_ta: string; nim: string; topik_ta?: TopikTA }
 interface Dosen { id_dosen: number; nama_dosen: string; nidn: string; kuota_menguji: number; }
-interface DetailKriteria { keahlian_dosen: string[]; matched_words: string[]; poin_teks: number; poin_kuota: number; }
+interface DetailKriteria { keahlian_dosen: string[]; matched_words: string[]; poin_teks: number; poin_kuota: number; angka_pelanggaran: number; }
 interface Rekomendasi {
   id_rekomendasi: number;
   mahasiswa_id: number;
@@ -365,16 +391,11 @@ const showAlert = (type: AlertVariant, title: string, message: string) => {
 
 const isLoading = ref(false)
 const isGenerating = ref(false)
+const isDeleting = ref(false)
 const isGenerateModalOpen = ref(false)
+const isDeleteAllModalOpen = ref(false)
 
-// State khusus menampung variable parameter PSO yang akan dikirim ke Backend
-const psoParams = ref({
-  maxIter: 50,
-  numParticles: 30,
-  w: 0.7,
-  c1: 1.5,
-  c2: 1.5
-})
+const psoParams = ref({ maxIter: 50, numParticles: 30, w: 0.7, c1: 1.5, c2: 1.5 })
 
 const mahasiswaList = ref<Mahasiswa[]>([])
 const semuaRekomendasi = ref<Rekomendasi[]>([])
@@ -397,12 +418,8 @@ const canManageMatching = computed(() => {
 })
 
 const handleDropdownClickOutside = (event: MouseEvent) => {
-  if (mahasiswaDropdownRef.value && !mahasiswaDropdownRef.value.contains(event.target as Node)) {
-    isMahasiswaDropdownOpen.value = false;
-  }
-  if (itemsPerPageDropdownRef.value && !itemsPerPageDropdownRef.value.contains(event.target as Node)) {
-    isItemsPerPageDropdownOpen.value = false;
-  }
+  if (mahasiswaDropdownRef.value && !mahasiswaDropdownRef.value.contains(event.target as Node)) isMahasiswaDropdownOpen.value = false;
+  if (itemsPerPageDropdownRef.value && !itemsPerPageDropdownRef.value.contains(event.target as Node)) isItemsPerPageDropdownOpen.value = false;
 }
 
 const selectFilterMahasiswa = (val: number | '') => {
@@ -418,10 +435,8 @@ const selectedMahasiswaLabel = computed(() => {
 
 const groupedRekomendasi = computed(() => {
   const groups: Record<number, GroupedMahasiswa> = {};
-
   semuaRekomendasi.value.forEach(rek => {
     if (!rek.mahasiswa) return;
-
     if (!groups[rek.mahasiswa_id]) {
       groups[rek.mahasiswa_id] = {
         mahasiswa_id: rek.mahasiswa_id,
@@ -434,7 +449,6 @@ const groupedRekomendasi = computed(() => {
     }
     groups[rek.mahasiswa_id].rekomendasi.push(rek);
   });
-
   return Object.values(groups);
 })
 
@@ -442,18 +456,17 @@ const filteredGroups = computed(() => {
   let result = groupedRekomendasi.value;
 
   if (selectedMahasiswaFilter.value !== '') {
-    result = result.filter(group => group.mahasiswa_id === selectedMahasiswaFilter.value);
+      result = result.filter(group => group.mahasiswa_id === selectedMahasiswaFilter.value);
   }
 
   if (searchQuery.value) {
     const q = searchQuery.value.toLowerCase();
-    result = result.filter(group =>
-      group.nama_mahasiswa.toLowerCase().includes(q) ||
-      group.nim.toLowerCase().includes(q) ||
-      (group.judul_ta && group.judul_ta.toLowerCase().includes(q))
-    );
+    result = result.filter(group => {
+      const isMhsMatch = group.nama_mahasiswa.toLowerCase().includes(q) || group.nim.toLowerCase().includes(q) || (group.judul_ta && group.judul_ta.toLowerCase().includes(q));
+      const isDosenMatch = group.rekomendasi.some(r => r.dosen && r.dosen.nama_dosen.toLowerCase().includes(q));
+      return isMhsMatch || isDosenMatch;
+    });
   }
-
   return result;
 })
 
@@ -465,38 +478,26 @@ const paginatedGroups = computed(() => {
   return filteredGroups.value.slice(start, end)
 })
 
-watch([searchQuery, selectedMahasiswaFilter, itemsPerPage], () => {
-  currentPage.value = 1
-})
+watch([searchQuery, selectedMahasiswaFilter, itemsPerPage], () => { currentPage.value = 1 })
 
 const fetchMahasiswaList = async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/mahasiswa', {
-      method: 'GET', headers: { 'Content-Type': 'application/json' }, credentials: 'include'
-    })
+    const response = await fetch('http://localhost:3000/api/mahasiswa', { method: 'GET', headers: { 'Content-Type': 'application/json' }, credentials: 'include' })
     const result = await response.json()
     if (result.success) mahasiswaList.value = result.data.rows || result.data
-  } catch (error) {
-    console.error("Gagal fetch mahasiswa:", error)
-  }
+  } catch (error) { console.error("Gagal fetch mahasiswa:", error) }
 }
 
 const fetchAllRekomendasi = async () => {
   isLoading.value = true;
   semuaRekomendasi.value = [];
   try {
-    const response = await fetch('http://localhost:3000/api/matching-ta', {
-      method: 'GET', headers: { 'Content-Type': 'application/json' }, credentials: 'include'
-    })
+    const response = await fetch('http://localhost:3000/api/matching-ta', { method: 'GET', headers: { 'Content-Type': 'application/json' }, credentials: 'include' })
     const result = await response.json()
     if (response.ok) {
-      if (result.data && Array.isArray(result.data)) {
-         semuaRekomendasi.value = result.data;
-      } else if (result.data && result.data.rows) {
-         semuaRekomendasi.value = result.data.rows;
-      } else if (Array.isArray(result)) {
-         semuaRekomendasi.value = result;
-      }
+      if (result.data && Array.isArray(result.data)) semuaRekomendasi.value = result.data;
+      else if (result.data && result.data.rows) semuaRekomendasi.value = result.data.rows;
+      else if (Array.isArray(result)) semuaRekomendasi.value = result;
     }
   } catch (error) {
     console.error("Gagal fetch rekomendasi:", error)
@@ -513,25 +514,18 @@ const submitGeneratePso = async () => {
   isGenerating.value = true;
   try {
     const response = await fetch('http://localhost:3000/api/matching-ta/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      // Mengirim payload variabel PSO ke Backend API
-      body: JSON.stringify(psoParams.value)
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(psoParams.value)
     })
-
     const result = await response.json()
-
     if (response.ok) {
       showAlert('success', 'Algoritma Selesai!', result.data?.message || result.message || 'Berhasil mencarikan dosen untuk semua mahasiswa.')
       closeGenerateModal()
       fetchAllRekomendasi()
     } else {
-      let errorMsg = 'Gagal menjalankan algoritma. Syarat jumlah dosen tidak terpenuhi.';
+      let errorMsg = 'Gagal menjalankan algoritma.';
       if (result.err && result.err.message) errorMsg = result.err.message;
       else if (result.meta && result.meta.message) errorMsg = result.meta.message;
-      else if (result.message && result.message.toLowerCase() !== 'success' && result.message.toLowerCase() !== 'ok') errorMsg = result.message;
-
+      else if (result.message) errorMsg = result.message;
       showAlert('error', 'Proses Gagal!', errorMsg)
       closeGenerateModal()
     }
@@ -543,7 +537,26 @@ const submitGeneratePso = async () => {
   }
 }
 
-// --- MODAL DETAIL & GRAFIK APEXCHARTS ---
+const confirmDeleteAll = async () => {
+  isDeleting.value = true;
+  try {
+    const response = await fetch('http://localhost:3000/api/matching-ta/delete-all', { method: 'DELETE', credentials: 'include' })
+    const result = await response.json()
+    if (response.ok) {
+      showAlert('success', 'Proses Selesai!', result.data?.message || result.message || 'Data rekomendasi berhasil dibersihkan.')
+      isDeleteAllModalOpen.value = false
+      await fetchAllRekomendasi()
+    } else {
+      showAlert('error', 'Gagal!', 'Terdapat kesalahan saat menghapus data.')
+    }
+  } catch (error) {
+    console.error("Error hapus data:", error)
+    showAlert('error', 'Gagal Server!', 'Gagal menghubungi server.')
+  } finally {
+    isDeleting.value = false;
+  }
+}
+
 const isDetailModalOpen = ref(false)
 const selectedGroupDetail = ref<GroupedMahasiswa | null>(null)
 const selectedRekomendasiDetail = ref<Rekomendasi | null>(null)
@@ -552,112 +565,43 @@ const parsedDetailKriteria = ref<DetailKriteria | null>(null)
 const chartSeries = ref<{ name: string, data: number[] }[]>([])
 
 const chartOptions = ref({
-  chart: {
-    type: 'line',
-    toolbar: { show: false },
-    zoom: { enabled: false },
-    fontFamily: 'Inter, sans-serif',
-    background: 'transparent',
-    dropShadow: {
-      enabled: true,
-      color: '#3b82f6',
-      top: 10,
-      left: 0,
-      blur: 5,
-      opacity: 0.3
-    }
-  },
+  chart: { type: 'line', toolbar: { show: false }, zoom: { enabled: false }, fontFamily: 'Inter, sans-serif', background: 'transparent', dropShadow: { enabled: true, color: '#3b82f6', top: 10, left: 0, blur: 5, opacity: 0.3 } },
   colors: ['#3b82f6'],
   dataLabels: { enabled: false },
   stroke: { curve: 'straight', width: 4 },
-  xaxis: {
-    categories: [] as string[],
-    labels: { show: false },
-    axisBorder: { show: false },
-    axisTicks: { show: false },
-    tooltip: { enabled: false }
-  },
-  yaxis: {
-    min: 0,
-    max: 100,
-    labels: {
-      formatter: (value: number) => { return value.toFixed(0) },
-      style: { colors: '#9ca3af', fontSize: '12px', fontWeight: 600 }
-    }
-  },
-  grid: {
-    borderColor: '#e5e7eb',
-    strokeDashArray: 4,
-    yaxis: { lines: { show: true } },
-    xaxis: { lines: { show: false } },
-  },
-  tooltip: {
-    theme: 'light',
-    y: { formatter: function (val: number) { return val + " Poin Fitness" } },
-    marker: { show: false }
-  }
+  xaxis: { categories: [] as string[], labels: { show: false }, axisBorder: { show: false }, axisTicks: { show: false }, tooltip: { enabled: false } },
+  yaxis: { min: 0, max: 100, labels: { formatter: (value: number) => { return value.toFixed(0) }, style: { colors: '#9ca3af', fontSize: '12px', fontWeight: 600 } } },
+  grid: { borderColor: '#e5e7eb', strokeDashArray: 4, yaxis: { lines: { show: true } }, xaxis: { lines: { show: false } } },
+  tooltip: { theme: 'light', y: { formatter: function (val: number) { return val + " Poin Fitness" } }, marker: { show: false } }
 })
 
 const openDetailModal = (item: Rekomendasi, group: GroupedMahasiswa) => {
   selectedGroupDetail.value = group;
   selectedRekomendasiDetail.value = item;
 
-  // PARSING BUKTI PENILAIAN
   if (item.detail_kriteria) {
-    try {
-      parsedDetailKriteria.value = JSON.parse(item.detail_kriteria);
-    } catch {
-      parsedDetailKriteria.value = null;
-    }
-  } else {
-    parsedDetailKriteria.value = null;
-  }
+    try { parsedDetailKriteria.value = JSON.parse(item.detail_kriteria); } catch { parsedDetailKriteria.value = null; }
+  } else { parsedDetailKriteria.value = null; }
 
-  // MENGAMBIL DATA LANGSUNG DARI DATABASE (100% REAL)
   let dataPoints: number[] = [];
   if (item.history_fitness) {
-      try {
-          dataPoints = JSON.parse(item.history_fitness);
-      } catch {
-          dataPoints = [Number(item.nilai_fitness)];
-      }
-  } else {
-      dataPoints = [Number(item.nilai_fitness)];
-  }
+      try { dataPoints = JSON.parse(item.history_fitness); } catch { dataPoints = [Number(item.nilai_fitness)]; }
+  } else { dataPoints = [Number(item.nilai_fitness)]; }
 
   const actualIterCount = dataPoints.length;
-
   const isDark = document.documentElement.classList.contains('dark');
   const actualMin = Math.min(...dataPoints);
   const actualMax = Math.max(...dataPoints);
 
   chartOptions.value = {
     ...chartOptions.value,
-    xaxis: {
-       ...chartOptions.value.xaxis,
-       //  KATEGORI X-AXIS DINAMIS MENGIKUTI TOTAL ITERASI (BISA 50, 80, 100, DST)
-       categories: Array.from({ length: actualIterCount }, (_, i) => `Iterasi ${i + 1}`)
-    },
-    tooltip: {
-      ...chartOptions.value.tooltip,
-      theme: isDark ? 'dark' : 'light'
-    },
-    grid: {
-      ...chartOptions.value.grid,
-      borderColor: isDark ? '#374151' : '#e5e7eb'
-    },
-    yaxis: {
-      ...chartOptions.value.yaxis,
-      min: Math.max(0, Math.floor(actualMin - 2)),
-      max: Math.min(100, Math.ceil(actualMax + 2))
-    }
+    xaxis: { ...chartOptions.value.xaxis, categories: Array.from({ length: actualIterCount }, (_, i) => `Iterasi ${i + 1}`) },
+    tooltip: { ...chartOptions.value.tooltip, theme: isDark ? 'dark' : 'light' },
+    grid: { ...chartOptions.value.grid, borderColor: isDark ? '#374151' : '#e5e7eb' },
+    yaxis: { ...chartOptions.value.yaxis, min: Math.max(0, Math.floor(actualMin - 2)), max: Math.min(100, Math.ceil(actualMax + 2)) }
   };
 
-  chartSeries.value = [{
-    name: 'Skor Fitness',
-    data: dataPoints
-  }];
-
+  chartSeries.value = [{ name: 'Skor Fitness', data: dataPoints }];
   isDetailModalOpen.value = true;
 }
 
@@ -670,21 +614,12 @@ const closeDetailModal = () => {
 }
 
 onMounted(() => {
+  try { userRoles.value = JSON.parse(localStorage.getItem('userRoles') || '[]') } catch { userRoles.value = (localStorage.getItem('userRoles') || '').split(',').map(r => r.trim()) }
   document.addEventListener('mousedown', handleDropdownClickOutside);
-
-  try {
-    userRoles.value = JSON.parse(localStorage.getItem('userRoles') || '[]')
-  } catch {
-    userRoles.value = (localStorage.getItem('userRoles') || '').split(',').map(r => r.trim())
-  }
-
-  fetchMahasiswaList()
-  fetchAllRekomendasi()
+  fetchMahasiswaList(); fetchAllRekomendasi();
 })
 
-onBeforeUnmount(() => {
-  document.removeEventListener('mousedown', handleDropdownClickOutside);
-})
+onBeforeUnmount(() => { document.removeEventListener('mousedown', handleDropdownClickOutside); })
 </script>
 
 <style scoped>
@@ -693,24 +628,8 @@ onBeforeUnmount(() => {
 .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; }
 .custom-scrollbar:hover::-webkit-scrollbar-thumb { background: #94a3b8; }
-
-:deep(.apexcharts-tooltip) {
-  background: #ffffff !important;
-  border: 1px solid #e5e7eb !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
-  color: #1f2937 !important;
-}
-:deep(.dark .apexcharts-tooltip) {
-  background: #1f2937 !important;
-  border: 1px solid #374151 !important;
-  color: #f9fafb !important;
-}
-:deep(.apexcharts-tooltip-title) {
-  background: transparent !important;
-  border-bottom: 1px solid inherit !important;
-  font-weight: bold !important;
-}
-:deep(.apexcharts-tooltip-text-y-value) {
-  color: inherit !important;
-}
+:deep(.apexcharts-tooltip) { background: #ffffff !important; border: 1px solid #e5e7eb !important; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important; color: #1f2937 !important; }
+:deep(.dark .apexcharts-tooltip) { background: #1f2937 !important; border: 1px solid #374151 !important; color: #f9fafb !important; }
+:deep(.apexcharts-tooltip-title) { background: transparent !important; border-bottom: 1px solid inherit !important; font-weight: bold !important; }
+:deep(.apexcharts-tooltip-text-y-value) { color: inherit !important; }
 </style>

@@ -75,15 +75,15 @@
       </div>
     </div>
 
-    <div class="rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 shadow-sm relative z-10">
+   <div class="rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 shadow-sm relative z-10">
       <div class="w-full overflow-visible">
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-white/[0.02]">
-              <th class="px-5 py-3 w-16 sm:px-6 rounded-tl-xl"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">No</p></th>
-              <th class="px-5 py-3 sm:px-6 w-1/4"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Nama Dosen & Grup</p></th>
-              <th class="px-5 py-3 sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Sub-Bidang Keahlian & Bukti Scholar</p></th>
-              <th v-if="isAdmin" class="px-5 py-3 text-center w-52 sm:px-6 rounded-tr-xl"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Aksi</p></th>
+              <th class="py-3 px-3 w-[5%] sm:w-[5%] text-center rounded-tl-xl"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">No</p></th>
+              <th class="px-5 py-3 w-[30%] sm:w-[25%] sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Nama Dosen & Grup</p></th>
+              <th class="px-5 py-3 w-[45%] sm:w-[55%] sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Sub-Bidang Keahlian & Bukti Scholar</p></th>
+              <th v-if="isAdmin" class="px-5 py-3 text-center w-[20%] sm:w-[15%] sm:px-6 rounded-tr-xl"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Aksi</p></th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -102,17 +102,19 @@
             </tr>
 
             <tr v-else v-for="(group, index) in paginatedGroups" :key="group.dosen_id" class="border-t border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/[0.02]">
-              <td class="px-5 py-4 sm:px-6 align-middle">
+
+              <td class="py-4 px-3 align-middle text-center">
                 <span class="block font-medium text-gray-800 text-theme-sm dark:text-gray-300">{{ (currentPage - 1) * itemsPerPage + index + 1 }}</span>
               </td>
+
               <td class="px-5 py-4 sm:px-6 align-middle">
                 <span class="block font-semibold text-gray-800 text-theme-sm dark:text-gray-200">{{ group.nama_dosen }}</span>
                 <span class="block text-[11px] text-gray-500 dark:text-gray-400 mt-1">{{ group.grup_riset || 'Tidak Ada Grup' }}</span>
               </td>
 
               <td class="px-5 py-4 sm:px-6 align-middle">
-                <div class="flex flex-wrap gap-2">
-                  <div v-for="keahlian in group.keahlian" :key="keahlian.id_keahlian" class="group relative inline-flex items-center justify-center">
+                <div class="flex flex-wrap gap-2 w-full max-w-full">
+                  <div v-for="(keahlian, kIndex) in group.keahlian" :key="keahlian.id_keahlian" class="group relative inline-block">
 
                     <span class="inline-flex items-center gap-1.5 justify-center rounded-md bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 border border-blue-200 cursor-help transition-all hover:bg-blue-100 hover:border-blue-300 shadow-sm relative z-10 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 dark:hover:bg-blue-800/50">
                       <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477-4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
@@ -120,14 +122,20 @@
                     </span>
 
                     <div v-if="keahlian.keyword_jurnal"
-                      class="absolute left-1/2 -translate-x-1/2 hidden group-hover:block z-[9999] w-[340px] pointer-events-none"
-                      :class="index < (itemsPerPage / 2) ? 'top-full pt-2' : 'bottom-full pb-2'">
+                      class="absolute hidden group-hover:block z-[9999] w-[340px] pointer-events-none"
+                      :class="[
+                        kIndex % 2 === 0 ? 'left-0' : 'right-0',
+                        index < (itemsPerPage / 2) ? 'top-full pt-2' : 'bottom-full pb-2'
+                      ]">
 
                       <div class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl relative"
                         :class="index < (itemsPerPage / 2) ? 'animate-fade-in-down' : 'animate-fade-in-up'">
 
-                        <div class="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 transform rotate-45"
-                          :class="index < (itemsPerPage / 2) ? 'top-0 -mt-1.5 border-t border-l' : 'bottom-0 -mb-1.5 border-b border-r'">
+                        <div class="absolute w-3 h-3 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 transform rotate-45"
+                          :class="[
+                             kIndex % 2 === 0 ? 'left-6' : 'right-6',
+                             index < (itemsPerPage / 2) ? 'top-0 -mt-1.5 border-t border-l' : 'bottom-0 -mb-1.5 border-b border-r'
+                          ]">
                         </div>
 
                         <div class="relative z-10 flex items-center gap-2 px-3 py-2.5 bg-gray-50 dark:bg-gray-900 rounded-t-xl border-b border-gray-100 dark:border-gray-700">
@@ -135,11 +143,11 @@
                           <span class="font-bold text-xs text-gray-700 dark:text-gray-300">Sumber Validasi Keahlian</span>
                         </div>
 
-                        <div class="relative z-10 p-3 bg-white dark:bg-gray-800 rounded-b-xl">
+                        <div class="relative z-10 p-3 bg-white dark:bg-gray-800 rounded-b-xl whitespace-normal break-words">
                           <ul v-if="!keahlian.keyword_jurnal.includes('Manual')" class="flex flex-col gap-2.5">
                             <li v-for="(jurnal, i) in parseJurnal(keahlian.keyword_jurnal)" :key="i" class="text-[11px] text-gray-600 dark:text-gray-400 leading-snug flex items-start gap-2">
                               <span v-if="!jurnal.startsWith('...')" class="text-blue-500 dark:text-blue-400 mt-[3px] text-[8px]">●</span>
-                              <span :class="['text-left font-medium', { 'italic text-blue-500 dark:text-blue-400 font-semibold text-center w-full mt-1': jurnal.startsWith('...') }]">{{ jurnal }}</span>
+                              <span :class="['text-left font-medium w-full', { 'italic text-blue-500 dark:text-blue-400 font-semibold text-center mt-1': jurnal.startsWith('...') }]">{{ jurnal }}</span>
                             </li>
                           </ul>
                           <p v-else class="text-[11px] text-gray-500 dark:text-gray-400 italic text-center py-2">
@@ -182,71 +190,68 @@
       :items-per-page="itemsPerPage" @update:currentPage="currentPage = $event" class="mt-4" />
 
     <Modal v-if="isModalOpen" @close="closeModal">
-      <div class="relative w-full max-w-[600px] rounded-3xl bg-white p-4 dark:bg-gray-900 border dark:border-gray-700 lg:p-11 mx-auto mt-10 shadow-2xl">
-        <button @click="closeModal" class="transition-color absolute right-5 top-5 z-[100] flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200">
-          <svg class="fill-current" width="24" height="24" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.04289 16.5418C5.65237 16.9323 5.65237 17.5655 6.04289 17.956C6.43342 18.3465 7.06658 18.3465 7.45711 17.956L11.9987 13.4144L16.5408 17.9565C16.9313 18.347 17.5645 18.347 17.955 17.9565C18.3455 17.566 18.3455 16.9328 17.955 16.5423L13.4129 12.0002L17.955 7.45808C18.3455 7.06756 18.3455 6.43439 17.955 6.04387C17.5645 5.65335 16.9313 5.65335 16.5408 6.04387L11.9987 10.586L7.45711 6.04439C7.06658 5.65386 6.43342 5.65386 6.04289 6.04439C5.65237 6.43491 5.65237 7.06808 6.04289 7.4586L10.5845 12.0002L6.04289 16.5418Z" /></svg>
-        </button>
+      <div class="relative w-full max-w-[600px] max-h-[90vh] flex flex-col rounded-3xl bg-white dark:bg-gray-900 border dark:border-gray-700 mx-auto mt-10 shadow-2xl overflow-hidden">
 
-        <div class="px-2 pr-14 mb-6 mt-4">
-          <h4 class="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 z-10 shrink-0">
+          <h4 class="text-xl font-bold text-gray-800 dark:text-white/90">
             {{ isEditing ? 'Edit Keahlian Dosen' : 'Tambah Keahlian Dosen' }}
           </h4>
+          <button @click="closeModal" class="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
         </div>
 
-        <form @submit.prevent="submitForm" class="flex flex-col px-2 pb-10">
-          <div class="mb-5 relative z-[60]" ref="dosenDropdownContainer">
-            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Pilih Dosen (Ketik untuk mencari) <span class="text-red-500">*</span></label>
-            <div v-if="!isEditing" class="relative">
-              <input type="text" v-model="dosenSearchTerm" @focus="showDosenDropdown = true" placeholder="Ketik nama dosen..." class="dark:bg-gray-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:text-gray-200" required />
-              <ul v-if="showDosenDropdown && filteredDosenOptions.length > 0" class="absolute w-full mt-1 max-h-60 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-200 rounded-lg shadow-xl dark:border-gray-700">
-                <li v-for="dosen in filteredDosenOptions" :key="dosen.id_dosen" @click="selectDosen(dosen)" class="px-4 py-2 cursor-pointer hover:bg-brand-50 text-sm text-gray-800 border-b border-gray-100 last:border-0 dark:text-gray-200 dark:hover:bg-gray-700 dark:border-gray-700">{{ dosen.nama_dosen }}</li>
-              </ul>
-            </div>
-            <input v-else type="text" :value="dosenSearchTerm" disabled class="dark:bg-gray-800 h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-500 shadow-theme-xs cursor-not-allowed dark:border-gray-700 dark:text-gray-400" />
-          </div>
+        <div class="px-6 py-6 overflow-y-auto custom-scrollbar flex-1">
+          <form @submit.prevent="submitForm" class="flex flex-col gap-6">
 
-          <div class="mb-6 relative z-[50]" ref="topikDropdownContainer">
-            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Pilih Sub-Bidang Keahlian <span class="text-red-500">*</span></label>
-
-            <div @click="showTopikDropdown = !showTopikDropdown"
-                 class="min-h-[44px] w-full rounded-lg border border-gray-300 bg-white px-2 pr-10 py-1.5 text-sm text-gray-800 shadow-theme-xs cursor-pointer flex flex-wrap gap-2 items-center relative transition-colors focus-within:border-brand-300 dark:bg-gray-800 dark:border-gray-700">
-
-              <span v-if="formData.bidang_keahlian_list.length === 0" class="text-gray-400 px-2 py-1">Pilih sub-bidang keahlian...</span>
-
-              <span v-for="kbk in formData.bidang_keahlian_list" :key="kbk"
-                    class="inline-flex items-center gap-1.5 rounded-md bg-brand-50 pl-2.5 py-0.5 text-xs font-medium text-brand-700 border border-brand-200 dark:bg-brand-900/30 dark:text-brand-300 dark:border-brand-800">
-                {{ kbk }}
-                <button @click.stop="toggleKbk(kbk)" type="button" class="p-1 hover:bg-brand-200 hover:text-red-500 rounded-r-md transition-colors text-brand-500 dark:hover:bg-brand-800 dark:text-brand-400 focus:outline-none">
-                  <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-              </span>
-
-              <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                <svg class="w-5 h-5 transition-transform duration-200" :class="{'rotate-180': showTopikDropdown}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            <div class="relative z-[60]" ref="dosenDropdownContainer">
+              <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Pilih Dosen (Ketik untuk mencari) <span class="text-red-500">*</span></label>
+              <div v-if="!isEditing" class="relative">
+                <input type="text" v-model="dosenSearchTerm" @focus="showDosenDropdown = true" placeholder="Ketik nama dosen..." class="dark:bg-gray-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:text-gray-200" required />
+                <ul v-if="showDosenDropdown && filteredDosenOptions.length > 0" class="absolute z-[100] w-full mt-1 max-h-48 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-200 rounded-lg shadow-xl dark:border-gray-700 custom-scrollbar">
+                  <li v-for="dosen in filteredDosenOptions" :key="dosen.id_dosen" @click="selectDosen(dosen)" class="px-4 py-2 cursor-pointer hover:bg-brand-50 text-sm text-gray-800 border-b border-gray-100 last:border-0 dark:text-gray-200 dark:hover:bg-gray-700 dark:border-gray-700">{{ dosen.nama_dosen }}</li>
+                </ul>
               </div>
+              <input v-else type="text" :value="dosenSearchTerm" disabled class="dark:bg-gray-800 h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-500 shadow-theme-xs cursor-not-allowed dark:border-gray-700 dark:text-gray-400" />
             </div>
 
-            <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
-              <div v-if="showTopikDropdown" class="absolute z-[100] w-full mt-1 max-h-56 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 custom-scrollbar">
-
-                <div v-if="availableKbkList.length === 0" class="px-4 py-3 text-sm text-gray-500 italic text-center">
-                  Pilih dosen terlebih dahulu untuk melihat bidang keahliannya.
-                </div>
-
-                <div v-else v-for="kbk in availableKbkList" :key="kbk" @click="toggleKbk(kbk)"
-                     class="px-4 py-2.5 cursor-pointer hover:bg-brand-50 text-sm text-gray-800 border-b border-gray-100 last:border-0 flex items-center justify-between dark:hover:bg-gray-700 dark:text-gray-200 dark:border-gray-700">
-                  <span>{{ kbk }}</span>
-                  <svg v-if="formData.bidang_keahlian_list.includes(kbk)" class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+            <div class="relative z-[50]" ref="topikDropdownContainer">
+              <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Pilih Sub-Bidang Keahlian <span class="text-red-500">*</span></label>
+              <div @click="showTopikDropdown = !showTopikDropdown"
+                  class="min-h-[44px] w-full rounded-lg border border-gray-300 bg-white px-2 pr-10 py-1.5 text-sm text-gray-800 shadow-theme-xs cursor-pointer flex flex-wrap gap-2 items-center relative transition-colors focus-within:border-brand-300 dark:bg-gray-800 dark:border-gray-700">
+                <span v-if="formData.bidang_keahlian_list.length === 0" class="text-gray-400 px-2 py-1">Pilih sub-bidang keahlian...</span>
+                <span v-for="kbk in formData.bidang_keahlian_list" :key="kbk"
+                      class="inline-flex items-center gap-1.5 rounded-md bg-brand-50 pl-2.5 py-0.5 text-xs font-medium text-brand-700 border border-brand-200 dark:bg-brand-900/30 dark:text-brand-300 dark:border-brand-800">
+                  {{ kbk }}
+                  <button @click.stop="toggleKbk(kbk)" type="button" class="p-1 hover:bg-brand-200 hover:text-red-500 rounded-r-md transition-colors text-brand-500 dark:hover:bg-brand-800 dark:text-brand-400 focus:outline-none">
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+                </span>
+                <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                  <svg class="w-5 h-5 transition-transform duration-200" :class="{'rotate-180': showTopikDropdown}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </div>
               </div>
-            </transition>
-          </div>
 
-          <div class="flex items-center gap-3 lg:justify-end mt-4">
-            <button @click="closeModal" type="button" class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 sm:w-auto dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">Batal</button>
-            <button type="submit" :disabled="isSaving || !formData.dosen_id || formData.bidang_keahlian_list.length === 0" class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 sm:w-auto dark:bg-brand-600 dark:hover:bg-brand-500">{{ isSaving ? 'Menyimpan...' : 'Simpan' }}</button>
-          </div>
-        </form>
+              <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
+                <div v-if="showTopikDropdown" class="absolute z-[100] w-full mt-1 max-h-48 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 custom-scrollbar">
+                  <div v-if="availableKbkList.length === 0" class="px-4 py-3 text-sm text-gray-500 italic text-center">
+                    Pilih dosen terlebih dahulu untuk melihat bidang keahliannya.
+                  </div>
+                  <div v-else v-for="kbk in availableKbkList" :key="kbk" @click="toggleKbk(kbk)"
+                      class="px-4 py-2.5 cursor-pointer hover:bg-brand-50 text-sm text-gray-800 border-b border-gray-100 last:border-0 flex items-center justify-between dark:hover:bg-gray-700 dark:text-gray-200 dark:border-gray-700">
+                    <span>{{ kbk }}</span>
+                    <svg v-if="formData.bidang_keahlian_list.includes(kbk)" class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                  </div>
+                </div>
+              </transition>
+            </div>
+
+            <div class="flex items-center gap-3 lg:justify-end mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 shrink-0">
+              <button @click="closeModal" type="button" class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 sm:w-auto dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">Batal</button>
+              <button type="submit" :disabled="isSaving || !formData.dosen_id || formData.bidang_keahlian_list.length === 0" class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 sm:w-auto dark:bg-brand-600 dark:hover:bg-brand-500">{{ isSaving ? 'Menyimpan...' : 'Simpan' }}</button>
+            </div>
+          </form>
+        </div>
       </div>
     </Modal>
 
@@ -295,7 +300,6 @@ const keahlianList = ref<Keahlian[]>([])
 const dosenList = ref<Dosen[]>([])
 const isLoading = ref(true)
 
-// DAFTAR KEAHLIAN BERSARANG UNTUK FRONTEND (Harus sama dengan Backend)
 const DICTIONARY_FRONTEND: Record<string, string[]> = {
     "Center of Artificial Intelligence": ["Machine Learning", "Data Science & Data Mining", "Jaringan Saraf Tiruan", "Sistem Pakar & Fuzzy Logic", "Computer Vision & NLP"],
     "Center of Design, Animation and Multimedia": ["UI/UX Design", "HCI & Usability", "Desain Grafis & Animasi", "AR / VR & Gamifikasi"],
@@ -409,15 +413,10 @@ const dosenSearchTerm = ref('')
 const showDosenDropdown = ref(false)
 const showTopikDropdown = ref(false)
 
-// KEAHLIAN YANG TERSEDIA BERDASARKAN DOSEN YANG DIPILIH
 const availableKbkList = computed(() => {
   if (!formData.value.dosen_id) return [];
-
-  // Cari dosen yang dipilih
   const selectedDosen = dosenList.value.find(d => d.id_dosen === formData.value.dosen_id);
   if (!selectedDosen || !selectedDosen.grup_riset) return [];
-
-  // Kembalikan array sub-keahlian berdasarkan grup risetnya
   return DICTIONARY_FRONTEND[selectedDosen.grup_riset] || [];
 })
 
@@ -454,7 +453,6 @@ const filteredDosenOptions = computed(() => {
 const selectDosen = (dosen: Dosen) => {
   formData.value.dosen_id = dosen.id_dosen;
   dosenSearchTerm.value = dosen.nama_dosen;
-  // Reset array keahlian jika dosen ganti (supaya tidak salah grup)
   if (!isEditing.value) formData.value.bidang_keahlian_list = [];
   showDosenDropdown.value = false;
 }
@@ -486,17 +484,11 @@ const syncOneScholar = async (id: number) => {
   try {
     const response = await fetch(`http://localhost:3000/api/keahlian-dosen/sync-scholar/${id}`, { method: 'POST', credentials: 'include' })
     const result = await response.json()
-
-    const customMessage = result.data?.message || result.message || 'Sinkronisasi dari Google Scholar selesai.';
-
+    const customMessage = result.data?.message || result.message || 'Sinkronisasi selesai.';
     if (response.ok) {
       await fetchKeahlian();
-
-      if (customMessage.toLowerCase().includes('sinkron') || customMessage.toLowerCase().includes('terbaru')) {
-        showAlert('info', 'Info Sinkronisasi', customMessage);
-      } else {
-        showAlert('success', 'Berhasil Diperbarui!', customMessage);
-      }
+      if (customMessage.toLowerCase().includes('sinkron') || customMessage.toLowerCase().includes('terbaru')) showAlert('info', 'Info Sinkronisasi', customMessage);
+      else showAlert('success', 'Berhasil Diperbarui!', customMessage);
     } else {
       showAlert('error', 'Gagal!', customMessage);
     }
@@ -513,16 +505,11 @@ const syncAllScholar = async () => {
   try {
     const response = await fetch(`http://localhost:3000/api/keahlian-dosen/sync-scholar-all`, { method: 'POST', credentials: 'include' })
     const result = await response.json()
-
-    const customMessage = result.data?.message || result.message || 'Proses sinkronisasi massal selesai.';
-
+    const customMessage = result.data?.message || result.message || 'Sinkronisasi selesai.';
     if (response.ok) {
       await fetchKeahlian();
-      if (customMessage.includes('0 profil') || customMessage.toLowerCase().includes('sudah yang paling terbaru')) {
-        showAlert('info', 'Info Sinkronisasi', 'Semua data keahlian dosen sudah sinkron. Tidak ada perubahan baru dari Google Scholar.');
-      } else {
-        showAlert('success', 'Berhasil Diperbarui!', customMessage);
-      }
+      if (customMessage.includes('0 profil') || customMessage.toLowerCase().includes('terbaru')) showAlert('info', 'Info Sinkronisasi', 'Semua data keahlian sudah sinkron.');
+      else showAlert('success', 'Berhasil Diperbarui!', customMessage);
     } else {
       showAlert('error', 'Gagal!', customMessage);
     }
@@ -574,3 +561,16 @@ const confirmDelete = async () => {
   finally { isDeleting.value = false }
 }
 </script>
+
+<style scoped>
+.animate-fade-in-down { animation: fadeInDown 0.2s ease-out forwards; }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-in-up { animation: fadeInUp 0.2s ease-out forwards; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+.dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; }
+.custom-scrollbar:hover::-webkit-scrollbar-thumb { background: #94a3b8; }
+</style>
