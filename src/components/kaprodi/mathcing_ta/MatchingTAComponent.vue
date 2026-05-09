@@ -318,14 +318,20 @@
                 <span class="font-bold text-orange-500 mt-1 sm:mt-0">+ {{ parsedDetailKriteria.poin_kuota }} Poin</span>
               </div>
 
-              <div class="flex flex-col sm:flex-row justify-between sm:items-center bg-red-50 dark:bg-red-900/20 p-3 rounded border border-red-100 dark:border-red-800">
-                <span class="text-xs font-bold text-red-600 dark:text-red-400 flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                  Angka Pelanggaran Kendala (Constraint Violation)
+              <div class="flex flex-col sm:flex-row justify-between sm:items-center bg-indigo-50 dark:bg-indigo-900/20 p-3 rounded border border-indigo-100 dark:border-indigo-800">
+                <span class="text-xs font-bold text-indigo-700 dark:text-indigo-400 flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                  Posisi Partikel Terbaik (Global Best / Gbest)
                 </span>
-                <span class="font-bold text-red-600 dark:text-red-400 mt-1 sm:mt-0">{{ parsedDetailKriteria.angka_pelanggaran }} Poin</span>
+                <span class="font-bold text-indigo-700 dark:text-indigo-400 mt-1 sm:mt-0">{{ selectedRekomendasiDetail?.nilai_fitness }} Poin</span>
               </div>
-              <p class="text-[10px] text-gray-400 italic text-right mt-1">*Semakin kecil pelanggaran, semakin baik (100 - Total Fitness)</p>
+
+              <div class="mt-2 bg-gray-50 dark:bg-gray-900 p-2 rounded border border-gray-100 dark:border-gray-700">
+                <p class="text-[10px] text-gray-500 dark:text-gray-400 italic leading-relaxed">
+                  *Berdasarkan rumusan algoritma PSO pada sistem, partikel mengevaluasi nilai <b>Fitness</b> tertinggi dengan terus memperbarui kecepatan pergerakannya menuju titik optimal melalui persamaan:<br/>
+                  <span class="font-mono text-indigo-600 dark:text-indigo-400 font-semibold block mt-1">V_j(i) = w · V_j(i-1) + c1·r1 [Pbest_j - X_j(i-1)] + c2·r2 [Gbest - X_j(i-1)]</span>
+                </p>
+              </div>
 
             </div>
           </div>
@@ -360,7 +366,7 @@ type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 interface TopikTA { nama_topik: string; }
 interface Mahasiswa { id_mahasiswa: number; nama_mahasiswa: string; judul_ta: string; nim: string; topik_ta?: TopikTA }
 interface Dosen { id_dosen: number; nama_dosen: string; nidn: string; kuota_menguji: number; }
-interface DetailKriteria { keahlian_dosen: string[]; matched_words: string[]; poin_teks: number; poin_kuota: number; angka_pelanggaran: number; }
+interface DetailKriteria { keahlian_dosen: string[]; matched_words: string[]; poin_teks: number; poin_kuota: number; }
 interface Rekomendasi {
   id_rekomendasi: number;
   mahasiswa_id: number;
