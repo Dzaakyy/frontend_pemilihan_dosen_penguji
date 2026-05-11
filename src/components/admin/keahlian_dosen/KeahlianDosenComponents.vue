@@ -4,7 +4,7 @@
       <Alert :variant="alert.type" :title="alert.title" :message="alert.message" />
     </div>
 
-    <div class="flex flex-col gap-4 mb-6 p-5 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 shadow-sm relative z-20">
+    <div class="flex flex-col gap-4 mb-6 p-5 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 shadow-sm relative">
 
       <div class="flex items-center gap-2 w-full sm:w-auto" ref="itemsPerPageDropdownRef">
         <span class="text-sm text-gray-500 dark:text-gray-400">Tampilkan</span>
@@ -75,8 +75,8 @@
       </div>
     </div>
 
-   <div class="rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 shadow-sm relative z-10">
-      <div class="w-full overflow-visible">
+   <div class="rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 shadow-sm relative">
+     <div class="w-full overflow-visible pb-6">
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-white/[0.02]">
@@ -124,17 +124,17 @@
                     <div v-if="keahlian.keyword_jurnal"
                       class="absolute hidden group-hover:block z-[9999] w-[340px] pointer-events-none"
                       :class="[
-                        kIndex % 2 === 0 ? 'left-0' : 'right-0',
-                        index < (itemsPerPage / 2) ? 'top-full pt-2' : 'bottom-full pb-2'
+                        getTooltipAlignClass(kIndex),
+                        isTooltipUp(index) ? 'bottom-full pb-2' : 'top-full pt-2'
                       ]">
 
                       <div class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl relative"
-                        :class="index < (itemsPerPage / 2) ? 'animate-fade-in-down' : 'animate-fade-in-up'">
+                        :class="isTooltipUp(index) ? 'animate-fade-in-up' : 'animate-fade-in-down'">
 
                         <div class="absolute w-3 h-3 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 transform rotate-45"
                           :class="[
-                             kIndex % 2 === 0 ? 'left-6' : 'right-6',
-                             index < (itemsPerPage / 2) ? 'top-0 -mt-1.5 border-t border-l' : 'bottom-0 -mb-1.5 border-b border-r'
+                             getArrowAlignClass(kIndex),
+                             isTooltipUp(index) ? 'bottom-0 -mb-1.5 border-b border-r' : 'top-0 -mt-1.5 border-t border-l'
                           ]">
                         </div>
 
@@ -402,6 +402,18 @@ const parseJurnal = (keywordStr?: string) => {
     return displayList;
   }
   return list;
+}
+
+const isTooltipUp = (index: number) => {
+  const isLastRow = index === paginatedGroups.value.length - 1;
+  return index >= 3 || (isLastRow && index > 0);
+}
+
+const getTooltipAlignClass = (kIndex: number) => {
+  return kIndex % 5 <= 1 ? 'left-0' : 'right-0';
+}
+const getArrowAlignClass = (kIndex: number) => {
+  return kIndex % 5 <= 1 ? 'left-6' : 'right-6';
 }
 
 const isModalOpen = ref(false)

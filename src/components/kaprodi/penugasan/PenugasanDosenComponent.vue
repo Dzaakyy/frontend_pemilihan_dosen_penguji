@@ -204,13 +204,12 @@
             Rekomendasi di pilihan teratas.</p>
         </div>
 
-        <form @submit.prevent="submitForm" class="flex flex-col gap-5 pb-32">
+        <form @submit.prevent="submitForm" class="flex flex-col gap-5 pb-6">
 
-          <div class="relative w-full z-[60]" ref="mahasiswaFormRef">
+          <div class="relative w-full z-[60] transition-all duration-300" :class="{ 'mb-64': openDropdown === 'mahasiswa' && !isEditing }" ref="mahasiswaFormRef">
             <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Pilih Mahasiswa <span
                 class="text-red-500">*</span></label>
 
-            <!-- BUTTON MAHASISWA -->
             <button type="button" @click="!isEditing && toggleDropdown('mahasiswa')" :class="[
               'flex items-center justify-between h-11 w-full rounded-lg border px-4 text-sm text-left transition-colors',
               isEditing ? 'bg-gray-100 text-gray-500 border-gray-300 cursor-not-allowed dark:bg-gray-800/50 dark:border-gray-700' : 'bg-white border-gray-300 text-gray-800 focus:border-brand-500 focus:ring-3 focus:ring-brand-500/20 dark:bg-gray-900 dark:border-gray-700 dark:text-white/90'
@@ -235,7 +234,7 @@
                   <input v-model="searchMhsQuery" type="text" placeholder="Cari nama atau NIM..."
                     class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
                 </div>
-                <ul class="max-h-56 overflow-y-auto custom-scrollbar py-1">
+                <ul class="max-h-56 overflow-y-auto overscroll-contain custom-scrollbar py-1">
                   <li v-if="filteredMahasiswaOptions.length === 0" class="px-4 py-3 text-sm text-gray-500 text-center">
                     Data tidak ditemukan</li>
                   <li v-else v-for="mhs in filteredMahasiswaOptions" :key="mhs.id_mahasiswa"
@@ -263,7 +262,7 @@
           <div v-if="formData.mahasiswa_id && !isLoadingRekomendasi"
             class="flex flex-col gap-5 border-t border-gray-100 pt-5 dark:border-gray-800 transition-colors">
 
-            <div class="relative w-full z-[50]" ref="sekretarisRef">
+            <div class="relative w-full z-[50] transition-all duration-300" :class="{ 'mb-64': openDropdown === 'sekretaris' }" ref="sekretarisRef">
               <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Sekretaris<span
                   class="text-red-500">*</span></label>
 
@@ -289,7 +288,7 @@
                     <input v-model="searchDosenQuery" type="text" placeholder="Cari nama dosen..."
                       class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
                   </div>
-                  <ul class="max-h-56 overflow-y-auto custom-scrollbar py-1">
+                  <ul class="max-h-56 overflow-y-auto overscroll-contain custom-scrollbar py-1">
                     <template v-if="filteredRecommendedDosen.length > 0">
                       <li
                         class="px-3 py-2 bg-brand-50 text-brand-600 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-brand-100 dark:bg-brand-900/40 dark:text-brand-400 dark:border-brand-800">
@@ -326,7 +325,7 @@
               </transition>
             </div>
 
-            <div class="relative w-full z-[40]" ref="penguji1Ref">
+            <div class="relative w-full z-[40] transition-all duration-300" :class="{ 'mb-64': openDropdown === 'penguji1' }" ref="penguji1Ref">
               <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Penguji 1 <span
                   class="text-red-500">*</span></label>
 
@@ -352,7 +351,7 @@
                     <input v-model="searchDosenQuery" type="text" placeholder="Cari nama dosen..."
                       class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
                   </div>
-                  <ul class="max-h-56 overflow-y-auto custom-scrollbar py-1">
+                  <ul class="max-h-56 overflow-y-auto overscroll-contain custom-scrollbar py-1">
                     <template v-if="filteredRecommendedDosen.length > 0">
                       <li
                         class="px-3 py-2 bg-brand-50 text-brand-600 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-brand-100 dark:bg-brand-900/40 dark:text-brand-400 dark:border-brand-800">
@@ -389,7 +388,7 @@
               </transition>
             </div>
 
-            <div class="relative w-full z-[30]" ref="penguji2Ref">
+            <div class="relative w-full z-[30] transition-all duration-300" :class="{ 'mb-64': openDropdown === 'penguji2' }" ref="penguji2Ref">
               <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Penguji 2 <span
                   class="text-red-500">*</span></label>
 
@@ -415,7 +414,7 @@
                     <input v-model="searchDosenQuery" type="text" placeholder="Cari nama dosen..."
                       class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
                   </div>
-                  <ul class="max-h-56 overflow-y-auto custom-scrollbar py-1">
+                  <ul class="max-h-56 overflow-y-auto overscroll-contain custom-scrollbar py-1">
                     <template v-if="filteredRecommendedDosen.length > 0">
                       <li
                         class="px-3 py-2 bg-brand-50 text-brand-600 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-brand-100 dark:bg-brand-900/40 dark:text-brand-400 dark:border-brand-800">
@@ -502,10 +501,11 @@ import Alert from '@/components/ui/Alert.vue'
 
 type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 
+interface GenericRecord { [key: string]: unknown; }
 interface TopikTA { nama_topik: string; }
 interface Dosen { id_dosen: number; nama_dosen: string; nidn: string; kuota_menguji: number; }
-interface Mahasiswa { id_mahasiswa: number; nama_mahasiswa: string; nim: string; judul_ta: string; topik_ta?: TopikTA; }
-interface Rekomendasi { id_rekomendasi: number; dosen_id: number; rank: string; dosen?: Dosen; }
+interface Mahasiswa { id_mahasiswa: number; nama_mahasiswa: string; nim: string; judul_ta: string; topik_ta?: TopikTA; prodi_id?: unknown; }
+interface Rekomendasi { id_rekomendasi: number; dosen_id: number; rank: string; dosen?: Dosen; kuota?: number; nama_dosen?: string; }
 
 interface Penugasan {
   id_penugasan: number;
@@ -526,9 +526,22 @@ const showAlert = (type: AlertVariant, title: string, message: string) => {
 }
 
 const userRoles = ref<string[]>([])
-const canManage = computed(() => {
-  return userRoles.value.some(role => ['admin', 'kaprodi'].includes(role.toLowerCase()))
-})
+const userProdiId = ref<number>(0)
+const activeProdiName = ref('')
+
+const isAdmin = computed(() => userRoles.value.some(role => role.toLowerCase() === 'admin'))
+const canManage = computed(() => userRoles.value.some(role => ['admin', 'kaprodi'].includes(role.toLowerCase())))
+
+// Helper ID Reader
+const getRawId = (dataData: unknown): number => {
+  if (dataData === null || dataData === undefined) return 0;
+  if (typeof dataData === 'object' && dataData !== null) {
+      const obj = dataData as GenericRecord;
+      const id = obj.id_prodi || obj.id_user || obj.id_topik || obj.id_mahasiswa || obj.id_dosen || obj.id;
+      return Number(id) || 0;
+  }
+  return Number(dataData) || 0;
+}
 
 // States
 const penugasanList = ref<Penugasan[]>([])
@@ -550,7 +563,6 @@ const itemsPerPageDropdownRef = ref<HTMLElement | null>(null)
 const isItemsPerPageDropdownOpen = ref(false)
 const selectItemsPerPage = (val: number) => { itemsPerPage.value = val; isItemsPerPageDropdownOpen.value = false; }
 
-
 // Custom Dropdown States
 const openDropdown = ref<string | null>(null)
 const mahasiswaFormRef = ref<HTMLElement | null>(null)
@@ -562,14 +574,20 @@ const penguji2Ref = ref<HTMLElement | null>(null)
 const searchMhsQuery = ref('')
 const searchDosenQuery = ref('')
 
+// 🌟 KOREKSI: Filter Penugasan yang Tampil di Tabel Sesuai Jabatan Kaprodi
+const filteredPenugasanList = computed(() => {
+  if (isAdmin.value || userProdiId.value === 0) return penugasanList.value;
+  return penugasanList.value.filter(p => getRawId(p.mahasiswa?.prodi_id) === userProdiId.value);
+})
+
 // Pagination
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
-const totalItems = computed(() => penugasanList.value.length)
+const totalItems = computed(() => filteredPenugasanList.value.length)
 const paginatedList = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value
   const end = start + itemsPerPage.value
-  return penugasanList.value.slice(start, end)
+  return filteredPenugasanList.value.slice(start, end)
 })
 
 const formData = ref({
@@ -679,7 +697,31 @@ const getDosenLabel = (id_dosen: number | '') => {
   return '';
 }
 
-// --- API CALLS ---
+const fetchKaprodiIdentity = async () => {
+    if (isAdmin.value) return;
+
+    try {
+        const response = await fetch('http://localhost:3000/api/auth/profile', { method: 'GET', credentials: 'include' });
+        const result = await response.json();
+
+        if (result.success && result.data) {
+            activeProdiName.value = result.data.prodi;
+
+            const resProdi = await fetch('http://localhost:3000/api/prodi', { method: 'GET', credentials: 'include' });
+            const resultProdi = await resProdi.json();
+
+            if (resultProdi.success && resultProdi.data) {
+                const matchedProdi = resultProdi.data.find((p: GenericRecord) => String(p.nama_prodi) === activeProdiName.value);
+                if (matchedProdi) {
+                    userProdiId.value = getRawId(matchedProdi.id_prodi);
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Gagal mendeteksi identitas Kaprodi:", error);
+    }
+}
+
 const fetchPenugasan = async () => {
   isLoading.value = true
   try {
@@ -701,9 +743,12 @@ const fetchMahasiswaAvailable = async (currentEditId: number | null = null) => {
       const assignedIds = penugasanList.value.map(p => p.mahasiswa_id);
       const allMhs = result.data.rows || result.data;
 
-      mahasiswaList.value = allMhs.filter((m: Mahasiswa) =>
-        !assignedIds.includes(m.id_mahasiswa) || m.id_mahasiswa === currentEditId
-      );
+      // 🌟 KOREKSI: Mahasiswa yang muncul di Dropdown akan difilter sesuai Prodi Kaprodi
+      mahasiswaList.value = allMhs.filter((m: Mahasiswa) => {
+        const isAvailable = !assignedIds.includes(m.id_mahasiswa) || m.id_mahasiswa === currentEditId;
+        const isSameProdi = isAdmin.value || getRawId(m.prodi_id) === userProdiId.value;
+        return isAvailable && isSameProdi;
+      });
     }
   } catch (error) {
     console.error("Gagal fetch mahasiswa:", error)
@@ -860,40 +905,18 @@ const confirmDelete = async () => {
   }
 }
 
-onMounted(async () => {
+onMounted(() => {
   document.addEventListener('mousedown', handleOutsideClick);
   try { userRoles.value = JSON.parse(localStorage.getItem('userRoles') || '[]') }
   catch { userRoles.value = (localStorage.getItem('userRoles') || '').split(',').map(r => r.trim()) }
 
-  await fetchPenugasan()
-  fetchSemuaDosen()
+  fetchKaprodiIdentity().then(() => {
+      fetchPenugasan();
+      fetchSemuaDosen();
+  });
 })
 
 onBeforeUnmount(() => {
   document.removeEventListener('mousedown', handleOutsideClick);
 })
 </script>
-
-<style scoped>
-.custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #4b5563;
-}
-
-.custom-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: #94a3b8;
-}
-</style>
