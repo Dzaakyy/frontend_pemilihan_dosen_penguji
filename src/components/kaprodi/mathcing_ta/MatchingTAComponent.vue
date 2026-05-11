@@ -30,16 +30,27 @@
         </div>
 
         <div class="flex items-center gap-3 w-full sm:w-auto">
-          <button v-if="canManageMatching && semuaRekomendasi.length > 0" @click="isDeleteAllModalOpen = true" class="flex-1 sm:flex-none flex items-center justify-center px-4 h-10 text-sm font-medium text-red-600 transition rounded-lg bg-red-50 border border-red-200 hover:bg-red-100 shadow-theme-xs dark:bg-red-900/20 dark:border-red-800/50 dark:text-red-400 dark:hover:bg-red-900/40">
+          <button v-if="canManageMatching && filteredGroups.length > 0" @click="isDeleteAllModalOpen = true" class="flex-1 sm:flex-none flex items-center justify-center px-4 h-10 text-sm font-medium text-red-600 transition rounded-lg bg-red-50 border border-red-200 hover:bg-red-100 shadow-theme-xs dark:bg-red-900/20 dark:border-red-800/50 dark:text-red-400 dark:hover:bg-red-900/40">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
             Hapus Semua
           </button>
 
-          <button v-if="canManageMatching" @click="openGenerateModal" class="flex-1 sm:flex-none flex items-center justify-center px-5 h-10 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600 shadow-theme-xs">
+          <button v-if="canManageMatching && hasUnassignedMahasiswa" @click="openGenerateModal" class="flex-1 sm:flex-none flex items-center justify-center px-5 h-10 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600 shadow-theme-xs">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
             Jalankan Matching PSO Massal
           </button>
+
+          <span v-else-if="canManageMatching && !hasUnassignedMahasiswa" class="text-sm font-medium text-emerald-600 flex items-center bg-emerald-50 px-4 py-2 rounded-lg border border-emerald-100">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Semua Mahasiswa Telah Di-Matching
+          </span>
         </div>
+      </div>
+
+      <div v-if="!isAdmin && activeProdiName" class="w-full mb-2">
+        <span class="inline-flex items-center px-3 py-1 rounded-md bg-blue-50 border border-blue-100 text-blue-700 text-xs font-bold">
+          Menampilkan Data Hasil Matching Prodi: {{ activeProdiName }}
+        </span>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
@@ -66,7 +77,7 @@
                   class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors border-b border-gray-100 dark:border-gray-700 font-medium">
                   -- Tampilkan Semua Mahasiswa --
                 </li>
-                <li v-for="mhs in mahasiswaList" :key="mhs.id_mahasiswa" @click="selectFilterMahasiswa(mhs.id_mahasiswa)"
+                <li v-for="mhs in filteredMahasiswaDropdown" :key="mhs.id_mahasiswa" @click="selectFilterMahasiswa(mhs.id_mahasiswa)"
                   class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors border-b border-gray-50 last:border-0 dark:border-gray-700/50">
                   {{ mhs.nama_mahasiswa }} <span class="text-gray-400 dark:text-gray-500 ml-1 text-xs">({{ mhs.nim }})</span>
                 </li>
@@ -293,7 +304,7 @@
             <div class="space-y-4">
               <div class="flex flex-col bg-white dark:bg-gray-800 p-3 rounded border border-gray-100 dark:border-gray-700">
                 <div class="flex justify-between items-center mb-2">
-                  <span class="text-xs font-bold text-gray-500 dark:text-gray-400">1. Kemiripan Teks Mahasiswa & Keahlian Dosen (Max 60 Poin)</span>
+                  <span class="text-xs font-bold text-gray-500 dark:text-gray-400">1. Kemiripan Teks Mahasiswa & Keahlian Dosen (Max 75 Poin)</span>
                   <span class="font-bold text-blue-600">+ {{ parsedDetailKriteria.poin_teks }} Poin</span>
                 </div>
 
@@ -314,7 +325,7 @@
               </div>
 
               <div class="flex flex-col sm:flex-row justify-between sm:items-center bg-white dark:bg-gray-800 p-3 rounded border border-gray-100 dark:border-gray-700">
-                <span class="text-xs font-bold text-gray-500 dark:text-gray-400">2. Ketersediaan Kuota Dosen (Max 40 Poin)</span>
+                <span class="text-xs font-bold text-gray-500 dark:text-gray-400">2. Ketersediaan Kuota Dosen (Max 25 Poin)</span>
                 <span class="font-bold text-orange-500 mt-1 sm:mt-0">+ {{ parsedDetailKriteria.poin_kuota }} Poin</span>
               </div>
 
@@ -363,8 +374,10 @@ import VueApexCharts from 'vue3-apexcharts'
 
 type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 
+interface GenericRecord { [key: string]: unknown; }
+
 interface TopikTA { nama_topik: string; }
-interface Mahasiswa { id_mahasiswa: number; nama_mahasiswa: string; judul_ta: string; nim: string; topik_ta?: TopikTA }
+interface Mahasiswa { id_mahasiswa: number; nama_mahasiswa: string; judul_ta: string; nim: string; topik_id: unknown; topik_ta?: TopikTA; prodi_id: unknown; }
 interface Dosen { id_dosen: number; nama_dosen: string; nidn: string; kuota_menguji: number; }
 interface DetailKriteria { keahlian_dosen: string[]; matched_words: string[]; poin_teks: number; poin_kuota: number; }
 interface Rekomendasi {
@@ -386,6 +399,7 @@ interface GroupedMahasiswa {
   judul_ta: string;
   nama_topik: string;
   nim: string;
+  prodi_id: number;
   rekomendasi: Rekomendasi[];
 }
 
@@ -416,13 +430,24 @@ const searchQuery = ref('')
 const currentPage = ref(1)
 const itemsPerPage = ref(5)
 
-const selectItemsPerPage = (val: number) => { itemsPerPage.value = val; isItemsPerPageDropdownOpen.value = false; }
-
 const userRoles = ref<string[]>([])
-const canManageMatching = computed(() => {
-  return userRoles.value.some(role => ['admin', 'kaprodi'].includes(role.toLowerCase()))
-})
+const userProdiId = ref<number>(0)
+const activeProdiName = ref('')
 
+const isAdmin = computed(() => userRoles.value.some(role => role.toLowerCase() === 'admin'))
+const canManageMatching = computed(() => userRoles.value.some(role => ['admin', 'kaprodi'].includes(role.toLowerCase())))
+
+const getRawId = (dataData: unknown): number => {
+  if (dataData === null || dataData === undefined) return 0;
+  if (typeof dataData === 'object' && dataData !== null) {
+      const obj = dataData as GenericRecord;
+      const id = obj.id_prodi || obj.id_user || obj.id_topik || obj.id_mahasiswa || obj.id_dosen || obj.id;
+      return Number(id) || 0;
+  }
+  return Number(dataData) || 0;
+}
+
+const selectItemsPerPage = (val: number) => { itemsPerPage.value = val; isItemsPerPageDropdownOpen.value = false; }
 const handleDropdownClickOutside = (event: MouseEvent) => {
   if (mahasiswaDropdownRef.value && !mahasiswaDropdownRef.value.contains(event.target as Node)) isMahasiswaDropdownOpen.value = false;
   if (itemsPerPageDropdownRef.value && !itemsPerPageDropdownRef.value.contains(event.target as Node)) isItemsPerPageDropdownOpen.value = false;
@@ -432,6 +457,11 @@ const selectFilterMahasiswa = (val: number | '') => {
   selectedMahasiswaFilter.value = val;
   isMahasiswaDropdownOpen.value = false;
 }
+
+const filteredMahasiswaDropdown = computed(() => {
+  if (isAdmin.value || userProdiId.value === 0) return mahasiswaList.value;
+  return mahasiswaList.value.filter(m => getRawId(m.prodi_id) === userProdiId.value);
+})
 
 const selectedMahasiswaLabel = computed(() => {
   if (selectedMahasiswaFilter.value === '') return '-- Tampilkan Semua Mahasiswa --';
@@ -444,12 +474,21 @@ const groupedRekomendasi = computed(() => {
   semuaRekomendasi.value.forEach(rek => {
     if (!rek.mahasiswa) return;
     if (!groups[rek.mahasiswa_id]) {
+      // PENAMBAHAN LOGIKA PENCARIAN PRODI ID YANG AMAN
+      let prodiId = getRawId(rek.mahasiswa.prodi_id);
+      // JIKA BACKEND GAGAL MENGIRIM PRODI ID, CARI DARI DAFTAR MAHASISWA (FRONTEND)
+      if (prodiId === 0) {
+          const foundMhs = mahasiswaList.value.find(m => getRawId(m.id_mahasiswa) === getRawId(rek.mahasiswa_id));
+          if (foundMhs) prodiId = getRawId(foundMhs.prodi_id);
+      }
+
       groups[rek.mahasiswa_id] = {
         mahasiswa_id: rek.mahasiswa_id,
         nama_mahasiswa: rek.mahasiswa.nama_mahasiswa,
         judul_ta: rek.mahasiswa.judul_ta,
         nama_topik: rek.mahasiswa.topik_ta?.nama_topik || '',
         nim: rek.mahasiswa.nim,
+        prodi_id: prodiId,
         rekomendasi: []
       };
     }
@@ -460,6 +499,10 @@ const groupedRekomendasi = computed(() => {
 
 const filteredGroups = computed(() => {
   let result = groupedRekomendasi.value;
+
+  if (!isAdmin.value && userProdiId.value > 0) {
+      result = result.filter(group => group.prodi_id === userProdiId.value);
+  }
 
   if (selectedMahasiswaFilter.value !== '') {
       result = result.filter(group => group.mahasiswa_id === selectedMahasiswaFilter.value);
@@ -485,6 +528,22 @@ const paginatedGroups = computed(() => {
 })
 
 watch([searchQuery, selectedMahasiswaFilter, itemsPerPage], () => { currentPage.value = 1 })
+
+const hasUnassignedMahasiswa = computed(() => {
+    if (!mahasiswaList.value || mahasiswaList.value.length === 0) return false;
+
+    const mahasiswaDiProdi = isAdmin.value
+        ? mahasiswaList.value
+        : mahasiswaList.value.filter(m => getRawId(m.prodi_id) === userProdiId.value);
+
+    if (mahasiswaDiProdi.length === 0) return false;
+
+    const mahasiswaSudahMatchingIds = new Set(semuaRekomendasi.value.map(r => getRawId(r.mahasiswa_id)));
+
+    const unassigned = mahasiswaDiProdi.filter(m => !mahasiswaSudahMatchingIds.has(getRawId(m.id_mahasiswa)));
+
+    return unassigned.length > 0;
+});
 
 const fetchMahasiswaList = async () => {
   try {
@@ -513,14 +572,46 @@ const fetchAllRekomendasi = async () => {
   }
 }
 
+const fetchKaprodiIdentity = async () => {
+    if (isAdmin.value) return;
+
+    try {
+        const response = await fetch('http://localhost:3000/api/auth/profile', { method: 'GET', credentials: 'include' });
+        const result = await response.json();
+
+        if (result.success && result.data) {
+            activeProdiName.value = result.data.prodi;
+
+            const resProdi = await fetch('http://localhost:3000/api/prodi', { method: 'GET', credentials: 'include' });
+            const resultProdi = await resProdi.json();
+
+            if (resultProdi.success && resultProdi.data) {
+                const matchedProdi = resultProdi.data.find((p: GenericRecord) => String(p.nama_prodi) === activeProdiName.value);
+                if (matchedProdi) {
+                    userProdiId.value = getRawId(matchedProdi.id_prodi);
+                    console.log("IDENTITAS KAPRODI DITEMUKAN:", activeProdiName.value, "| ID PRODI:", userProdiId.value);
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Gagal mendeteksi identitas Kaprodi:", error);
+    }
+}
+
+
 const openGenerateModal = () => { isGenerateModalOpen.value = true; }
 const closeGenerateModal = () => { isGenerateModalOpen.value = false; }
 
 const submitGeneratePso = async () => {
   isGenerating.value = true;
   try {
+    const payload = {
+        ...psoParams.value,
+        prodi_id: !isAdmin.value && userProdiId.value > 0 ? userProdiId.value : undefined
+    };
+
     const response = await fetch('http://localhost:3000/api/matching-ta/generate', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(psoParams.value)
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(payload)
     })
     const result = await response.json()
     if (response.ok) {
@@ -622,7 +713,11 @@ const closeDetailModal = () => {
 onMounted(() => {
   try { userRoles.value = JSON.parse(localStorage.getItem('userRoles') || '[]') } catch { userRoles.value = (localStorage.getItem('userRoles') || '').split(',').map(r => r.trim()) }
   document.addEventListener('mousedown', handleDropdownClickOutside);
-  fetchMahasiswaList(); fetchAllRekomendasi();
+
+  fetchKaprodiIdentity().then(() => {
+      fetchMahasiswaList();
+      fetchAllRekomendasi();
+  });
 })
 
 onBeforeUnmount(() => { document.removeEventListener('mousedown', handleDropdownClickOutside); })
