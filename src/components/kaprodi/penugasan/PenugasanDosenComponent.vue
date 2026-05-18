@@ -42,14 +42,25 @@
         <span class="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">data</span>
       </div>
 
-      <button v-if="canManage" @click="openAddModal"
-        class="flex items-center justify-center px-5 h-10 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600 w-full sm:w-auto shadow-theme-xs">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-        </svg>
-        Buat Penugasan Baru
-      </button>
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <button v-if="filteredPenugasanList.length > 0" @click="exportToExcel"
+          class="flex items-center justify-center px-4 h-10 text-sm font-medium text-emerald-700 transition rounded-lg bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 shadow-theme-xs dark:bg-emerald-900/20 dark:border-emerald-800/50 dark:text-emerald-400 dark:hover:bg-emerald-900/40 w-full sm:w-auto">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+            </path>
+          </svg>
+          Export Excel
+        </button>
+        <button v-if="canManage" @click="openAddModal"
+          class="flex items-center justify-center px-5 h-10 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600 w-full sm:w-auto shadow-theme-xs dark:bg-brand-600 dark:hover:bg-brand-500">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Buat Penugasan Baru
+        </button>
+      </div>
     </div>
 
     <div
@@ -63,12 +74,12 @@
         <table class="min-w-full border-collapse">
           <thead>
             <tr class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-white/[0.02] transition-colors">
-              <th class="px-5 py-4 text-left w-16">
+              <th class="px-5 py-4 text-left w-12">
                 <p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">No</p>
               </th>
               <th class="px-5 py-4 text-left w-1/4">
                 <p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">Data
-                  Mahasiswa</p>
+                  Mahasiswa & Jadwal</p>
               </th>
               <th class="px-5 py-4 text-left">
                 <p class="font-bold text-gray-700 text-theme-xs dark:text-gray-400 uppercase tracking-wider">Sekretaris
@@ -119,16 +130,36 @@
                 <span class="block text-xs font-medium text-brand-500 dark:text-brand-400 mt-0.5">NIM: {{
                   item.mahasiswa?.nim }}</span>
 
+                <div class="mt-3 flex flex-wrap gap-2" v-if="item.tanggal_ujian || item.sesi_waktu">
+                  <span v-if="item.tanggal_ujian"
+                    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-blue-50 border border-blue-100 text-blue-700 text-[10px] font-bold dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-400">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                      </path>
+                    </svg>
+                    {{ formatDateDisplay(item.tanggal_ujian) }}
+                  </span>
+                  <span v-if="item.sesi_waktu"
+                    class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-purple-50 border border-purple-100 text-purple-700 text-[10px] font-bold dark:bg-purple-900/30 dark:border-purple-800 dark:text-purple-400">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    {{ formatSesiDisplay(item.sesi_waktu) }}
+                  </span>
+                </div>
+
                 <div class="mt-3 space-y-1">
-                  <span class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Judul:</span>
+                  <span class="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Judul:</span>
                   <span class="block text-xs text-gray-600 dark:text-gray-300 line-clamp-2"
                     :title="item.mahasiswa?.judul_ta">{{ item.mahasiswa?.judul_ta || 'Belum ada judul' }}</span>
                 </div>
 
                 <div class="mt-2 space-y-1">
-                  <span class="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Topik:</span>
+                  <span class="block text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Topik:</span>
                   <span
-                    class="inline-flex items-center justify-center rounded-md bg-purple-50 dark:bg-purple-500/10 px-2 py-0.5 text-[11px] font-semibold text-purple-700 dark:text-purple-400 border border-purple-100 dark:border-purple-500/20">
+                    class="inline-flex items-center justify-center rounded-md bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-500/20">
                     {{ item.mahasiswa?.topik_ta?.nama_topik || 'Belum ada topik' }}
                   </span>
                 </div>
@@ -200,15 +231,14 @@
           <h4 class="text-2xl font-bold text-gray-800 dark:text-white/90">
             {{ isEditing ? 'Edit Penugasan Penguji' : 'Buat Penugasan Penguji' }}
           </h4>
-          <p class="text-sm text-gray-500 mt-1 dark:text-gray-400">Sistem otomatis memprioritaskan Top 5 Dosen
-            Rekomendasi di pilihan teratas.</p>
+          <p class="text-sm text-gray-500 mt-1 dark:text-gray-400">Sistem otomatis memprioritaskan Top 3 Dosen
+            Rekomendasi berserta jadwalnya.</p>
         </div>
 
         <form @submit.prevent="submitForm" class="flex flex-col gap-5 pb-6">
 
           <div class="relative w-full z-[60] transition-all duration-300" :class="{ 'mb-64': openDropdown === 'mahasiswa' && !isEditing }" ref="mahasiswaFormRef">
-            <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Pilih Mahasiswa <span
-                class="text-red-500">*</span></label>
+            <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Pilih Mahasiswa <span class="text-red-500">*</span></label>
 
             <button type="button" @click="!isEditing && toggleDropdown('mahasiswa')" :class="[
               'flex items-center justify-between h-11 w-full rounded-lg border px-4 text-sm text-left transition-colors',
@@ -262,6 +292,20 @@
           <div v-if="formData.mahasiswa_id && !isLoadingRekomendasi"
             class="flex flex-col gap-5 border-t border-gray-100 pt-5 dark:border-gray-800 transition-colors">
 
+            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800/50 flex flex-col gap-2 shadow-sm">
+              <h6 class="text-xs font-bold text-indigo-800 dark:text-indigo-300 uppercase tracking-wider">Jadwal Ujian (Hasil Automasi PSO)</h6>
+              <div class="flex items-center gap-4 text-sm text-indigo-900 dark:text-indigo-200">
+                <div class="flex items-center gap-1.5 font-medium">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  {{ selectedJadwalPso.tanggal ? formatDateDisplay(selectedJadwalPso.tanggal) : 'Belum Terjadwal' }}
+                </div>
+                <div class="flex items-center gap-1.5 font-medium">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  {{ selectedJadwalPso.sesi ? formatSesiDisplay(selectedJadwalPso.sesi) : 'Belum Ditentukan' }}
+                </div>
+              </div>
+            </div>
+
             <div class="relative w-full z-[50] transition-all duration-300" :class="{ 'mb-64': openDropdown === 'sekretaris' }" ref="sekretarisRef">
               <label class="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">Sekretaris<span
                   class="text-red-500">*</span></label>
@@ -292,7 +336,7 @@
                     <template v-if="filteredRecommendedDosen.length > 0">
                       <li
                         class="px-3 py-2 bg-brand-50 text-brand-600 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-brand-100 dark:bg-brand-900/40 dark:text-brand-400 dark:border-brand-800">
-                        🌟 Top 5 Rekomendasi PSO</li>
+                        🌟 Top 3 Rekomendasi PSO</li>
                       <li v-for="d in filteredRecommendedDosen" :key="'sek_rek_' + d.dosen_id"
                         @click="selectDosenFor('sekretaris', d.dosen_id)"
                         class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 text-gray-800 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50"
@@ -355,7 +399,7 @@
                     <template v-if="filteredRecommendedDosen.length > 0">
                       <li
                         class="px-3 py-2 bg-brand-50 text-brand-600 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-brand-100 dark:bg-brand-900/40 dark:text-brand-400 dark:border-brand-800">
-                        🌟 Top 5 Rekomendasi PSO</li>
+                        🌟 Top 3 Rekomendasi PSO</li>
                       <li v-for="d in filteredRecommendedDosen" :key="'p1_rek_' + d.dosen_id"
                         @click="selectDosenFor('penguji_1', d.dosen_id)"
                         class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 text-gray-800 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50"
@@ -418,7 +462,7 @@
                     <template v-if="filteredRecommendedDosen.length > 0">
                       <li
                         class="px-3 py-2 bg-brand-50 text-brand-600 font-bold text-xs uppercase tracking-wider sticky top-0 z-10 border-b border-brand-100 dark:bg-brand-900/40 dark:text-brand-400 dark:border-brand-800">
-                        🌟 Top 5 Rekomendasi PSO</li>
+                        🌟 Top 3 Rekomendasi PSO</li>
                       <li v-for="d in filteredRecommendedDosen" :key="'p2_rek_' + d.dosen_id"
                         @click="selectDosenFor('penguji_2', d.dosen_id)"
                         class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 text-gray-800 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50"
@@ -498,6 +542,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import Pagination from '@/components/pagination/Pagination.vue'
 import Modal from '@/components/modal/Modal.vue'
 import Alert from '@/components/ui/Alert.vue'
+import * as XLSX from 'xlsx'
 
 type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 
@@ -505,7 +550,7 @@ interface GenericRecord { [key: string]: unknown; }
 interface TopikTA { nama_topik: string; }
 interface Dosen { id_dosen: number; nama_dosen: string; nidn: string; kuota_menguji: number; }
 interface Mahasiswa { id_mahasiswa: number; nama_mahasiswa: string; nim: string; judul_ta: string; topik_ta?: TopikTA; prodi_id?: unknown; }
-interface Rekomendasi { id_rekomendasi: number; dosen_id: number; rank: string; dosen?: Dosen; kuota?: number; nama_dosen?: string; }
+interface Rekomendasi { id_rekomendasi: number; dosen_id: number; rank: string; dosen?: Dosen; kuota?: number; nama_dosen?: string; tanggal_ujian?: string; sesi_waktu?: string; }
 
 interface Penugasan {
   id_penugasan: number;
@@ -513,6 +558,8 @@ interface Penugasan {
   sekretaris: number;
   penguji_1: number;
   penguji_2: number;
+  tanggal_ujian?: string;
+  sesi_waktu?: string;
   mahasiswa?: Mahasiswa;
   dosen_sekretaris?: Dosen;
   dosen_penguji_1?: Dosen;
@@ -532,7 +579,6 @@ const activeProdiName = ref('')
 const isAdmin = computed(() => userRoles.value.some(role => role.toLowerCase() === 'admin'))
 const canManage = computed(() => userRoles.value.some(role => ['admin', 'kaprodi'].includes(role.toLowerCase())))
 
-// Helper ID Reader
 const getRawId = (dataData: unknown): number => {
   if (dataData === null || dataData === undefined) return 0;
   if (typeof dataData === 'object' && dataData !== null) {
@@ -543,7 +589,6 @@ const getRawId = (dataData: unknown): number => {
   return Number(dataData) || 0;
 }
 
-// States
 const penugasanList = ref<Penugasan[]>([])
 const mahasiswaList = ref<Mahasiswa[]>([])
 const dosenList = ref<Dosen[]>([])
@@ -563,24 +608,20 @@ const itemsPerPageDropdownRef = ref<HTMLElement | null>(null)
 const isItemsPerPageDropdownOpen = ref(false)
 const selectItemsPerPage = (val: number) => { itemsPerPage.value = val; isItemsPerPageDropdownOpen.value = false; }
 
-// Custom Dropdown States
 const openDropdown = ref<string | null>(null)
 const mahasiswaFormRef = ref<HTMLElement | null>(null)
 const sekretarisRef = ref<HTMLElement | null>(null)
 const penguji1Ref = ref<HTMLElement | null>(null)
 const penguji2Ref = ref<HTMLElement | null>(null)
 
-// Search Queries
 const searchMhsQuery = ref('')
 const searchDosenQuery = ref('')
 
-// 🌟 KOREKSI: Filter Penugasan yang Tampil di Tabel Sesuai Jabatan Kaprodi
 const filteredPenugasanList = computed(() => {
   if (isAdmin.value || userProdiId.value === 0) return penugasanList.value;
   return penugasanList.value.filter(p => getRawId(p.mahasiswa?.prodi_id) === userProdiId.value);
 })
 
-// Pagination
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 const totalItems = computed(() => filteredPenugasanList.value.length)
@@ -598,7 +639,8 @@ const formData = ref({
   penguji_2: '' as number | '',
 })
 
-// --- FILTER & LOGIKA MAHASISWA ---
+const selectedJadwalPso = ref({ tanggal: '', sesi: '' });
+
 const filteredMahasiswaOptions = computed(() => {
   if (!searchMhsQuery.value) return mahasiswaList.value;
   const q = searchMhsQuery.value.toLowerCase();
@@ -620,7 +662,6 @@ const selectMahasiswa = (id: number) => {
   handleMahasiswaChange();
 }
 
-// --- FILTER & LOGIKA GROUPING DOSEN ---
 const isDosenSelected = (id_dosen: number) => {
   return formData.value.sekretaris === id_dosen ||
     formData.value.penguji_1 === id_dosen ||
@@ -654,7 +695,6 @@ const filteredOtherDosen = computed(() => {
   return otherDosen.value.filter(d => d.nama_dosen.toLowerCase().includes(q));
 })
 
-// --- CUSTOM DROPDOWN LOGIC ---
 const toggleDropdown = (menu: string) => {
   if (openDropdown.value === menu) {
     openDropdown.value = null;
@@ -706,10 +746,8 @@ const fetchKaprodiIdentity = async () => {
 
         if (result.success && result.data) {
             activeProdiName.value = result.data.prodi;
-
             const resProdi = await fetch('http://localhost:3000/api/prodi', { method: 'GET', credentials: 'include' });
             const resultProdi = await resProdi.json();
-
             if (resultProdi.success && resultProdi.data) {
                 const matchedProdi = resultProdi.data.find((p: GenericRecord) => String(p.nama_prodi) === activeProdiName.value);
                 if (matchedProdi) {
@@ -743,7 +781,6 @@ const fetchMahasiswaAvailable = async (currentEditId: number | null = null) => {
       const assignedIds = penugasanList.value.map(p => p.mahasiswa_id);
       const allMhs = result.data.rows || result.data;
 
-      // 🌟 KOREKSI: Mahasiswa yang muncul di Dropdown akan difilter sesuai Prodi Kaprodi
       mahasiswaList.value = allMhs.filter((m: Mahasiswa) => {
         const isAvailable = !assignedIds.includes(m.id_mahasiswa) || m.id_mahasiswa === currentEditId;
         const isSameProdi = isAdmin.value || getRawId(m.prodi_id) === userProdiId.value;
@@ -770,6 +807,7 @@ const handleMahasiswaChange = async (isFromEdit = false) => {
     formData.value.sekretaris = ''
     formData.value.penguji_1 = ''
     formData.value.penguji_2 = ''
+    selectedJadwalPso.value = { tanggal: '', sesi: '' }
   }
   rekomendasiList.value = []
 
@@ -785,7 +823,15 @@ const handleMahasiswaChange = async (isFromEdit = false) => {
       else if (result.data && result.data.rows) recs = result.data.rows;
       else if (Array.isArray(result)) recs = result;
 
-      rekomendasiList.value = recs.slice(0, 5);
+      // PERBAIKAN: Hanya set tanggal & sesi baru jika BUKAN dari mode Edit
+      if (recs.length > 0 && !isFromEdit) {
+        selectedJadwalPso.value = {
+          tanggal: recs[0].tanggal_ujian || '',
+          sesi: recs[0].sesi_waktu || ''
+        }
+      }
+
+      rekomendasiList.value = recs.slice(0, 3);
     }
   } catch (error) {
     console.error("Gagal fetch rekomendasi:", error)
@@ -798,6 +844,7 @@ const openAddModal = () => {
   isEditing.value = false;
   formData.value = { id: '', mahasiswa_id: '', sekretaris: '', penguji_1: '', penguji_2: '' }
   rekomendasiList.value = []
+  selectedJadwalPso.value = { tanggal: '', sesi: '' }
   openDropdown.value = null
   fetchMahasiswaAvailable()
   isModalOpen.value = true
@@ -812,6 +859,12 @@ const openEditModal = async (item: Penugasan) => {
     penguji_1: item.penguji_1,
     penguji_2: item.penguji_2
   };
+
+  selectedJadwalPso.value = {
+    tanggal: item.tanggal_ujian || '',
+    sesi: item.sesi_waktu || ''
+  };
+
   openDropdown.value = null;
 
   await fetchMahasiswaAvailable(item.mahasiswa_id);
@@ -854,7 +907,9 @@ const submitForm = async () => {
         penguji_2: Number(penguji_2),
         rekomendasi_sekretaris: findRekomendasiId(sekretaris),
         rekomendasi_penguji_1: findRekomendasiId(penguji_1),
-        rekomendasi_penguji_2: findRekomendasiId(penguji_2)
+        rekomendasi_penguji_2: findRekomendasiId(penguji_2),
+        tanggal_ujian: selectedJadwalPso.value.tanggal || null,
+        sesi_waktu: selectedJadwalPso.value.sesi || null
       })
     })
 
@@ -903,6 +958,49 @@ const confirmDelete = async () => {
   } finally {
     isDeleting.value = false;
   }
+}
+
+const formatDateDisplay = (dateString: string) => {
+  if (!dateString) return '';
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+  const [y, m, d] = dateString.split('-');
+  return `${d} ${monthNames[parseInt(m) - 1]} ${y}`;
+}
+
+const formatSesiDisplay = (sesi: string) => {
+  if (!sesi) return '';
+  const mapWaktu: Record<string, string> = {
+    '1': 'Sesi 1 (08:00 - 10:00 WIB)',
+    '2': 'Sesi 2 (10:00 - 12:00 WIB)',
+    '3': 'Sesi 3 (13:00 - 15:00 WIB)',
+    '4': 'Sesi 4 (15:00 - 17:00 WIB)',
+    '08:00': 'Sesi 1 (08:00 - 10:00 WIB)',
+    '10:00': 'Sesi 2 (10:00 - 12:00 WIB)',
+    '13:00': 'Sesi 3 (13:00 - 15:00 WIB)',
+    '15:00': 'Sesi 4 (15:00 - 17:00 WIB)'
+  };
+  return mapWaktu[String(sesi)] || `Sesi ${sesi}`;
+}
+
+const exportToExcel = () => {
+  if (filteredPenugasanList.value.length === 0) return showAlert('warning', 'Data Kosong', 'Tidak ada data untuk diekspor.');
+  const excelData: Record<string, string | number>[] = []; let no = 1;
+  filteredPenugasanList.value.forEach(item => {
+      excelData.push({
+          'No': no,
+          'Nama Mahasiswa': item.mahasiswa?.nama_mahasiswa || '',
+          'NIM': item.mahasiswa?.nim || '',
+          'Judul TA': item.mahasiswa?.judul_ta || '',
+          'Tanggal Ujian': item.tanggal_ujian || '-',
+          'Sesi Waktu': formatSesiDisplay(item.sesi_waktu || ''),
+          'Dosen Sekretaris': item.dosen_sekretaris?.nama_dosen || '',
+          'Dosen Penguji 1': item.dosen_penguji_1?.nama_dosen || '',
+          'Dosen Penguji 2': item.dosen_penguji_2?.nama_dosen || ''
+      });
+      no++;
+  });
+  const worksheet = XLSX.utils.json_to_sheet(excelData); const workbook = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(workbook, worksheet, "Data Penugasan");
+  XLSX.writeFile(workbook, `Data_Penugasan_TA_${new Date().toISOString().slice(0, 10)}.xlsx`); showAlert('success', 'Berhasil', 'Data berhasil diekspor!');
 }
 
 onMounted(() => {
