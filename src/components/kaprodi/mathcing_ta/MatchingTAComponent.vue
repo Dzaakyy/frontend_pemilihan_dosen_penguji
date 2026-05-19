@@ -88,7 +88,8 @@
         </span>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
+        <!-- 1. Pencarian Teks -->
         <div class="relative">
           <input v-model="searchQuery" type="text" placeholder="Cari Mahasiswa atau Dosen Penguji..."
             class="h-10 w-full rounded-lg border border-gray-300 bg-white pl-10 pr-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
@@ -99,6 +100,40 @@
           </svg>
         </div>
 
+        <!-- 2. FILTER TANGGAL BARU -->
+        <div class="relative w-full" ref="tanggalDropdownRef">
+          <button type="button" @click="isTanggalDropdownOpen = !isTanggalDropdownOpen"
+            class="flex items-center justify-between h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
+            <span class="truncate pr-4 font-medium">{{ selectedTanggalLabel }}</span>
+            <svg
+              :class="['w-4 h-4 text-gray-400 transition-transform duration-200', { 'rotate-180': isTanggalDropdownOpen }]"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+
+          <transition enter-active-class="transition duration-100 ease-out"
+            enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100"
+            leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100"
+            leave-to-class="transform scale-95 opacity-0">
+            <div v-if="isTanggalDropdownOpen"
+              class="absolute z-[100] w-full mt-1.5 top-full bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
+              <ul class="max-h-60 overflow-y-auto custom-scrollbar py-1">
+                <li @click="selectFilterTanggal('')"
+                  class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors border-b border-gray-100 dark:border-gray-700 font-medium">
+                  -- Tampilkan Semua Tanggal --
+                </li>
+                <li v-for="tgl in availableDatesFilter" :key="tgl"
+                  @click="selectFilterTanggal(tgl)"
+                  class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors border-b border-gray-50 last:border-0 dark:border-gray-700/50">
+                  {{ formatDateDisplay(tgl) }}
+                </li>
+              </ul>
+            </div>
+          </transition>
+        </div>
+
+        <!-- 3. FILTER MAHASISWA -->
         <div class="relative w-full" ref="mahasiswaDropdownRef">
           <button type="button" @click="isMahasiswaDropdownOpen = !isMahasiswaDropdownOpen"
             class="flex items-center justify-between h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
@@ -332,7 +367,7 @@
           </div>
           <h4 class="text-xl font-bold text-gray-800 dark:text-white/90">Automasi PSO Massal</h4>
           <p class="text-xs text-gray-500 mt-1 leading-relaxed">
-            Sistem mendeteksi mahasiswa yang belum di-matching. Atur kumpulan tanggal ujian serentak dan pilih parameter algoritma.
+            Sistem mendeteksi mahasiswa yang belum di-matching. Atur kumpulan tanggal pelaksanaan serentak dan pilih parameter algoritma.
           </p>
         </div>
 
@@ -351,7 +386,7 @@
                 Tentukan Tanggal Pool (Pilih Lebih Dari Satu)
               </h5>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full items-start">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full items-start">
 
                 <div class="w-full relative datepicker-container">
                   <label class="block text-[11px] font-semibold text-blue-700 dark:text-blue-400 mb-1 ml-1">Pilih Kumpulan Tanggal <span class="text-red-500">*</span></label>
@@ -363,7 +398,7 @@
                     <button type="button" @click="openCalendar('global', '')"
                       class="pl-10 flex items-center justify-between w-full h-[38px] text-xs rounded-xl border border-blue-200 bg-white px-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-sm transition-all outline-none cursor-pointer dark:bg-gray-900 dark:border-gray-600 dark:text-white hover:bg-blue-50/50 dark:hover:bg-gray-800">
                       <span :class="globalTanggal.length > 0 ? 'text-gray-800 dark:text-white truncate' : 'text-gray-400 dark:text-gray-500'">
-                        {{ globalTanggal.length > 0 ? [...globalTanggal].sort().map(d => formatDateDisplay(d)).join(' & ') : 'Klik untuk memilih banyak tanggal...' }}
+                        {{ globalTanggal.length > 0 ? [...globalTanggal].sort().map(d => formatDateDisplay(d)).join(' & ') : 'Klik untuk memilih...' }}
                       </span>
                       <svg class="w-4 h-4 text-gray-400 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
@@ -419,6 +454,18 @@
                       <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     </div>
                     <input v-model.number="inputDailyLimit" type="number" min="1"
+                      class="pl-10 w-full h-[38px] text-xs rounded-xl border border-blue-200 bg-white px-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-sm transition-all outline-none dark:bg-gray-900 dark:border-gray-600 dark:text-white" />
+                  </div>
+                </div>
+
+                <!-- INPUT BARU: MAKS SESI DOSEN -->
+                <div class="w-full relative">
+                  <label class="block text-[11px] font-semibold text-blue-700 dark:text-blue-400 mb-1 ml-1">Maks Sesi Dosen / Hari <span class="text-red-500">*</span></label>
+                  <div class="relative w-full">
+                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10">
+                      <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </div>
+                    <input v-model.number="inputDosenDailyLimit" type="number" min="1"
                       class="pl-10 w-full h-[38px] text-xs rounded-xl border border-blue-200 bg-white px-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 shadow-sm transition-all outline-none dark:bg-gray-900 dark:border-gray-600 dark:text-white" />
                   </div>
                 </div>
@@ -500,7 +547,7 @@
                         Nama Mahasiswa</th>
                       <th
                         class="p-3 font-bold text-gray-700 dark:text-gray-300 w-[220px] rounded-tr-xl border-b border-gray-200 dark:border-gray-700">
-                        Status Jadwal</th>
+                        Status Penugasan</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100 dark:divide-gray-800/60">
@@ -525,7 +572,7 @@
                         :class="{ 'rounded-br-xl': index === filteredUnassignedMahasiswaList.length - 1 }">
                           <span v-if="selectedMahasiswaIds.includes(mhs.id_mahasiswa)" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-medium dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800">
                               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                              Akan Dijadwalkan Otomatis
+                              Akan Diplot Otomatis
                           </span>
                           <span v-else class="text-xs text-gray-400 dark:text-gray-600 italic">Tidak Dipilih</span>
                       </td>
@@ -726,7 +773,7 @@
                 <span class="text-xs font-bold text-gray-500 dark:text-gray-400">2. Ketersediaan Kuota Dosen (Max 25
                   Poin)</span>
                 <span class="font-bold text-orange-500 dark:text-orange-400 mt-1 sm:mt-0">+ {{
-                  parsedDetailKriteria.poin_kuota }} Poin</span>
+                  parsedDetailKriteria.poin_distribusi }} Poin</span>
               </div>
 
               <div
@@ -790,7 +837,7 @@ interface GenericRecord { [key: string]: unknown; }
 interface TopikTA { nama_topik: string; }
 interface Mahasiswa { id_mahasiswa: number; nama_mahasiswa: string; judul_ta: string; nim: string; topik_id: unknown; topik_ta?: TopikTA; prodi_id: unknown; }
 interface Dosen { id_dosen: number; nama_dosen: string; nidn: string; kuota_menguji: number; }
-interface DetailKriteria { keahlian_dosen: string[]; matched_words: string[]; poin_teks: number; poin_kuota: number; }
+interface DetailKriteria { keahlian_dosen: string[]; matched_words: string[]; poin_teks: number; poin_distribusi: number; }
 interface Rekomendasi {
   id_rekomendasi: number;
   mahasiswa_id: number;
@@ -843,7 +890,6 @@ const fetchCapacityInfo = async () => {
     }
   } catch (e) {
     console.error("Gagal menarik data kapasitas", e);
-    // Fallback darurat jika routing belum terpasang dengan baik
     capacityInfo.value = { totalDosen: 999, dailyCapacity: 999, globalCapacity: 9999 };
   }
 };
@@ -854,6 +900,7 @@ const modalSearchQuery = ref('')
 
 const globalTanggal = ref<string[]>([])
 const inputDailyLimit = ref(10)
+const inputDosenDailyLimit = ref(2)
 
 const distributeDates = () => {
   if (globalTanggal.value.length === 0) return;
@@ -991,6 +1038,11 @@ const isSelected = (id: 'global' | number, day: number) => {
 const mahasiswaList = ref<Mahasiswa[]>([])
 const semuaRekomendasi = ref<Rekomendasi[]>([])
 
+// TANGGAL FILTER REFS (BARU)
+const selectedTanggalFilter = ref<string>('')
+const isTanggalDropdownOpen = ref(false)
+const tanggalDropdownRef = ref<HTMLElement | null>(null)
+
 const isMahasiswaDropdownOpen = ref(false)
 const mahasiswaDropdownRef = ref<HTMLElement | null>(null)
 const isItemsPerPageDropdownOpen = ref(false)
@@ -1020,19 +1072,25 @@ const getRawId = (dataData: unknown): number => {
 
 const selectItemsPerPage = (val: number) => { itemsPerPage.value = val; isItemsPerPageDropdownOpen.value = false; }
 
-const handleDropdownClickOutside = (event: MouseEvent) => {
-  if (mahasiswaDropdownRef.value && !mahasiswaDropdownRef.value.contains(event.target as Node)) isMahasiswaDropdownOpen.value = false;
-  if (itemsPerPageDropdownRef.value && !itemsPerPageDropdownRef.value.contains(event.target as Node)) isItemsPerPageDropdownOpen.value = false;
-
-  const target = event.target as HTMLElement;
-  if (!target.closest('.datepicker-container')) {
-    activeDatePicker.value = null;
-  }
+const selectFilterTanggal = (val: string) => {
+  selectedTanggalFilter.value = val;
+  isTanggalDropdownOpen.value = false;
 }
 
 const selectFilterMahasiswa = (val: number | '') => {
   selectedMahasiswaFilter.value = val;
   isMahasiswaDropdownOpen.value = false;
+}
+
+const handleDropdownClickOutside = (event: MouseEvent) => {
+  if (mahasiswaDropdownRef.value && !mahasiswaDropdownRef.value.contains(event.target as Node)) isMahasiswaDropdownOpen.value = false;
+  if (itemsPerPageDropdownRef.value && !itemsPerPageDropdownRef.value.contains(event.target as Node)) isItemsPerPageDropdownOpen.value = false;
+  if (tanggalDropdownRef.value && !tanggalDropdownRef.value.contains(event.target as Node)) isTanggalDropdownOpen.value = false;
+
+  const target = event.target as HTMLElement;
+  if (!target.closest('.datepicker-container')) {
+    activeDatePicker.value = null;
+  }
 }
 
 const filteredMahasiswaDropdown = computed(() => {
@@ -1044,6 +1102,11 @@ const selectedMahasiswaLabel = computed(() => {
   if (selectedMahasiswaFilter.value === '') return '-- Tampilkan Semua Mahasiswa --';
   const found = mahasiswaList.value.find(m => m.id_mahasiswa === selectedMahasiswaFilter.value);
   return found ? `${found.nama_mahasiswa} (${found.nim})` : '-- Tampilkan Semua Mahasiswa --';
+});
+
+const selectedTanggalLabel = computed(() => {
+  if (selectedTanggalFilter.value === '') return '-- Tampilkan Semua Tanggal --';
+  return formatDateDisplay(selectedTanggalFilter.value);
 });
 
 const groupedRekomendasi = computed(() => {
@@ -1074,11 +1137,24 @@ const groupedRekomendasi = computed(() => {
   return Object.values(groups);
 })
 
+const availableDatesFilter = computed(() => {
+  const dates = new Set<string>();
+  groupedRekomendasi.value.forEach(group => {
+    if (group.tanggal_ujian) dates.add(group.tanggal_ujian);
+  });
+  return Array.from(dates).sort();
+});
+
 const filteredGroups = computed(() => {
   let result = groupedRekomendasi.value;
 
   if (!isAdmin.value && userProdiId.value > 0) {
     result = result.filter(group => group.prodi_id === userProdiId.value);
+  }
+
+  // Filter Tanggal Baru
+  if (selectedTanggalFilter.value !== '') {
+    result = result.filter(group => group.tanggal_ujian === selectedTanggalFilter.value);
   }
 
   if (selectedMahasiswaFilter.value !== '') {
@@ -1104,7 +1180,7 @@ const paginatedGroups = computed(() => {
   return filteredGroups.value.slice(start, end)
 })
 
-watch([searchQuery, selectedMahasiswaFilter, itemsPerPage], () => { currentPage.value = 1 })
+watch([searchQuery, selectedMahasiswaFilter, selectedTanggalFilter, itemsPerPage], () => { currentPage.value = 1 })
 
 const unassignedMahasiswaList = computed(() => {
   if (!mahasiswaList.value || mahasiswaList.value.length === 0) return [];
@@ -1260,7 +1336,8 @@ const submitGeneratePso = async () => {
       prodi_id: !isAdmin.value && userProdiId.value > 0 ? userProdiId.value : undefined,
       data_generate: selectedMahasiswaIds.value.map(id => ({ id_mahasiswa: id })),
       tanggal_pool: globalTanggal.value,
-      max_per_day: inputDailyLimit.value
+      max_mhs_per_day: inputDailyLimit.value,
+      max_dosen_per_day: inputDosenDailyLimit.value
     };
 
     const response = await fetch('http://localhost:3000/api/matching-ta/generate', {
@@ -1376,7 +1453,7 @@ const exportToExcel = () => {
     group.rekomendasi.forEach((rek, index) => {
       const isFirstRow = index === 0;
 
-      const tanggalText = group.tanggal_ujian ? formatDateDisplay(group.tanggal_ujian) : 'Belum Dijadwalkan';
+      const tanggalText = group.tanggal_ujian ? formatDateDisplay(group.tanggal_ujian) : 'Belum Ditentukan';
       const sesiText = group.sesi_waktu ? formatSesiDisplay(group.sesi_waktu) : '-';
 
       excelData.push({
@@ -1406,7 +1483,7 @@ const exportToExcel = () => {
 
   XLSX.writeFile(workbook, fileName);
 
-  showAlert('success', 'Berhasil', 'Data berhasil diekspor ke format .xlsx asli beserta jadwalnya!');
+  showAlert('success', 'Berhasil', 'Data berhasil diekspor ke format .xlsx asli!');
 }
 
 onMounted(() => {
@@ -1423,115 +1500,27 @@ onBeforeUnmount(() => { document.removeEventListener('mousedown', handleDropdown
 </script>
 
 <style scoped>
-.custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
-}
-
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #4b5563;
-}
-
-.custom-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: #94a3b8;
-}
+.custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+.dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; }
+.custom-scrollbar:hover::-webkit-scrollbar-thumb { background: #94a3b8; }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-:global(.apexcharts-tooltip) {
-  border-radius: 0.75rem !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  transition: all 0.2s ease !important;
-}
-
-:global(.apexcharts-tooltip),
-:global(.apexcharts-tooltip.apexcharts-theme-light) {
-  background: #ffffff !important;
-  border: 1px solid #e5e7eb !important;
-  color: #1f2937 !important;
-}
-
-:global(.dark .apexcharts-tooltip),
-:global(.apexcharts-tooltip.apexcharts-theme-dark) {
-  background: #1f2937 !important;
-  border: 1px solid #374151 !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
-  color: #f9fafb !important;
-}
-
-:global(.apexcharts-tooltip-title) {
-  font-family: inherit !important;
-  font-size: 0.75rem !important;
-  font-weight: 700 !important;
-  padding: 0.625rem 0.75rem !important;
-  margin-bottom: 0 !important;
-  background: transparent !important;
-  border-bottom: 1px solid #e5e7eb !important;
-  color: inherit !important;
-}
-
-:global(.dark .apexcharts-tooltip-title),
-:global(.apexcharts-tooltip.apexcharts-theme-dark .apexcharts-tooltip-title) {
-  border-bottom: 1px solid #374151 !important;
-}
-
-:global(.apexcharts-tooltip-series-group) {
-  padding: 0.625rem 0.75rem !important;
-  background: transparent !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-}
-
-:global(.apexcharts-tooltip-text) {
-  font-family: inherit !important;
-  font-size: 0.75rem !important;
-  color: inherit !important;
-}
-
-:global(.apexcharts-tooltip-text-y-label) {
-  color: #6b7280 !important;
-}
-
-:global(.dark .apexcharts-tooltip-text-y-label),
-:global(.apexcharts-tooltip.apexcharts-theme-dark .apexcharts-tooltip-text-y-label) {
-  color: #9ca3af !important;
-}
-
-:global(.apexcharts-tooltip-text-y-value) {
-  color: #3b82f6 !important;
-  font-weight: 700 !important;
-  margin-left: 0.5rem !important;
-}
-
-:global(.dark .apexcharts-tooltip-text-y-value),
-:global(.apexcharts-tooltip.apexcharts-theme-dark .apexcharts-tooltip-text-y-value) {
-  color: #60a5fa !important;
-}
-
-.custom-date-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
-  display: none !important;
-  -webkit-appearance: none;
-}
+:global(.apexcharts-tooltip) { border-radius: 0.75rem !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important; padding: 0 !important; overflow: hidden !important; transition: all 0.2s ease !important; }
+:global(.apexcharts-tooltip), :global(.apexcharts-tooltip.apexcharts-theme-light) { background: #ffffff !important; border: 1px solid #e5e7eb !important; color: #1f2937 !important; }
+:global(.dark .apexcharts-tooltip), :global(.apexcharts-tooltip.apexcharts-theme-dark) { background: #1f2937 !important; border: 1px solid #374151 !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important; color: #f9fafb !important; }
+:global(.apexcharts-tooltip-title) { font-family: inherit !important; font-size: 0.75rem !important; font-weight: 700 !important; padding: 0.625rem 0.75rem !important; margin-bottom: 0 !important; background: transparent !important; border-bottom: 1px solid #e5e7eb !important; color: inherit !important; }
+:global(.dark .apexcharts-tooltip-title), :global(.apexcharts-tooltip.apexcharts-theme-dark .apexcharts-tooltip-title) { border-bottom: 1px solid #374151 !important; }
+:global(.apexcharts-tooltip-series-group) { padding: 0.625rem 0.75rem !important; background: transparent !important; display: flex !important; align-items: center !important; justify-content: space-between !important; }
+:global(.apexcharts-tooltip-text) { font-family: inherit !important; font-size: 0.75rem !important; color: inherit !important; }
+:global(.apexcharts-tooltip-text-y-label) { color: #6b7280 !important; }
+:global(.dark .apexcharts-tooltip-text-y-label), :global(.apexcharts-tooltip.apexcharts-theme-dark .apexcharts-tooltip-text-y-label) { color: #9ca3af !important; }
+:global(.apexcharts-tooltip-text-y-value) { color: #3b82f6 !important; font-weight: 700 !important; margin-left: 0.5rem !important; }
+:global(.dark .apexcharts-tooltip-text-y-value), :global(.apexcharts-tooltip.apexcharts-theme-dark .apexcharts-tooltip-text-y-value) { color: #60a5fa !important; }
+.custom-date-wrapper input[type="date"]::-webkit-calendar-picker-indicator { display: none !important; -webkit-appearance: none; }
 </style>
