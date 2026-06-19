@@ -182,6 +182,8 @@ const showAlert = (type: 'success' | 'error' | 'warning' | 'info', title: string
   }, 3000)
 }
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL
+
 const prodiList = ref<Prodi[]>([])
 const isLoading = ref(true)
 
@@ -203,7 +205,7 @@ const isDeleting = ref(false)
 const fetchProdi = async () => {
   isLoading.value = true
   try {
-    const response = await fetch('http://localhost:3000/api/prodi', {
+    const response = await fetch(`${baseUrl}/prodi`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'
@@ -239,8 +241,8 @@ const submitForm = async () => {
   isSaving.value = true
   try {
     const url = isEditing.value
-      ? `http://localhost:3000/api/prodi/${formData.value.id_prodi}`
-      : 'http://localhost:3000/api/prodi'
+      ? `${baseUrl}/prodi/${formData.value.id_prodi}`
+      : `${baseUrl}/prodi`
 
     const method = isEditing.value ? 'PUT' : 'POST'
 
@@ -282,7 +284,7 @@ const confirmDelete = async () => {
 
   isDeleting.value = true
   try {
-    const response = await fetch(`http://localhost:3000/api/prodi/${itemToDelete.value.id_prodi}`, {
+    const response = await fetch(`${baseUrl}/prodi/${itemToDelete.value.id_prodi}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'

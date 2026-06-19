@@ -12,16 +12,16 @@
       </div>
 
       <div class="lg:col-span-6 xl:col-span-5">
-        <div class="h-full min-h-[350px] rounded-2xl border border-gray-200 bg-white p-6 flex flex-col shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
+        <div class="h-[400px] lg:h-[430px] rounded-2xl border border-gray-200 bg-white p-6 flex flex-col shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
           <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Keahlian Dosen</h3>
-          <p class="text-xs text-gray-500 mb-6">Sebaran dosen berdasarkan topik keahliannya.</p>
+          <p class="text-xs text-gray-500 mb-6 shrink-0">Sebaran dosen berdasarkan bidang keahliannya. Klik untuk detail dosen.</p>
 
-          <div class="flex-1 flex flex-col justify-center gap-4">
-            <div v-if="isLoading" class="text-center text-sm text-gray-400">Memuat diagram...</div>
-            <div v-else-if="keahlianStats.length === 0" class="text-center text-sm text-gray-400">Belum ada data keahlian.</div>
+          <div class="flex-1 flex flex-col gap-4 overflow-y-auto custom-scrollbar pr-2">
+            <div v-if="isLoading" class="text-center text-sm text-gray-400 mt-10">Memuat diagram...</div>
+            <div v-else-if="keahlianStats.length === 0" class="text-center text-sm text-gray-400 mt-10">Belum ada data keahlian.</div>
 
-            <div v-else v-for="(stat, index) in keahlianStats" :key="index" class="w-full">
-              <div class="flex justify-between text-xs font-semibold mb-1">
+            <div v-else v-for="(stat, index) in keahlianStats" :key="index" class="w-full shrink-0 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 p-1.5 -ml-1.5 rounded-lg transition-colors" @click="openKeahlianDetail(stat.name)">
+              <div class="flex justify-between text-xs font-semibold mb-1 px-1">
                 <span class="text-gray-700 dark:text-gray-300">{{ stat.name }}</span>
                 <span class="text-brand-600">{{ stat.count }} Dosen</span>
               </div>
@@ -31,14 +31,14 @@
             </div>
           </div>
 
-          <div class="mt-6 pt-4 border-t border-gray-100 flex justify-between text-sm font-semibold text-gray-500">
+          <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm font-semibold text-gray-500 shrink-0">
              <div class="text-center w-1/2 border-r border-gray-200">
                <p class="text-xs">Dosen</p>
                <p class="text-lg text-gray-800">{{ filteredDosenList.length }}</p>
              </div>
              <div class="text-center w-1/2">
                <p class="text-xs">Keahlian</p>
-               <p class="text-lg text-gray-800">{{ topikList.length }}</p>
+               <p class="text-lg text-gray-800">{{ uniqueKeahlianCount }}</p>
              </div>
           </div>
         </div>
@@ -61,15 +61,15 @@
       </div>
 
       <div class="lg:col-span-6 xl:col-span-5">
-        <div class="h-full min-h-[350px] rounded-2xl border border-gray-200 bg-white p-6 flex flex-col shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
+        <div class="h-[400px] lg:h-[430px] rounded-2xl border border-gray-200 bg-white p-6 flex flex-col shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
           <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Sebaran Topik Tugas Akhir</h3>
-          <p class="text-xs text-gray-500 mb-6">Persentase mahasiswa di prodi Anda berdasarkan topik yang diambil.</p>
+          <p class="text-xs text-gray-500 mb-6 shrink-0">Persentase mahasiswa di prodi Anda berdasarkan topik yang diambil.</p>
 
-          <div class="flex-1 flex flex-col justify-center gap-4">
-            <div v-if="isLoading" class="text-center text-sm text-gray-400">Memuat diagram...</div>
-            <div v-else-if="topikStats.length === 0" class="text-center text-sm text-gray-400">Belum ada data topik.</div>
+          <div class="flex-1 flex flex-col gap-4 overflow-y-auto custom-scrollbar pr-2">
+            <div v-if="isLoading" class="text-center text-sm text-gray-400 mt-10">Memuat diagram...</div>
+            <div v-else-if="topikStats.length === 0" class="text-center text-sm text-gray-400 mt-10">Belum ada data topik.</div>
 
-            <div v-else v-for="(stat, index) in topikStats" :key="index" class="w-full">
+            <div v-else v-for="(stat, index) in topikStats" :key="index" class="w-full shrink-0">
               <div class="flex justify-between text-xs font-semibold mb-1">
                 <span class="text-gray-700 dark:text-gray-300">{{ stat.name }}</span>
                 <span class="text-brand-600">{{ stat.count }} Mhs ({{ stat.percentage }}%)</span>
@@ -132,6 +132,48 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal Detail Keahlian Dosen  -->
+    <div v-if="isModalOpen" @click.self="closeModal" class="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 bg-gray-900/60 backdrop-blur-sm transition-opacity">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[85vh] transform transition-all scale-100">
+
+        <!-- Modal Header -->
+        <div class="px-6 py-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-start bg-white dark:bg-gray-800">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1">Daftar Dosen</h3>
+            <p class="text-xl font-extrabold text-brand-600 dark:text-brand-500">{{ selectedKeahlianName }}</p>
+          </div>
+          <button @click="closeModal" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-full transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-6 overflow-y-auto custom-scrollbar bg-gray-50/50 dark:bg-gray-900/20">
+          <ul class="space-y-3">
+            <li v-for="dosen in selectedDosenList" :key="dosen.id_dosen" class="flex items-center gap-4 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md hover:border-brand-200 dark:hover:border-brand-800 transition-all">
+               <div class="w-10 h-10 shrink-0 rounded-full bg-gradient-to-br from-brand-100 to-brand-50 dark:from-brand-900/40 dark:to-brand-800/20 flex items-center justify-center text-brand-600 dark:text-brand-400 font-bold text-lg shadow-inner">
+                 {{ dosen.nama_dosen.charAt(0) }}
+               </div>
+               <div class="flex-1">
+                 <h4 class="text-sm font-bold text-gray-800 dark:text-gray-100">{{ dosen.nama_dosen }}</h4>
+               </div>
+            </li>
+            <li v-if="selectedDosenList.length === 0" class="text-sm text-gray-500 text-center py-8">
+              Data dosen tidak ditemukan.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 text-right">
+          <button @click="closeModal" class="px-6 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors">
+            Tutup
+          </button>
+        </div>
+
+      </div>
+    </div>
   </admin-layout>
 </template>
 
@@ -151,7 +193,8 @@ interface Mahasiswa { id_mahasiswa: number; nama_mahasiswa: string; nim: string;
 interface Penugasan { id_penugasan: number; mahasiswa_id: unknown; sekretaris: unknown; penguji_1: unknown; penguji_2: unknown; }
 interface Prodi { id_prodi: number; nama_prodi: string; }
 interface Topik { id_topik: number; nama_topik: string; }
-interface Keahlian { id_keahlian: number; dosen_id: unknown; topik_id: unknown; }
+
+interface Keahlian { id_keahlian: number; dosen_id: unknown; bidang_keahlian?: string; topik_id?: unknown; }
 interface Matching { id_rekomendasi: number; mahasiswa_id: unknown; nilai_fitness: unknown; rank: unknown; }
 
 const isLoading = ref(true)
@@ -167,6 +210,10 @@ const keahlianList = ref<Keahlian[]>([])
 const matchingList = ref<Matching[]>([])
 
 const totalUserAsli = ref(0)
+
+const isModalOpen = ref(false);
+const selectedKeahlianName = ref('');
+const selectedDosenList = ref<Dosen[]>([]);
 
 const isAdmin = computed(() => userRoles.value.some(role => role.toLowerCase() === 'admin'))
 
@@ -252,7 +299,7 @@ const topikStats = computed(() => {
     const percentage = filteredMahasiswaList.value.length > 0 ? Math.round((count / filteredMahasiswaList.value.length) * 100) : 0;
     return { name: t.nama_topik, count, percentage };
   });
-  return stats.sort((a, b) => b.count - a.count).slice(0, 5);
+  return stats.sort((a, b) => b.count - a.count);
 })
 
 const getTopikName = (idData: unknown) => {
@@ -261,37 +308,78 @@ const getTopikName = (idData: unknown) => {
   return topik ? topik.nama_topik : 'Belum memilih topik';
 }
 
+const uniqueKeahlianCount = computed(() => {
+  if (keahlianList.value.length === 0) return 0;
+
+  const validDosenIds = new Set(filteredDosenList.value.map(d => getRawId(d.id_dosen)));
+  const validKeahlian = keahlianList.value.filter(k => validDosenIds.has(getRawId(k.dosen_id)));
+
+  const uniqueNames = new Set(validKeahlian.map(k => k.bidang_keahlian || 'Belum Ditentukan'));
+  return uniqueNames.size;
+});
+
 const keahlianStats = computed(() => {
-  if (topikList.value.length === 0 || keahlianList.value.length === 0) return [];
+  if (keahlianList.value.length === 0) return [];
 
   const validDosenIds = new Set(filteredDosenList.value.map(d => getRawId(d.id_dosen)));
   const filteredKeahlian = keahlianList.value.filter(k => validDosenIds.has(getRawId(k.dosen_id)));
 
-  const stats = topikList.value.map(t => {
-    const currentTopikId = getRawId(t.id_topik);
-    const count = filteredKeahlian.filter(k => getRawId(k.topik_id) === currentTopikId).length;
-    const maxKeahlian = Math.max(...topikList.value.map(tx => filteredKeahlian.filter(kx => getRawId(kx.topik_id) === getRawId(tx.id_topik)).length));
-    const percentage = maxKeahlian > 0 ? Math.round((count / maxKeahlian) * 100) : 0;
-    return { name: t.nama_topik, count, percentage };
+  const statsMap: Record<string, number> = {};
+  filteredKeahlian.forEach(k => {
+    const name = k.bidang_keahlian || 'Belum Ditentukan';
+    statsMap[name] = (statsMap[name] || 0) + 1;
   });
-  return stats.sort((a, b) => b.count - a.count).slice(0, 5);
+
+  const stats = Object.keys(statsMap).map(name => ({
+    name,
+    count: statsMap[name],
+    percentage: 0
+  }));
+
+  const maxKeahlian = Math.max(...stats.map(s => s.count), 1);
+  stats.forEach(s => {
+    s.percentage = Math.round((s.count / maxKeahlian) * 100);
+  });
+
+  return stats.sort((a, b) => b.count - a.count);
 })
+
+const openKeahlianDetail = (keahlianName: string) => {
+  selectedKeahlianName.value = keahlianName;
+
+  const relatedDosenIds = new Set(
+    keahlianList.value
+      .filter(k => (k.bidang_keahlian || 'Belum Ditentukan') === keahlianName)
+      .map(k => getRawId(k.dosen_id))
+  );
+
+  selectedDosenList.value = filteredDosenList.value.filter(d => relatedDosenIds.has(getRawId(d.id_dosen)));
+
+  isModalOpen.value = true;
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+};
+
 
 const fetchAllData = async () => {
   isLoading.value = true;
   try {
     const opts = { credentials: 'include' as RequestCredentials };
 
+    const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
     const [resDosen, resMhs, resPenugasan, resProdi, resTopik, resKeahlian, resAuthList, resMatching] = await Promise.all([
-      fetch('http://localhost:3000/api/dosen', opts).then(r => r.json()).catch(() => ({})),
-      fetch('http://localhost:3000/api/mahasiswa', opts).then(r => r.json()).catch(() => ({})),
-      fetch('http://localhost:3000/api/penugasan', opts).then(r => r.json()).catch(() => ({})),
-      fetch('http://localhost:3000/api/prodi', opts).then(r => r.json()).catch(() => ({})),
-      fetch('http://localhost:3000/api/topik-ta', opts).then(r => r.json()).catch(() => ({})),
-      fetch('http://localhost:3000/api/keahlian-dosen', opts).then(r => r.json()).catch(() => ({})),
-      fetch('http://localhost:3000/api/auth/users', opts).then(r => r.json()).catch(() => ({})),
-      fetch('http://localhost:3000/api/matching-ta', opts).then(r => r.json()).catch(() => ({}))
-    ]);
+          fetch(`${baseUrl}/dosen`, opts).then(r => r.json()).catch(() => ({})),
+          fetch(`${baseUrl}/mahasiswa`, opts).then(r => r.json()).catch(() => ({})),
+          fetch(`${baseUrl}/penugasan`, opts).then(r => r.json()).catch(() => ({})),
+          fetch(`${baseUrl}/prodi`, opts).then(r => r.json()).catch(() => ({})),
+          fetch(`${baseUrl}/topik-ta`, opts).then(r => r.json()).catch(() => ({})),
+          fetch(`${baseUrl}/keahlian-dosen`, opts).then(r => r.json()).catch(() => ({})),
+          fetch(`${baseUrl}/auth/users`, opts).then(r => r.json()).catch(() => ({})),
+          fetch(`${baseUrl}/matching-ta`, opts).then(r => r.json()).catch(() => ({}))
+    ]);;
 
     if (resDosen.success) dosenList.value = resDosen.data.rows || resDosen.data || [];
     if (resMhs.success) mahasiswaList.value = resMhs.data.rows || resMhs.data || [];

@@ -9,17 +9,12 @@
       'lg:translate-x-0': true,
     },
   ]" @mouseenter="handleMouseEnter" @mouseleave="isHovered = false">
-    <div :class="[
-      'py-8 flex',
-      !isExpanded && !isHovered ? 'lg:justify-center' : 'justify-start',
-    ]">
-      <!-- <router-link to="/">
-        <img v-if="isExpanded || isHovered || isMobileOpen" class="dark:hidden" src="/logo.svg" alt="Logo"
+    <div :class="['py-8 flex w-full justify-center']">
+        <img v-if="isExpanded || isHovered || isMobileOpen" class="dark:hidden" src="/images/logo/logo.svg" alt="Logo"
           width="150" height="40" />
-        <img v-if="isExpanded || isHovered || isMobileOpen" class="hidden dark:block" src="/logo.svg"
+        <img v-if="isExpanded || isHovered || isMobileOpen" class="hidden dark:block" src="/images/logo/logo.svg"
           alt="Logo" width="150" height="40" />
-        <img v-else src="/logo.svg" alt="Logo" width="32" height="32" />
-      </router-link> -->
+        <img v-else src="/images/logo/logo.svg" alt="Logo" width="60" height="60" />
     </div>
     <div class="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
       <nav class="mb-6">

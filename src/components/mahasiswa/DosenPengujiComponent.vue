@@ -136,6 +136,8 @@ const showAlert = (type: AlertVariant, title: string, message: string) => {
   setTimeout(() => { alert.value.show = false }, 3000)
 }
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL
+
 // State
 const myUserId = ref<number | null>(null) // ID Akun Login
 const myMahasiswaId = ref<number | null>(null) // ID Asli Tabel Mahasiswa
@@ -153,15 +155,14 @@ const simpanJudulTA = async () => {
   if (!myMahasiswaId.value) return;
   isSaving.value = true;
   try {
-    // Memperbarui berdasarkan ID Mahasiswa (Bukan ID User)
-    const response = await fetch(`http://localhost:3000/api/mahasiswa/${myMahasiswaId.value}`, {
+    const response = await fetch(`${baseUrl}/mahasiswa/${myMahasiswaId.value}`, {
       method: 'PUT', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
       body: JSON.stringify(formInput.value)
     });
 
     if(response.ok) {
       showAlert('success', 'Berhasil!', 'Judul TA dan Topik berhasil disimpan.')
-      await fetchInitData() // Muat ulang data terbaru
+      await fetchInitData()
     } else {
       showAlert('error', 'Gagal', 'Terjadi kesalahan saat menyimpan data.')
     }
@@ -173,25 +174,22 @@ const simpanJudulTA = async () => {
   }
 }
 
-// Fungsi Utama untuk memuat data secara berurutan
 const fetchInitData = async () => {
   isLoading.value = true
   try {
-    // 1. Tarik Data Mahasiswa via User ID
-    const resMhs = await fetch(`http://localhost:3000/api/mahasiswa/user/${myUserId.value}`, { credentials: 'include' })
+    const resMhs = await fetch(`${baseUrl}/mahasiswa/user/${myUserId.value}`, { credentials: 'include' })
     const resMhsData = await resMhs.json()
 
     if (resMhsData.success && resMhsData.data) {
       mahasiswaData.value = resMhsData.data
-      myMahasiswaId.value = resMhsData.data.id_mahasiswa // Ambil ID Mahasiswa asli
+      myMahasiswaId.value = resMhsData.data.id_mahasiswa
 
       formInput.value = {
         judul_ta: resMhsData.data.judul_ta || '',
         topik_id: resMhsData.data.topik_id || ''
       }
 
-      // 2. Jika mahasiswa valid, tarik Data Penugasannya
-      const resPenugasan = await fetch(`http://localhost:3000/api/penugasan/mahasiswa/${myMahasiswaId.value}`, { credentials: 'include' })
+      const resPenugasan = await fetch(`${baseUrl}/penugasan/mahasiswa/${myMahasiswaId.value}`, { credentials: 'include' })
       const penugasanData = await resPenugasan.json()
 
       if (penugasanData.success && penugasanData.data) {
@@ -206,7 +204,7 @@ const fetchInitData = async () => {
 }
 
 const fetchTopikList = async () => {
-  const response = await fetch('http://localhost:3000/api/topik-ta', { credentials: 'include' })
+  const response = await fetch(`${baseUrl}/topik-ta`, { credentials: 'include' })
   const result = await response.json()
   if(result.success) topikList.value = result.data
 }

@@ -114,7 +114,7 @@ import { ref, onMounted } from 'vue'
 import Modal from '../modal/Modal.vue'
 
 const isProfileInfoModal = ref(false)
-
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const profileName = ref('Loading...')
 const profileUsername = ref('Loading...')
 const profileRole = ref('Loading...')
@@ -123,7 +123,7 @@ const profileProdi = ref('Loading...')
 
 const fetchProfile = async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/auth/profile', {
+    const response = await fetch(`${baseUrl}/auth/profile`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'

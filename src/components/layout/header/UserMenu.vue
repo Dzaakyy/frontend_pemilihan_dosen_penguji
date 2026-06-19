@@ -51,7 +51,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 const router = useRouter()
 const dropdownOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
-
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const currentUsername = ref('Guest')
 const currentRoles = ref('User')
 
@@ -71,7 +71,7 @@ const signOut = async () => {
   try {
     console.log('Signing out...')
 
-    await fetch('http://localhost:3000/api/auth/logout', {
+    await fetch(`${baseUrl}/auth/logout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

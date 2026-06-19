@@ -181,6 +181,8 @@ const showAlert = (type: 'success' | 'error' | 'warning' | 'info', title: string
   }, 3000)
 }
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL
+
 const topikList = ref<Topik[]>([])
 const isLoading = ref(true)
 
@@ -202,7 +204,7 @@ const isDeleting = ref(false)
 const fetchTopik = async () => {
   isLoading.value = true
   try {
-    const response = await fetch('http://localhost:3000/api/topik-ta', {
+    const response = await fetch(`${baseUrl}/topik-ta`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'
@@ -238,8 +240,8 @@ const submitForm = async () => {
   isSaving.value = true
   try {
     const url = isEditing.value
-      ? `http://localhost:3000/api/topik-ta/${formData.value.id_topik}`
-      : 'http://localhost:3000/api/topik-ta'
+      ? `${baseUrl}/topik-ta/${formData.value.id_topik}`
+      : `${baseUrl}/topik-ta`
 
     const method = isEditing.value ? 'PUT' : 'POST'
 
@@ -281,7 +283,7 @@ const confirmDelete = async () => {
 
   isDeleting.value = true
   try {
-    const response = await fetch(`http://localhost:3000/api/topik-ta/${itemToDelete.value.id_topik}`, {
+    const response = await fetch(`${baseUrl}/topik-ta/${itemToDelete.value.id_topik}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'

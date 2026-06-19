@@ -107,6 +107,8 @@ interface DosenAPI {
   nama_dosen?: string;
 }
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL
+
 const myDosenId = ref<number | null>(null)
 const mahasiswaList = ref<Penugasan[]>([])
 const isLoading = ref(true)
@@ -136,7 +138,7 @@ onMounted(async () => {
     }
 
     if (!userId) {
-      const profileRes = await fetch('http://localhost:3000/api/auth/profile', opts);
+      const profileRes = await fetch(`${baseUrl}/auth/profile`, opts);
       if (profileRes.ok) {
         const profileJson = await profileRes.json();
         userId = profileJson.data?.id || profileJson.data?.id_user;
@@ -147,7 +149,7 @@ onMounted(async () => {
       throw new Error('Gagal mendapatkan data sesi. Silakan logout dan login ulang.');
     }
 
-    const dosenRes = await fetch('http://localhost:3000/api/dosen', opts);
+    const dosenRes = await fetch(`${baseUrl}/dosen`, opts);
     if (!dosenRes.ok) {
       throw new Error('Anda tidak memiliki akses untuk memuat profil Dosen.');
     }
@@ -163,7 +165,7 @@ onMounted(async () => {
 
     myDosenId.value = myDosenProfile.id_dosen;
 
-    const penugasanRes = await fetch(`http://localhost:3000/api/penugasan/dosen/${myDosenId.value}`, opts);
+    const penugasanRes = await fetch(`${baseUrl}/penugasan/dosen/${myDosenId.value}`, opts);
     const penugasanJson = await penugasanRes.json();
 
     if (penugasanJson.success) {

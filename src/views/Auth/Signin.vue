@@ -140,8 +140,8 @@ import FullScreenLayout from '@/components/layout/FullScreenLayout.vue'
 defineOptions({
   name: 'SignInView'
 })
-
 const router = useRouter()
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const username = ref('')
 const password = ref('')
 const showPassword = ref(false)
@@ -157,7 +157,7 @@ const handleSubmit = async () => {
   isLoading.value = true
 
   try {
-    const response = await fetch('http://localhost:3000/api/auth/login', {
+    const response = await fetch(`${baseUrl}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

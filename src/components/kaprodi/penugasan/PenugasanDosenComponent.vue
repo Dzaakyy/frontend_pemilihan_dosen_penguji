@@ -564,6 +564,8 @@ const showAlert = (type: AlertVariant, title: string, message: string) => {
   setTimeout(() => { alert.value.show = false }, 3000)
 }
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL
+
 const userRoles = ref<string[]>([])
 const userProdiId = ref<number>(0)
 const activeProdiName = ref('')
@@ -640,7 +642,6 @@ const currentDailyCounts = computed(() => {
 
   penugasanList.value.forEach(p => {
     if (p.tanggal_ujian === selectedWaktuPso.value.tanggal) {
-      // Jika sedang edit, jangan hitung penugasan yang sedang aktif diedit ini
       if (isEditing.value && p.id_penugasan === formData.value.id) return;
 
       if (p.sekretaris) counts[p.sekretaris] = (counts[p.sekretaris] || 0) + 1;
@@ -700,7 +701,6 @@ const filteredRecommendedDosen = computed(() => {
 
 const otherDosen = computed(() => {
   const recIds = recommendedDosen.value.map(d => d.dosen_id);
-  // Semua dosen dimunculkan tanpa memfilter kuota (agar filter ditangani dari logic harian)
   return dosenList.value.filter(d => !recIds.includes(d.id_dosen));
 })
 
@@ -759,12 +759,12 @@ const fetchKaprodiIdentity = async () => {
     if (isAdmin.value) return;
 
     try {
-        const response = await fetch('http://localhost:3000/api/auth/profile', { method: 'GET', credentials: 'include' });
+        const response = await fetch(`${baseUrl}/auth/profile`, { method: 'GET', credentials: 'include' });
         const result = await response.json();
 
         if (result.success && result.data) {
             activeProdiName.value = result.data.prodi;
-            const resProdi = await fetch('http://localhost:3000/api/prodi', { method: 'GET', credentials: 'include' });
+            const resProdi = await fetch(`${baseUrl}/prodi`, { method: 'GET', credentials: 'include' });
             const resultProdi = await resProdi.json();
             if (resultProdi.success && resultProdi.data) {
                 const matchedProdi = resultProdi.data.find((p: GenericRecord) => String(p.nama_prodi) === activeProdiName.value);
@@ -781,7 +781,7 @@ const fetchKaprodiIdentity = async () => {
 const fetchPenugasan = async () => {
   isLoading.value = true
   try {
-    const response = await fetch('http://localhost:3000/api/penugasan', { method: 'GET', credentials: 'include' })
+    const response = await fetch(`${baseUrl}/penugasan`, { method: 'GET', credentials: 'include' })
     const result = await response.json()
     if (response.ok) penugasanList.value = result.data.rows || result.data || []
   } catch (error) {
@@ -793,7 +793,7 @@ const fetchPenugasan = async () => {
 
 const fetchMahasiswaAvailable = async (currentEditId: number | null = null) => {
   try {
-    const response = await fetch('http://localhost:3000/api/mahasiswa', { method: 'GET', credentials: 'include' })
+    const response = await fetch(`${baseUrl}/mahasiswa`, { method: 'GET', credentials: 'include' })
     const result = await response.json()
     if (result.success) {
       const assignedIds = penugasanList.value.map(p => p.mahasiswa_id);
@@ -812,7 +812,7 @@ const fetchMahasiswaAvailable = async (currentEditId: number | null = null) => {
 
 const fetchSemuaDosen = async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/dosen', { method: 'GET', credentials: 'include' })
+    const response = await fetch(`${baseUrl}/dosen`, { method: 'GET', credentials: 'include' })
     const result = await response.json()
     if (result.success) dosenList.value = result.data.rows || result.data || []
   } catch (error) {
@@ -833,7 +833,7 @@ const handleMahasiswaChange = async (isFromEdit = false) => {
 
   isLoadingRekomendasi.value = true
   try {
-    const response = await fetch(`http://localhost:3000/api/matching-ta/mahasiswa/${formData.value.mahasiswa_id}`, { method: 'GET', credentials: 'include' })
+    const response = await fetch(`${baseUrl}/matching-ta/mahasiswa/${formData.value.mahasiswa_id}`, { method: 'GET', credentials: 'include' })
     const result = await response.json()
     if (response.ok) {
       let recs = [];
@@ -910,7 +910,7 @@ const submitForm = async () => {
   }
 
   try {
-    const url = isEditing.value ? `http://localhost:3000/api/penugasan/${formData.value.id}` : 'http://localhost:3000/api/penugasan';
+    const url = isEditing.value ? `${baseUrl}/penugasan/${formData.value.id}` : `${baseUrl}/penugasan`;
     const method = isEditing.value ? 'PUT' : 'POST';
 
     const response = await fetch(url, {
@@ -960,7 +960,7 @@ const confirmDelete = async () => {
   if (!itemToDelete.value) return;
   isDeleting.value = true;
   try {
-    const response = await fetch(`http://localhost:3000/api/penugasan/${itemToDelete.value.id_penugasan}`, {
+    const response = await fetch(`${baseUrl}/penugasan/${itemToDelete.value.id_penugasan}`, {
       method: 'DELETE', credentials: 'include'
     })
     const result = await response.json();

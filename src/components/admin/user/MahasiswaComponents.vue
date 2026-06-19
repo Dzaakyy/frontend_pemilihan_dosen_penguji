@@ -671,6 +671,8 @@ const showAlert = (type: AlertVariant, title: string, message: string) => {
   setTimeout(() => { alert.value.show = false }, 3000)
 }
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL
+
 const userRoles = ref<string[]>([])
 const isAdmin = computed(() => {
   return userRoles.value.some(role => role.toLowerCase() === 'admin')
@@ -875,7 +877,7 @@ const isDeleting = ref(false)
 const fetchMahasiswa = async () => {
   isLoading.value = true
   try {
-    const response = await fetch('http://localhost:3000/api/mahasiswa', {
+    const response = await fetch(`${baseUrl}/mahasiswa`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'
@@ -894,7 +896,7 @@ const fetchMahasiswa = async () => {
 
 const fetchProdiList = async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/prodi', {
+    const response = await fetch(`${baseUrl}/prodi`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'
@@ -908,7 +910,7 @@ const fetchProdiList = async () => {
 
 const fetchTopikList = async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/topik-ta', {
+    const response = await fetch(`${baseUrl}/topik-ta`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'
@@ -922,7 +924,7 @@ const fetchTopikList = async () => {
 
 const fetchDosenList = async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/dosen', {
+    const response = await fetch(`${baseUrl}/dosen`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -988,8 +990,8 @@ const submitForm = async () => {
   isSaving.value = true
   try {
     const url = isEditing.value
-      ? `http://localhost:3000/api/mahasiswa/${formData.value.id}`
-      : 'http://localhost:3000/api/mahasiswa'
+      ? `${baseUrl}/mahasiswa/${formData.value.id}`
+      : `${baseUrl}/mahasiswa`
     const method = isEditing.value ? 'PUT' : 'POST'
 
     const bodyPayload: MahasiswaPayload = {
@@ -1048,7 +1050,7 @@ const confirmDelete = async () => {
   if (itemToDelete.value === null) return;
   isDeleting.value = true
   try {
-    const response = await fetch(`http://localhost:3000/api/mahasiswa/${itemToDelete.value.id_mahasiswa}`, {
+    const response = await fetch(`${baseUrl}/mahasiswa/${itemToDelete.value.id_mahasiswa}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'

@@ -462,6 +462,8 @@ interface DosenPayload {
  role_ids: number[];
 }
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL
+
 // --- STATE ---
 const alert = ref({ show: false, type: 'success' as AlertVariant, title: '', message: '' })
 const showAlert = (type: AlertVariant, title: string, message: string) => {
@@ -622,7 +624,7 @@ const isDeleting = ref(false)
 const fetchDosen = async () => {
  isLoading.value = true
  try {
-  const response = await fetch('http://localhost:3000/api/dosen', {
+  const response = await fetch(`${baseUrl}/dosen`, {
    method: 'GET',
    headers: { 'Content-Type': 'application/json' },
    credentials: 'include'
@@ -641,7 +643,7 @@ const fetchDosen = async () => {
 
 const fetchProdiList = async () => {
  try {
-  const response = await fetch('http://localhost:3000/api/prodi', {
+  const response = await fetch(`${baseUrl}/prodi`, {
    method: 'GET',
    headers: { 'Content-Type': 'application/json' },
    credentials: 'include'
@@ -707,8 +709,8 @@ const submitForm = async () => {
  isSaving.value = true
  try {
   const url = isEditing.value
-   ? `http://localhost:3000/api/dosen/${formData.value.id}`
-   : 'http://localhost:3000/api/dosen'
+   ? `${baseUrl}/dosen/${formData.value.id}`
+   : `${baseUrl}/dosen`
   const method = isEditing.value ? 'PUT' : 'POST'
 
   const bodyPayload: DosenPayload = {
@@ -759,7 +761,7 @@ const confirmDelete = async () => {
  if (itemToDelete.value === null) return;
  isDeleting.value = true
  try {
-  const response = await fetch(`http://localhost:3000/api/dosen/${itemToDelete.value.id_dosen}`, {
+  const response = await fetch(`${baseUrl}/dosen/${itemToDelete.value.id_dosen}`, {
    method: 'DELETE',
    headers: { 'Content-Type': 'application/json' },
    credentials: 'include'

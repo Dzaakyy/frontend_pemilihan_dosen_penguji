@@ -486,6 +486,7 @@ const showAlert = (type: AlertVariant, title: string, message: string) => {
   setTimeout(() => { alert.value.show = false }, 3500)
 }
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL
 const userRoles = ref<string[]>([])
 const isAdmin = computed(() => userRoles.value.some(role => role.toLowerCase() === 'admin'))
 
@@ -683,7 +684,7 @@ const isDeleting = ref(false)
 const fetchKeahlian = async () => {
   isLoading.value = true
   try {
-    const response = await fetch('http://localhost:3000/api/keahlian-dosen', { method: 'GET', credentials: 'include' })
+    const response = await fetch(`${baseUrl}/keahlian-dosen`, { method: 'GET', credentials: 'include' })
     const result = await response.json()
     if (result.success) keahlianList.value = result.data.rows || result.data
   } catch (error) { console.error("Gagal fetch data keahlian:", error) } finally { isLoading.value = false }
@@ -691,7 +692,7 @@ const fetchKeahlian = async () => {
 
 const fetchDosenList = async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/dosen', { method: 'GET', credentials: 'include' })
+    const response = await fetch(`${baseUrl}/dosen`, { method: 'GET', credentials: 'include' })
     const result = await response.json()
     if (result.success) dosenList.value = result.data.rows || result.data
   } catch (error) { console.error("Gagal fetch dosen:", error) }
@@ -699,7 +700,6 @@ const fetchDosenList = async () => {
 
 // === FUNGSI UNTUK MODAL SYNC 1 DOSEN DARI LUAR ===
 const filteredSyncDosenOptions = computed(() => {
-  // Dapatkan ID dosen yang SUDAH memiliki keahlian
   const dosenIdsWithKeahlian = groupedKeahlian.value.map(group => group.dosen_id);
 
   // Filter: Dosen BELUM punya keahlian && PUNYA link scholar
@@ -745,7 +745,7 @@ const executeSyncSingle = async () => {
 const syncOneScholar = async (id: number) => {
   isSyncingId.value = id
   try {
-    const response = await fetch(`http://localhost:3000/api/keahlian-dosen/sync-scholar/${id}`, { method: 'POST', credentials: 'include' })
+    const response = await fetch(`${baseUrl}/keahlian-dosen/sync-scholar/${id}`, { method: 'POST', credentials: 'include' })
     const result = await response.json()
     const customMessage = result.data?.message || result.message || 'Sinkronisasi selesai.';
     if (response.ok) {
@@ -781,7 +781,7 @@ const syncAllScholar = async () => {
       syncProgress.value = `(${i + 1}/${dosenToSync.length})`;
 
       try {
-        const response = await fetch(`http://localhost:3000/api/keahlian-dosen/sync-scholar/${dosen.id_dosen}`, {
+        const response = await fetch(`${baseUrl}/keahlian-dosen/sync-scholar/${dosen.id_dosen}`, {
           method: 'POST',
           credentials: 'include'
         });
@@ -826,7 +826,7 @@ const submitForm = async () => {
   if (!formData.value.dosen_id || formData.value.bidang_keahlian_list.length === 0) { showAlert('warning', 'Peringatan', 'Silakan pilih dosen dan minimal 1 bidang keahlian.'); return; }
   isSaving.value = true
   try {
-    const url = isEditing.value ? `http://localhost:3000/api/keahlian-dosen/${formData.value.dosen_id}` : 'http://localhost:3000/api/keahlian-dosen'
+    const url = isEditing.value ? `${baseUrl}/keahlian-dosen/${formData.value.dosen_id}` : `${baseUrl}/keahlian-dosen`
     const method = isEditing.value ? 'PUT' : 'POST'
     const response = await fetch(url, {
       method: method,
@@ -851,7 +851,7 @@ const confirmDelete = async () => {
   if (itemToDeleteGroup.value === null) return;
   isDeleting.value = true
   try {
-    const response = await fetch(`http://localhost:3000/api/keahlian-dosen/${itemToDeleteGroup.value.dosen_id}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, credentials: 'include' })
+    const response = await fetch(`${baseUrl}/keahlian-dosen/${itemToDeleteGroup.value.dosen_id}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, credentials: 'include' })
     if (response.ok) { closeDeleteModal(); fetchKeahlian(); showAlert('success', 'Dihapus!', 'Seluruh Keahlian Dosen berhasil dihapus.') }
     else { showAlert('error', 'Gagal!', 'Terdapat kesalahan saat menghapus data.') }
   } catch (error) { console.error("Error hapus data:", error) }

@@ -871,6 +871,8 @@ const showAlert = (type: AlertVariant, title: string, message: string) => {
   setTimeout(() => { alert.value.show = false }, 3000)
 }
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL
+
 const isLoading = ref(false)
 const isGenerating = ref(false)
 const isDeleting = ref(false)
@@ -883,7 +885,7 @@ const capacityInfo = ref({ totalDosen: 0, dailyCapacity: 0, globalCapacity: 0 })
 
 const fetchCapacityInfo = async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/matching-ta/capacity', { method: 'GET', credentials: 'include' });
+    const response = await fetch(`${baseUrl}/matching-ta/capacity`, { method: 'GET', credentials: 'include' });
     const result = await response.json();
     if (response.ok && result.data) {
       capacityInfo.value = result.data;
@@ -1239,7 +1241,7 @@ watch(unassignedMahasiswaList, (newList) => {
 
 const fetchMahasiswaList = async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/mahasiswa', { method: 'GET', headers: { 'Content-Type': 'application/json' }, credentials: 'include' })
+    const response = await fetch(`${baseUrl}/mahasiswa`, { method: 'GET', headers: { 'Content-Type': 'application/json' }, credentials: 'include' })
     const result = await response.json()
     if (result.success) mahasiswaList.value = result.data.rows || result.data
   } catch (error) { console.error("Gagal fetch mahasiswa:", error) }
@@ -1249,7 +1251,7 @@ const fetchAllRekomendasi = async () => {
   isLoading.value = true;
   semuaRekomendasi.value = [];
   try {
-    const response = await fetch('http://localhost:3000/api/matching-ta', { method: 'GET', headers: { 'Content-Type': 'application/json' }, credentials: 'include' })
+    const response = await fetch(`${baseUrl}/matching-ta`, { method: 'GET', headers: { 'Content-Type': 'application/json' }, credentials: 'include' })
     const result = await response.json()
     if (response.ok) {
       if (result.data && Array.isArray(result.data)) semuaRekomendasi.value = result.data;
@@ -1268,13 +1270,13 @@ const fetchKaprodiIdentity = async () => {
   if (isAdmin.value) return;
 
   try {
-    const response = await fetch('http://localhost:3000/api/auth/profile', { method: 'GET', credentials: 'include' });
+    const response = await fetch(`${baseUrl}/auth/profile`, { method: 'GET', credentials: 'include' });
     const result = await response.json();
 
     if (result.success && result.data) {
       activeProdiName.value = result.data.prodi;
 
-      const resProdi = await fetch('http://localhost:3000/api/prodi', { method: 'GET', credentials: 'include' });
+      const resProdi = await fetch(`${baseUrl}/prodi`, { method: 'GET', credentials: 'include' });
       const resultProdi = await resProdi.json();
 
       if (resultProdi.success && resultProdi.data) {
@@ -1340,7 +1342,7 @@ const submitGeneratePso = async () => {
       max_dosen_per_day: inputDosenDailyLimit.value
     };
 
-    const response = await fetch('http://localhost:3000/api/matching-ta/generate', {
+    const response = await fetch(`${baseUrl}/matching-ta/generate`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(payload)
     })
     const result = await response.json()
@@ -1367,7 +1369,7 @@ const submitGeneratePso = async () => {
 const confirmDeleteAll = async () => {
   isDeleting.value = true;
   try {
-    const response = await fetch('http://localhost:3000/api/matching-ta/delete-all', { method: 'DELETE', credentials: 'include' })
+    const response = await fetch(`${baseUrl}/matching-ta/delete-all`, { method: 'DELETE', credentials: 'include' })
     const result = await response.json()
     if (response.ok) {
       showAlert('success', 'Proses Selesai!', result.data?.message || result.message || 'Data rekomendasi berhasil dibersihkan.')
