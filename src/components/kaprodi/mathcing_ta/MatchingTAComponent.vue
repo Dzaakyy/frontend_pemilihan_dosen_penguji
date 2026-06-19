@@ -81,12 +81,12 @@
         </div>
       </div>
 
-      <div v-if="!isAdmin && activeProdiName" class="w-full mb-2">
+      <!-- <div v-if="!isAdmin && activeProdiName" class="w-full mb-2">
         <span
           class="inline-flex items-center px-3 py-1 rounded-md bg-blue-50 border border-blue-100 text-blue-700 text-xs font-bold dark:bg-blue-900/20 dark:border-blue-800/50 dark:text-blue-400">
           Menampilkan Data Hasil Matching Prodi: {{ activeProdiName }}
         </span>
-      </div>
+      </div> -->
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
         <!-- 1. Pencarian Teks -->
@@ -174,7 +174,7 @@
       class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 shadow-sm">
       <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-transparent">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Hasil Algoritma PSO (Top 5 Dosen)
+          Hasil Matching TA
         </h3>
       </div>
 
@@ -790,14 +790,14 @@
                   selectedRekomendasiDetail?.nilai_fitness }} Poin</span>
               </div>
 
-              <div class="mt-2 bg-gray-50 dark:bg-gray-900/50 p-2 rounded border border-gray-100 dark:border-gray-700">
+              <!-- <div class="mt-2 bg-gray-50 dark:bg-gray-900/50 p-2 rounded border border-gray-100 dark:border-gray-700">
                 <p class="text-[10px] text-gray-500 dark:text-gray-400 italic leading-relaxed">
                   *Berdasarkan rumusan algoritma PSO pada sistem, partikel mengevaluasi nilai <b>Fitness</b> tertinggi
                   dengan terus memperbarui kecepatan pergerakannya menuju titik optimal melalui persamaan:<br />
                   <span class="font-mono text-indigo-600 dark:text-indigo-400 font-semibold block mt-1">V_j(i) = w ·
                     V_j(i-1) + c1·r1 [Pbest_j - X_j(i-1)] + c2·r2 [Gbest - X_j(i-1)]</span>
                 </p>
-              </div>
+              </div> -->
 
             </div>
           </div>
