@@ -94,23 +94,26 @@
             <span class="whitespace-nowrap">Sync 1 Dosen</span>
           </button>
 
-          <!-- TOMBOL LAMA: Sync Semua Scholar -->
-          <button v-if="isAdmin" @click="syncAllScholar" :disabled="isSyncingAll"
-            class="flex-1 sm:flex-none flex items-center justify-center px-4 h-10 text-sm font-medium text-brand-600 transition rounded-lg bg-brand-50 border border-brand-200 hover:bg-brand-100 shadow-theme-xs disabled:opacity-50 dark:bg-brand-900/20 dark:border-brand-800/50 dark:text-brand-400 dark:hover:bg-brand-900/40">
-            <svg v-if="!isSyncingAll" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
-              </path>
-            </svg>
-            <svg v-else class="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-              </path>
-            </svg>
-            <span class="whitespace-nowrap">{{ isSyncingAll ? `Proses Sync... ${syncProgress}` : 'Sync Semua' }}</span>
-          </button>
+          <div v-if="isAdmin" class="flex items-center gap-2 flex-1 sm:flex-none">
+            <button @click="openSyncAllModal" :disabled="isSyncingAll"
+              class="flex-1 sm:flex-none flex items-center justify-center px-4 h-10 text-sm font-medium text-brand-600 transition rounded-lg bg-brand-50 border border-brand-200 hover:bg-brand-100 shadow-theme-xs disabled:opacity-50 dark:bg-brand-900/20 dark:border-brand-800/50 dark:text-brand-400 dark:hover:bg-brand-900/40">
+              <svg v-if="!isSyncingAll" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+              <svg v-else class="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span class="whitespace-nowrap">{{ isSyncingAll ? `Proses Sync... ${syncProgress}` : 'Sync Semua' }}</span>
+            </button>
 
+            <button v-if="isSyncingAll" @click="cancelSyncAll" title="Hentikan Proses Sinkronisasi"
+              class="flex items-center justify-center w-10 h-10 text-red-600 transition rounded-lg bg-red-50 border border-red-200 hover:bg-red-100 shadow-theme-xs shrink-0 dark:bg-red-900/20 dark:border-red-800/50 dark:text-red-400 dark:hover:bg-red-900/40">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
           <button v-if="isAdmin" @click="openAddModal"
             class="flex-1 sm:flex-none flex items-center justify-center px-5 h-10 text-sm font-medium text-white transition rounded-lg bg-brand-500 hover:bg-brand-600 shadow-theme-xs dark:bg-brand-600 dark:hover:bg-brand-500">
             <svg class="w-4 h-4 mr-2 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -458,6 +461,38 @@
         </div>
       </div>
     </Modal>
+
+<Modal v-if="isSyncAllModalOpen" @close="closeSyncAllModal">
+      <div class="w-full max-w-[450px] rounded-3xl bg-white p-8 dark:bg-gray-900 border dark:border-gray-700 text-center mx-auto mt-20 z-50 shadow-xl relative overflow-hidden">
+
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 bg-brand-500/10 rounded-full blur-3xl -z-10 dark:bg-brand-500/20"></div>
+
+        <div class="flex justify-center mb-6">
+          <div class="flex items-center justify-center w-16 h-16 bg-brand-50 text-brand-600 rounded-full ring-8 ring-brand-50/50 dark:bg-brand-900/30 dark:text-brand-400 dark:ring-brand-900/20">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+          </div>
+        </div>
+
+        <h4 class="mb-3 text-2xl font-bold text-gray-800 dark:text-white/90">Peringatan Sinkronisasi</h4>
+        <p class="mb-8 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+          Anda akan melakukan sinkronisasi data Google Scholar untuk <strong>semua dosen</strong>. Proses ini memakan waktu yang cukup lama dan tidak dapat dibatalkan di tengah jalan.<br/><br/>
+          Apakah Anda yakin ingin melanjutkannya sekarang?
+        </p>
+
+        <div class="flex flex-col-reverse sm:flex-row items-center justify-center gap-3 w-full">
+          <button @click="closeSyncAllModal" type="button"
+            class="flex w-full justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors sm:w-1/2">
+            Nanti Saja
+          </button>
+          <button @click="confirmSyncAll" type="button"
+            class="flex w-full justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white hover:bg-brand-600 dark:bg-brand-600 dark:hover:bg-brand-500 shadow-theme-xs transition-colors sm:w-1/2">
+            Ya, Lanjutkan
+          </button>
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -530,6 +565,30 @@ const selectedDosenToSync = ref<number | ''>('')
 const dosenSyncSearchTerm = ref('')
 const showDosenSyncDropdown = ref(false)
 const dosenSyncDropdownContainer = ref<HTMLElement | null>(null)
+
+const isSyncAllModalOpen = ref(false)
+
+const openSyncAllModal = () => {
+
+  if (!isSyncingAll.value) {
+    isSyncAllModalOpen.value = true;
+  }
+}
+
+const closeSyncAllModal = () => {
+  isSyncAllModalOpen.value = false;
+}
+
+const confirmSyncAll = () => {
+  closeSyncAllModal();
+  syncAllScholar();
+}
+
+const isSyncCancelled = ref(false)
+
+const cancelSyncAll = () => {
+  isSyncCancelled.value = true;
+}
 
 const grupRisetList = computed(() => {
   const groups = dosenList.value.map(d => d.grup_riset).filter(Boolean) as string[];
@@ -772,12 +831,19 @@ const syncAllScholar = async () => {
   }
 
   isSyncingAll.value = true;
+  isSyncCancelled.value = false;
   let successCount = 0;
+  let isStoppedIntentionally = false;
 
   try {
     for (let i = 0; i < dosenToSync.length; i++) {
-      const dosen = dosenToSync[i];
 
+      if (isSyncCancelled.value) {
+        isStoppedIntentionally = true;
+        break;
+      }
+
+      const dosen = dosenToSync[i];
       syncProgress.value = `(${i + 1}/${dosenToSync.length})`;
 
       try {
@@ -798,23 +864,38 @@ const syncAllScholar = async () => {
 
       if (i < dosenToSync.length - 1) {
         const delay = Math.floor(Math.random() * (15000 - 8000 + 1)) + 8000;
-        await new Promise(resolve => setTimeout(resolve, delay));
+        const checkInterval = 500;
+        for (let waited = 0; waited < delay; waited += checkInterval) {
+           if (isSyncCancelled.value) {
+              isStoppedIntentionally = true;
+              break;
+           }
+           await new Promise(resolve => setTimeout(resolve, checkInterval));
+        }
+
+        if (isStoppedIntentionally) {
+           break;
+        }
       }
     }
 
     await fetchKeahlian();
 
-    if (successCount === 0) {
+    if (isStoppedIntentionally) {
+      showAlert('warning', 'Dihentikan!', `Proses sinkronisasi dihentikan paksa. ${successCount} profil sempat diperbarui.`);
+    } else if (successCount === 0) {
       showAlert('info', 'Info Sinkronisasi', 'Semua data keahlian dosen sudah sinkron/terbaru.');
     } else {
       showAlert('success', 'Berhasil Diperbarui!', `Proses sinkronisasi massal selesai. ${successCount} profil dosen mengalami perubahan.`);
     }
+
   } catch (error) {
     console.error("Sync All error:", error);
     showAlert('error', 'Error!', 'Terjadi kesalahan saat proses sinkronisasi massal.');
   } finally {
     isSyncingAll.value = false;
     syncProgress.value = '';
+    isSyncCancelled.value = false;
   }
 }
 
