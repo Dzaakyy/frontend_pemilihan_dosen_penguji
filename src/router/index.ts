@@ -227,6 +227,22 @@ const router = createRouter({
         title: 'Signup',
       },
     },
+    {
+      path: '/forgot-password',
+      name: 'Forgot Password',
+      component: () => import('../views/Auth/ForgotPasswordView.vue'),
+      meta: {
+        title: 'Lupa Password',
+      },
+    },
+    {
+      path: '/update-password',
+      name: 'Update Password',
+      component: () => import('../views/Auth/UpdatePasswordView.vue'),
+      meta: {
+        title: 'Buat Password Baru',
+      },
+    },
   ],
 })
 
@@ -249,10 +265,13 @@ router.beforeEach((to, from, next) => {
 
   const rolesLower = userRoles.map(r => r.toLowerCase());
 
-  if (to.name !== 'Signin' && to.name !== 'Signup' && !isAuthenticated) {
+  const publicPages = ['Signin', 'Signup', 'Forgot Password', 'Update Password'];
+  const authRequired = !publicPages.includes(to.name as string);
+
+  if (authRequired && !isAuthenticated) {
     next({ name: 'Signin' })
   }
-  else if ((to.name === 'Signin' || to.name === 'Signup') && isAuthenticated) {
+  else if (!authRequired && isAuthenticated) {
     if (rolesLower.includes('admin') || rolesLower.includes('kaprodi')) {
       next({ name: 'Dashboard' })
     } else if (rolesLower.includes('dosen')) {

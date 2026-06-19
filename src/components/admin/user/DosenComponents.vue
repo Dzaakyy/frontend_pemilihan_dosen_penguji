@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <div v-if="alert.show" class="fixed top-20 right-5 z-[99999] w-full max-w-sm transition-all duration-300 ease-in-out">
+    <div v-if="alert.show" class="fixed top-20 right-5 z-[9999999] w-full max-w-sm transition-all duration-300 ease-in-out">
       <Alert :variant="alert.type" :title="alert.title" :message="alert.message" />
     </div>
 
@@ -112,7 +112,7 @@
               <th class="px-5 py-3 text-left sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">NIDN</p></th>
               <th class="px-5 py-3 text-left sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Prodi</p></th>
               <th class="px-5 py-3 text-center sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Grup Riset</p></th>
-              <th class="px-5 py-3 text-center sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Kuota</p></th>
+              <!-- <th class="px-5 py-3 text-center sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Kuota</p></th> -->
               <th v-if="isAdmin" class="px-5 py-3 text-center w-32 sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Aksi</p></th>
             </tr>
           </thead>
@@ -141,9 +141,6 @@
               <td class="px-5 py-4 sm:px-6 align-top"><span class="block text-gray-500 text-theme-sm dark:text-gray-400 mt-1">{{ item.prodi?.nama_prodi || '-' }}</span></td>
               <td class="px-5 py-4 text-center sm:px-6 align-top">
                 <span class="inline-flex items-center justify-center rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 border border-purple-200 dark:border-purple-800 mt-1">{{ item.grup_riset || '-' }}</span>
-              </td>
-              <td class="px-5 py-4 text-center sm:px-6 align-top">
-                <span class="inline-flex items-center justify-center rounded-full bg-brand-500/10 px-3 py-1 text-sm font-medium text-brand-500 border border-brand-500/20 dark:bg-brand-900/30 dark:text-brand-400 dark:border-brand-800 mt-1">{{ item.kuota_menguji }}</span>
               </td>
 
               <td v-if="isAdmin" class="px-5 py-4 text-center sm:px-6 align-top">
@@ -222,13 +219,7 @@
           </div>
 
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 border-t border-gray-100 pt-6 dark:border-gray-800">
-            <div class="flex flex-col">
-              <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Sisa Kuota Menguji</span>
-              <span
-                class="inline-flex w-max items-center justify-center rounded-md bg-brand-50 px-3 py-1 text-sm font-bold text-brand-600 border border-brand-100 dark:bg-brand-900/30 dark:text-brand-400 dark:border-brand-800">
-                {{ selectedDosenDetail.kuota_menguji }} Kuota
-              </span>
-            </div>
+
 
             <div class="flex flex-col">
               <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Peran (Role) Akun</span>
@@ -346,10 +337,7 @@
                   <input v-model="formData.url_scholar" type="url" placeholder="https://scholar.google.co.id/..." class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" />
                 </div>
 
-                <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Kuota Menguji <span class="text-red-500">*</span></label>
-                  <input v-model="formData.kuota_menguji" type="number" placeholder="Misal: 5" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" required />
-                </div>
+
               </div>
             </div>
 
@@ -372,17 +360,23 @@
                 <p v-if="formData.role_ids.length === 0" class="mt-2 text-xs text-red-500">Pilih minimal 1 peran.</p>
               </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
-                <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Username <span class="text-red-500">*</span></label>
-                  <input v-model="formData.username" type="text" placeholder="Username untuk dosen" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" :required="!isEditing" />
-                </div>
-                <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Password <span v-if="!isEditing" class="text-red-500">*</span></label>
-                  <input v-model="formData.password" type="password" placeholder="Password untuk dosen" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" :required="!isEditing" />
-                  <p v-if="isEditing" class="mt-1 text-xs text-gray-500 dark:text-gray-400">Kosongkan jika tidak ingin mengubah password.</p>
-                </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-5 gap-y-4">
+              <div>
+                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Email <span class="text-red-500">*</span></label>
+                <input v-model="formData.email" type="email" placeholder="email@gmail.com" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" required />
               </div>
+
+              <div>
+                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Username <span class="text-red-500">*</span></label>
+                <input v-model="formData.username" type="text" placeholder="Username login" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" required />
+              </div>
+
+              <div>
+                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Password <span v-if="!isEditing" class="text-red-500">*</span></label>
+                <input v-model="formData.password" type="password" placeholder="Password login" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" :required="!isEditing" />
+                <p v-if="isEditing" class="mt-1 text-[10px] text-gray-500 dark:text-gray-400">Kosongkan jika tak diubah.</p>
+              </div>
+            </div>
             </div>
 
           </form>
@@ -441,11 +435,11 @@ interface Dosen {
  url_scholar?: string;
  prodi_id: number;
  grup_riset: string;
- kuota_menguji: number;
  prodi?: Prodi;
  user?: {
   id_user: number;
   username: string;
+  email: string;
   role?: Role[];
  };
 }
@@ -456,8 +450,8 @@ interface DosenPayload {
  url_scholar?: string;
  prodi_id: number;
  grup_riset: string;
- kuota_menguji: number;
- username?: string;
+ username: string;
+ email: string;
  password?: string;
  role_ids: number[];
 }
@@ -610,8 +604,8 @@ const formData = ref({
  url_scholar: '',
  prodi_id: '' as number | '',
  grup_riset: '',
- kuota_menguji: '' as number | '',
  username: '',
+ email: '',
  password: '',
  role_ids: [] as number[]
 })
@@ -669,8 +663,8 @@ const closeDetailModal = () => {
 const openAddModal = () => {
  isEditing.value = false
  formData.value = {
-  id: null, nama_dosen: '', nidn: '', url_scholar: '', prodi_id: '', grup_riset: '', kuota_menguji: '',
-  username: '', password: '', role_ids: []
+  id: null, nama_dosen: '', nidn: '', url_scholar: '', prodi_id: '', grup_riset: '',
+  username: '', email: '', password: '', role_ids: []
  }
  isFormProdiDropdownOpen.value = false;
  isFormGrupRisetDropdownOpen.value = false;
@@ -688,8 +682,8 @@ const openEditModal = (item: Dosen) => {
   url_scholar: item.url_scholar || '',
   prodi_id: item.prodi_id,
   grup_riset: item.grup_riset || '',
-  kuota_menguji: item.kuota_menguji,
   username: item.user?.username || '',
+  email: item.user?.email || '',
   password: '',
   role_ids: existingRoleIds
  }
@@ -719,8 +713,8 @@ const submitForm = async () => {
    url_scholar: formData.value.url_scholar,
    prodi_id: Number(formData.value.prodi_id),
    grup_riset: formData.value.grup_riset,
-   kuota_menguji: Number(formData.value.kuota_menguji),
    username: formData.value.username,
+   email: formData.value.email,
    role_ids: formData.value.role_ids
   }
 

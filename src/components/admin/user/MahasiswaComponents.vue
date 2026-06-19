@@ -1,7 +1,7 @@
 <template>
   <div class="relative w-full">
     <div v-if="alert.show"
-      class="fixed top-20 right-5 z-[99999] w-full max-w-sm transition-all duration-300 ease-in-out">
+      class="fixed top-20 right-5 z-[999999] w-full max-w-sm transition-all duration-300 ease-in-out">
       <Alert :variant="alert.type" :title="alert.title" :message="alert.message" />
     </div>
 
@@ -393,7 +393,7 @@
                 <div>
                   <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Nama Lengkap <span
                       class="text-red-500">*</span></label>
-                  <input v-model="formData.nama_mahasiswa" type="text" placeholder="Misal: Anton Surya"
+                  <input v-model="formData.nama_mahasiswa" type="text" placeholder="Nama Mahasiswa"
                     class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors"
                     required />
                 </div>
@@ -560,25 +560,23 @@
                 class="text-sm font-bold text-gray-800 dark:text-white/90 uppercase tracking-wider mb-4 border-b border-gray-100 dark:border-gray-800 pb-2">
                 Akun Pengguna</h5>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
-                <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Username <span
-                      class="text-red-500">*</span></label>
-                  <input v-model="formData.username" type="text" placeholder="Username untuk mahasiswa"
-                    class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors"
-                    :required="!isEditing" />
-                </div>
-                <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Password <span
-                      v-if="!isEditing" class="text-red-500">*</span></label>
-                  <input v-model="formData.password" type="password" placeholder="Password untuk mahasiswa"
-                    class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors"
-                    :required="!isEditing" />
-                  <p v-if="isEditing" class="mt-1 text-xs text-gray-500 dark:text-gray-400">Kosongkan jika tidak ingin
-                    mengubah password.</p>
-                </div>
-                <input type="hidden" v-model="formData.role_id" />
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-5 gap-y-4">
+              <div>
+                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Email <span class="text-red-500">*</span></label>
+                <input v-model="formData.email" type="email" placeholder="email@kampus.ac.id" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" required />
               </div>
+
+              <div>
+                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Username <span class="text-red-500">*</span></label>
+                <input v-model="formData.username" type="text" placeholder="Username login" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" required />
+              </div>
+
+              <div>
+                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Password <span v-if="!isEditing" class="text-red-500">*</span></label>
+                <input v-model="formData.password" type="password" placeholder="Password login" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" :required="!isEditing" />
+                <p v-if="isEditing" class="mt-1 text-[10px] text-gray-500 dark:text-gray-400">Kosongkan jika tak diubah.</p>
+              </div>
+            </div>
             </div>
 
           </form>
@@ -648,7 +646,7 @@ interface Mahasiswa {
   topik_ta?: Topik;
   dosen_pembimbing_1?: Dosen;
   dosen_pembimbing_2?: Dosen;
-  user?: { id_user: number; username: string; };
+  user?: { id_user: number; username: string; email: string;};
 }
 
 interface MahasiswaPayload {
@@ -660,6 +658,7 @@ interface MahasiswaPayload {
   prodi_id: number;
   topik_id?: number;
   username?: string;
+  email: string;
   password?: string;
   role_id?: number;
 }
@@ -865,6 +864,7 @@ const formData = ref({
   prodi_id: '' as number | '',
   topik_id: '' as number | '',
   username: '',
+  email: '',
   password: '',
   role_id: 4
 })
@@ -949,7 +949,7 @@ const openAddModal = () => {
   isEditing.value = false
   formData.value = {
     id: null, nama_mahasiswa: '', nim: '', judul_ta: '', pembimbing_1: '', pembimbing_2: '', prodi_id: '', topik_id: '',
-    username: '', password: '', role_id: 4
+    username: '', email: '', password: '', role_id: 4
   }
   isFormProdiDropdownOpen.value = false;
   isFormTopikDropdownOpen.value = false;
@@ -972,6 +972,7 @@ const openEditModal = (item: Mahasiswa) => {
     prodi_id: item.prodi_id,
     topik_id: item.topik_id || '',
     username: item.user?.username || '',
+    email: item.user?.email || '',
     password: '',
     role_id: 4
   }
@@ -999,7 +1000,8 @@ const submitForm = async () => {
       nim: formData.value.nim,
       judul_ta: formData.value.judul_ta,
       prodi_id: Number(formData.value.prodi_id),
-      username: formData.value.username
+      username: formData.value.username,
+      email: formData.value.email,
     }
 
     if (formData.value.pembimbing_1) {
