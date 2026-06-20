@@ -110,7 +110,7 @@ const handleSubmit = async () => {
     const result = await response.json()
 
     if (response.ok && result.success) {
-      successMessage.value = result.data?.message || 'Tautan berhasil dikirim! Silakan periksa kotak masuk email Anda.'
+      successMessage.value = result.data?.message || 'Tautan berhasil dikirim! Silakan periksa kotak masuk email anda atau spam.'
       email.value = ''
     } else {
       errorMessage.value = result.message || 'Email tidak ditemukan atau terjadi kesalahan.'

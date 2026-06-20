@@ -87,10 +87,9 @@
         <div class="relative items-center hidden w-full h-full lg:w-1/2 bg-brand-950 dark:bg-gray-900 lg:flex overflow-hidden">
           <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-brand-800/40 via-brand-950 to-brand-950 dark:from-brand-900/30 dark:via-gray-900 dark:to-gray-900 z-0"></div>
 
-          <common-grid-shape class="absolute inset-0 z-0 opacity-40 mix-blend-overlay" />
 
           <div class="relative z-10 flex flex-col items-center justify-center w-full p-8 text-center sm:p-12">
-            <div class="w-full max-w-lg p-10 transition-all duration-500 border shadow-2xl backdrop-blur-md bg-white/5 border-white/10 rounded-3xl hover:bg-white/10">
+            <div class="w-full max-w-lg p-10 border shadow-2xl backdrop-blur-md bg-white/5 border-white/10 rounded-3xl">
 
               <div class="flex justify-center mb-8">
                 <div class="p-5 rounded-full bg-brand-500/20 ring-1 ring-brand-400/30 backdrop-blur-sm">
@@ -125,7 +124,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import CommonGridShape from '@/components/common/CommonGridShape.vue'
 import FullScreenLayout from '@/components/layout/FullScreenLayout.vue'
 
 defineOptions({

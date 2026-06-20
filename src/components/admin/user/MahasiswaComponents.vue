@@ -351,12 +351,17 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-1 border-t border-gray-100 pt-6 dark:border-gray-800">
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 border-t border-gray-100 pt-6 dark:border-gray-800">
             <div class="flex flex-col">
               <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Akun Pengguna
                 (Username)</span>
               <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
                 selectedMahasiswaDetail.user?.username || '-' }}</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Alamat Email</span>
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{
+                selectedMahasiswaDetail.user?.email || '-' }}</span>
             </div>
           </div>
 
@@ -560,23 +565,33 @@
                 class="text-sm font-bold text-gray-800 dark:text-white/90 uppercase tracking-wider mb-4 border-b border-gray-100 dark:border-gray-800 pb-2">
                 Akun Pengguna</h5>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-5 gap-y-4">
-              <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Email <span class="text-red-500">*</span></label>
-                <input v-model="formData.email" type="email" placeholder="email@kampus.ac.id" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" required />
-              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-5 gap-y-4">
+                <div>
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Email <span
+                      class="text-red-500">*</span></label>
+                  <input v-model="formData.email" type="email" placeholder="email@kampus.ac.id"
+                    class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors"
+                    required />
+                </div>
 
-              <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Username <span class="text-red-500">*</span></label>
-                <input v-model="formData.username" type="text" placeholder="Username login" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" required />
-              </div>
+                <div>
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Username <span
+                      class="text-red-500">*</span></label>
+                  <input v-model="formData.username" type="text" placeholder="Username login"
+                    class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors"
+                    required />
+                </div>
 
-              <div>
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Password <span v-if="!isEditing" class="text-red-500">*</span></label>
-                <input v-model="formData.password" type="password" placeholder="Password login" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" :required="!isEditing" />
-                <p v-if="isEditing" class="mt-1 text-[10px] text-gray-500 dark:text-gray-400">Kosongkan jika tak diubah.</p>
+                <div>
+                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Password <span
+                      v-if="!isEditing" class="text-red-500">*</span></label>
+                  <input v-model="formData.password" type="password" placeholder="Password login"
+                    class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors"
+                    :required="!isEditing" />
+                  <p v-if="isEditing" class="mt-1 text-[10px] text-gray-500 dark:text-gray-400">Kosongkan jika tak diubah.
+                  </p>
+                </div>
               </div>
-            </div>
             </div>
 
           </form>
@@ -646,7 +661,7 @@ interface Mahasiswa {
   topik_ta?: Topik;
   dosen_pembimbing_1?: Dosen;
   dosen_pembimbing_2?: Dosen;
-  user?: { id_user: number; username: string; email: string;};
+  user?: { id_user: number; username: string; email: string; };
 }
 
 interface MahasiswaPayload {

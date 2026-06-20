@@ -914,9 +914,21 @@ const distributeDates = () => {
     mhsTimeConfig.value[id].tanggal = '';
   });
 
+  const existingCounts: Record<string, number> = {};
+  groupedRekomendasi.value.forEach(group => {
+    if (group.tanggal_ujian) {
+      existingCounts[group.tanggal_ujian] = (existingCounts[group.tanggal_ujian] || 0) + 1;
+    }
+  });
+
   for (const date of dates) {
+    const alreadyAssigned = existingCounts[date] || 0;
+
+    const remainingCapacity = Math.max(0, inputDailyLimit.value - alreadyAssigned);
+
     let assignedToThisDate = 0;
-    while (assignedToThisDate < inputDailyLimit.value && currentStudentIdx < selectedMahasiswaIds.value.length) {
+
+    while (assignedToThisDate < remainingCapacity && currentStudentIdx < selectedMahasiswaIds.value.length) {
       const mhsId = selectedMahasiswaIds.value[currentStudentIdx];
       mhsTimeConfig.value[mhsId].tanggal = date;
       assignedToThisDate++;
@@ -1304,16 +1316,26 @@ const capacityErrors = computed(() => {
   const errors: string[] = [];
   if (capacityInfo.value.totalDosen === 0) return errors;
 
-  const numDays = Math.max(1, globalTanggal.value.length);
-  const totalCapacity = numDays * inputDailyLimit.value;
-
   if (globalTanggal.value.length === 0 && selectedMahasiswaIds.value.length > 0) {
     errors.push("Silakan pilih minimal 1 tanggal pelaksanaan.");
     return errors;
   }
 
-  if (selectedMahasiswaIds.value.length > totalCapacity) {
-    errors.push(`Kapasitas tidak cukup! ${selectedMahasiswaIds.value.length} Mahasiswa butuh minimal ${Math.ceil(selectedMahasiswaIds.value.length / inputDailyLimit.value)} hari ujian (Maks ${inputDailyLimit.value} Mhs/hari). Silakan tambah tanggal seleksi.`);
+  const existingCounts: Record<string, number> = {};
+  groupedRekomendasi.value.forEach(group => {
+    if (group.tanggal_ujian) {
+      existingCounts[group.tanggal_ujian] = (existingCounts[group.tanggal_ujian] || 0) + 1;
+    }
+  });
+
+  let totalAvailableCapacity = 0;
+  globalTanggal.value.forEach(date => {
+    const alreadyAssigned = existingCounts[date] || 0;
+    totalAvailableCapacity += Math.max(0, inputDailyLimit.value - alreadyAssigned);
+  });
+
+  if (selectedMahasiswaIds.value.length > totalAvailableCapacity) {
+    errors.push(`Kapasitas tidak cukup! Sisa slot dari tanggal terpilih hanya ${totalAvailableCapacity} (karena sebagian sudah terisi). Silakan tambah tanggal pelaksanaan atau naikkan batas mahasiswa per hari.`);
   }
 
   if (selectedMahasiswaIds.value.length > capacityInfo.value.globalCapacity) {

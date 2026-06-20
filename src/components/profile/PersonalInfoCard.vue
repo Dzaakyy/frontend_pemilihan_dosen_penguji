@@ -8,7 +8,7 @@
       <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div class="w-full">
           <h4 class="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
-            Personal Information
+            Informasi Pribadi
           </h4>
 
           <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
@@ -59,7 +59,7 @@
 
         <div class="px-2 pr-14 mb-6">
           <h4 class="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-            Edit Personal Information
+            Edit Informasi Pribadi
           </h4>
           <p class="text-sm text-gray-500 dark:text-gray-400">
             Perbarui data diri dan kata sandi Anda di sini.
@@ -96,7 +96,7 @@
               </div>
 
               <div class="col-span-2 lg:col-span-1" v-if="profileRole.toLowerCase() !== 'admin'">
-                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Identitas (NIM/NIDN)</label>
+                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ identityLabel }}</label>
                 <input type="text" :value="profileIdentity" disabled class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-500 cursor-not-allowed dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400" />
               </div>
 
@@ -119,7 +119,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import Modal from '../modal/Modal.vue'
 import Alert from '@/components/ui/Alert.vue'
 
@@ -145,6 +145,17 @@ const profileEmail = ref('')
 const profileRole = ref('Loading...')
 const profileIdentity = ref('Loading...')
 const profileProdi = ref('Loading...')
+
+const identityLabel = computed(() => {
+  const role = String(profileRole.value).toLowerCase();
+
+  if (role.includes('dosen') || role.includes('kaprodi')) {
+    return 'NIDN';
+  } else if (role.includes('mahasiswa')) {
+    return 'NIM';
+  }
+  return 'Identitas';
+})
 
 // State Form Edit
 const formEdit = ref({
@@ -213,6 +224,9 @@ const saveProfile = async () => {
 
       localStorage.setItem('namaAsli', formEdit.value.nama_asli);
       fetchProfile();
+
+      window.dispatchEvent(new Event('profile-updated'));
+
     } else {
       showAlert('error', 'Gagal!', result.message || 'Gagal memperbarui profil.');
     }

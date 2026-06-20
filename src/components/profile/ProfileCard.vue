@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const profileName = ref('Loading...')
@@ -76,7 +76,16 @@ const fetchProfile = async () => {
   }
 }
 
+const handleProfileUpdate = () => {
+  fetchProfile();
+}
+
 onMounted(() => {
   fetchProfile();
+  window.addEventListener('profile-updated', handleProfileUpdate);
+})
+
+onUnmounted(() => {
+  window.removeEventListener('profile-updated', handleProfileUpdate);
 })
 </script>

@@ -561,7 +561,8 @@ interface Penugasan {
 const alert = ref({ show: false, type: 'success' as AlertVariant, title: '', message: '' })
 const showAlert = (type: AlertVariant, title: string, message: string) => {
   alert.value = { show: true, type, title, message }
-  setTimeout(() => { alert.value.show = false }, 3000)
+  // Menambah durasi tampil agar pesan yang detail sempat terbaca
+  setTimeout(() => { alert.value.show = false }, 4500)
 }
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL
@@ -897,8 +898,10 @@ const closeModal = () => {
 
 const submitForm = async () => {
   const { sekretaris, penguji_1, penguji_2 } = formData.value;
+
+  // Validasi peran ganda
   if (sekretaris === penguji_1 || sekretaris === penguji_2 || penguji_1 === penguji_2) {
-    showAlert('warning', 'Peringatan', 'Sekretaris, Penguji 1, dan Penguji 2 harus orang yang berbeda!');
+    showAlert('warning', 'Komposisi Penguji Tidak Valid', 'Mohon pastikan posisi Sekretaris, Penguji 1, dan Penguji 2 diisi oleh dosen yang berbeda. Satu dosen tidak dapat merangkap peran ganda untuk mahasiswa yang sama.');
     return;
   }
 
@@ -933,7 +936,13 @@ const submitForm = async () => {
     const result = await response.json()
 
     if (response.ok) {
-      showAlert('success', 'Berhasil!', result.data?.message || result.message || `Penugasan berhasil ${isEditing.value ? 'diperbarui' : 'disimpan'}.`)
+      const mhsLabel = getMahasiswaLabel(formData.value.mahasiswa_id);
+      const mhsNameOnly = mhsLabel ? mhsLabel.split(' - ')[0] : 'mahasiswa tersebut';
+
+      const detailedSuccessMsg = `Data tim penguji untuk ${mhsNameOnly} telah berhasil ${isEditing.value ? 'diperbarui dan disinkronkan ke dalam sistem' : 'disimpan dan dialokasikan'}.`;
+
+      // KITA PAKSA MENGGUNAKAN PESAN DETAIL (MENGABAIKAN PESAN DARI BACKEND)
+      showAlert('success', 'Penyimpanan Berhasil', detailedSuccessMsg);
       closeModal()
       fetchPenugasan()
       fetchSemuaDosen()
@@ -941,13 +950,13 @@ const submitForm = async () => {
       const errorMsg = result.err?.message ||
         (result.err && typeof result.err === 'string' ? result.err : null) ||
         result.message ||
-        'Gagal menyimpan penugasan.';
+        'Terjadi kesalahan saat memproses data.';
 
-      showAlert('error', 'Gagal!', errorMsg)
+      showAlert('error', 'Gagal Menyimpan Data', `Sistem tidak dapat memproses penugasan: ${errorMsg}. Silakan periksa kembali kelengkapan form Anda.`);
     }
   } catch (error) {
     console.error("Submit error:", error)
-    showAlert('error', 'Gagal Server!', 'Terjadi kesalahan komunikasi dengan server.')
+    showAlert('error', 'Gangguan Koneksi Server', 'Terjadi masalah saat menghubungi server. Mohon periksa koneksi internet Anda atau coba beberapa saat lagi.');
   } finally {
     isSaving.value = false;
   }
@@ -966,16 +975,19 @@ const confirmDelete = async () => {
     const result = await response.json();
 
     if (response.ok) {
-      showAlert('success', 'Dihapus!', result.message || 'Data penugasan berhasil dihapus.')
+      const mhsName = itemToDelete.value.mahasiswa?.nama_mahasiswa || 'mahasiswa tersebut';
+
+      // KITA PAKSA MENGGUNAKAN PESAN DETAIL (MENGABAIKAN PESAN DARI BACKEND)
+      showAlert('success', 'Penghapusan Berhasil', `Data penugasan atas nama ${mhsName} telah dihapus permanen. Alokasi sesi untuk ketiga dosen terkait kini telah kembali tersedia.`);
       closeDeleteModal()
       fetchPenugasan()
       fetchSemuaDosen()
     } else {
-      showAlert('error', 'Gagal!', result.message || 'Gagal menghapus data.')
+      showAlert('error', 'Penghapusan Dibatalkan', result.message || 'Sistem gagal menghapus data penugasan ini. Kemungkinan data sedang terikat dengan proses sistem lainnya.');
     }
   } catch (error) {
     console.error("Delete error:", error)
-    showAlert('error', 'Gagal Server!', 'Terjadi kesalahan komunikasi dengan server.')
+    showAlert('error', 'Gangguan Koneksi Server', 'Terjadi masalah saat mengirim instruksi hapus ke server. Pastikan jaringan stabil dan coba kembali.');
   } finally {
     isDeleting.value = false;
   }
@@ -1004,7 +1016,10 @@ const formatSesiDisplay = (sesi: string) => {
 }
 
 const exportToExcel = () => {
-  if (filteredPenugasanList.value.length === 0) return showAlert('warning', 'Data Kosong', 'Tidak ada data untuk diekspor.');
+  if (filteredPenugasanList.value.length === 0) {
+    return showAlert('warning', 'Pengeksporan Dibatalkan', 'Tidak ada rekam data penugasan yang tersedia untuk diekspor ke dalam Excel saat ini.');
+  }
+
   const excelData: Record<string, string | number>[] = []; let no = 1;
   filteredPenugasanList.value.forEach(item => {
       excelData.push({
@@ -1012,7 +1027,7 @@ const exportToExcel = () => {
           'Nama Mahasiswa': item.mahasiswa?.nama_mahasiswa || '',
           'NIM': item.mahasiswa?.nim || '',
           'Judul TA': item.mahasiswa?.judul_ta || '',
-          'Tanggal Ujian': item.tanggal_ujian || '-',
+          'Tanggal Pelaksanaan': item.tanggal_ujian || '-',
           'Sesi Waktu': formatSesiDisplay(item.sesi_waktu || ''),
           'Dosen Sekretaris': item.dosen_sekretaris?.nama_dosen || '',
           'Dosen Penguji 1': item.dosen_penguji_1?.nama_dosen || '',
@@ -1020,8 +1035,12 @@ const exportToExcel = () => {
       });
       no++;
   });
+
   const worksheet = XLSX.utils.json_to_sheet(excelData); const workbook = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(workbook, worksheet, "Data Penugasan");
-  XLSX.writeFile(workbook, `Data_Penugasan_TA_${new Date().toISOString().slice(0, 10)}.xlsx`); showAlert('success', 'Berhasil', 'Data berhasil diekspor!');
+  XLSX.writeFile(workbook, `Data_Penugasan_TA_${new Date().toISOString().slice(0, 10)}.xlsx`);
+
+  // MENGABAIKAN JIKA ADA GANGGUAN PESAN BAWAAN
+  showAlert('success', 'Dokumen Berhasil Diunduh', 'Data rekapitulasi penugasan penguji telah diekspor. Silakan periksa folder unduhan (Downloads) di perangkat Anda.');
 }
 
 onMounted(() => {

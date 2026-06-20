@@ -4,12 +4,10 @@
       <Alert :variant="alert.type" :title="alert.title" :message="alert.message" />
     </div>
 
-    <!-- Header Filter & Tambah -->
     <div class="flex flex-col gap-4 mb-6 p-5 rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 shadow-sm relative z-20">
 
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
 
-        <!-- CUSTOM DROPDOWN TAMPILKAN DATA -->
         <div class="flex items-center gap-2 w-full sm:w-auto" ref="itemsPerPageDropdownRef">
           <span class="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">Tampilkan</span>
           <div class="relative">
@@ -41,7 +39,6 @@
 
       <hr class="border-gray-100 dark:border-gray-800" />
 
-      <!-- Filter Pencarian & Kategori -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div class="relative w-full">
           <input v-model="searchQuery" type="text" placeholder="Cari nama, NIDN..."
@@ -101,7 +98,6 @@
       </div>
     </div>
 
-    <!-- Tabel Data -->
     <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/50 relative z-10">
       <div class="max-w-full overflow-x-auto custom-scrollbar">
         <table class="min-w-full">
@@ -112,7 +108,6 @@
               <th class="px-5 py-3 text-left sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">NIDN</p></th>
               <th class="px-5 py-3 text-left sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Prodi</p></th>
               <th class="px-5 py-3 text-center sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Grup Riset</p></th>
-              <!-- <th class="px-5 py-3 text-center sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Kuota</p></th> -->
               <th v-if="isAdmin" class="px-5 py-3 text-center w-32 sm:px-6"><p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Aksi</p></th>
             </tr>
           </thead>
@@ -144,7 +139,6 @@
               </td>
 
               <td v-if="isAdmin" class="px-5 py-4 text-center sm:px-6 align-top">
-                <!-- SUSUNAN TOMBOL AKSI VERTIKAL (KE BAWAH), RATA KIRI -->
                 <div class="flex flex-col gap-2 w-max mx-auto mt-0.5">
                   <button @click="openDetailModal(item)" class="flex items-center justify-start w-[100px] gap-2.5 px-3.5 py-1.5 text-sm font-semibold text-gray-700 transition-colors bg-white border border-gray-200 rounded-lg hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 shadow-theme-xs dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-400 dark:hover:border-emerald-800" title="Detail Dosen">
                     <svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4.5C7 4.5 2.73 8.11 1 12c1.73 3.89 6 7.5 11 7.5s9.27-3.61 11-7.5c-1.73-3.89-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
@@ -170,7 +164,6 @@
     <Pagination v-if="!isLoading && totalItems > 0" :current-page="currentPage" :total-items="totalItems"
       :items-per-page="itemsPerPage" @update:currentPage="currentPage = $event" class="mt-4" />
 
-    <!-- MODAL DETAIL DOSEN -->
     <Modal v-if="isDetailModalOpen" @close="closeDetailModal">
       <div
         class="relative w-full max-w-[700px] rounded-3xl bg-white p-6 dark:bg-gray-900 border dark:border-gray-700 lg:p-11 mx-auto mt-10 shadow-2xl transition-colors">
@@ -219,8 +212,17 @@
           </div>
 
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 border-t border-gray-100 pt-6 dark:border-gray-800">
+            <div class="flex flex-col">
+              <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Username Login</span>
+              <span class="text-sm font-bold text-gray-800 dark:text-gray-200">{{ selectedDosenDetail.user?.username || '-' }}</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Alamat Email</span>
+              <span class="text-sm font-bold text-gray-800 dark:text-gray-200">{{ selectedDosenDetail.user?.email || '-' }}</span>
+            </div>
+          </div>
 
-
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 border-t border-gray-100 pt-6 dark:border-gray-800">
             <div class="flex flex-col">
               <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Peran (Role) Akun</span>
               <div class="flex flex-wrap gap-1.5 mt-0.5">
@@ -265,11 +267,9 @@
       </div>
     </Modal>
 
-    <!-- MODAL FORM TAMBAH/EDIT -->
     <Modal v-if="isModalOpen" @close="closeModal">
       <div class="relative w-full max-w-[700px] flex flex-col max-h-[90vh] rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 mx-auto mt-10 shadow-2xl overflow-hidden transition-colors">
 
-        <!-- Header Sticky -->
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 z-10">
           <h4 class="text-xl font-bold text-gray-800 dark:text-white/90">
             {{ isEditing ? 'Edit Data Dosen' : 'Tambah Data Dosen' }}
@@ -279,11 +279,9 @@
           </button>
         </div>
 
-        <!-- Body Scrollable -->
         <div class="px-6 py-6 overflow-y-auto custom-scrollbar flex-1 pb-10">
           <form id="dosenForm" @submit.prevent="submitForm" class="flex flex-col gap-6">
 
-            <!-- Section 1: Info Akademik -->
             <div>
               <h5 class="text-sm font-bold text-gray-800 dark:text-white/90 uppercase tracking-wider mb-4 border-b border-gray-100 dark:border-gray-800 pb-2">Informasi Akademik</h5>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
@@ -341,7 +339,6 @@
               </div>
             </div>
 
-            <!-- Section 2: Info Akun -->
             <div>
               <h5 class="text-sm font-bold text-gray-800 dark:text-white/90 uppercase tracking-wider mb-4 border-b border-gray-100 dark:border-gray-800 pb-2">Akun Pengguna</h5>
 
@@ -382,7 +379,6 @@
           </form>
         </div>
 
-        <!-- Footer Sticky -->
         <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 flex justify-end gap-3 z-10 rounded-b-2xl">
           <button @click="closeModal" type="button" class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 shadow-theme-xs transition-colors dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">
             Batal
@@ -395,7 +391,6 @@
       </div>
     </Modal>
 
-  <!-- Modal Hapus -->
   <Modal v-if="isDeleteModalOpen" @close="closeDeleteModal">
     <div class="w-full max-w-[400px] rounded-3xl bg-white p-6 text-center mx-auto mt-20 z-50 shadow-xl dark:bg-gray-900 border dark:border-gray-700 transition-colors">
      <h4 class="mb-4 text-xl font-semibold text-gray-800 dark:text-white/90">Konfirmasi Hapus</h4>
