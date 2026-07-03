@@ -1355,6 +1355,7 @@ const closeGenerateModal = () => { isGenerateModalOpen.value = false; }
 const submitGeneratePso = async () => {
   isGenerating.value = true;
   try {
+    localStorage.setItem('max_dosen_per_day', String(inputDosenDailyLimit.value));
     const payload = {
       ...psoParams.value,
       prodi_id: !isAdmin.value && userProdiId.value > 0 ? userProdiId.value : undefined,

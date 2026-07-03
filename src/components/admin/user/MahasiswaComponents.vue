@@ -64,7 +64,7 @@
           </svg>
         </div>
 
-        <div class="relative w-full" ref="prodiDropdownRef">
+        <div v-if="isAdmin" class="relative w-full" ref="prodiDropdownRef">
           <button type="button" @click="isProdiDropdownOpen = !isProdiDropdownOpen"
             class="flex items-center justify-between h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
             <span class="truncate pr-4 font-medium">{{ selectedProdiLabel }}</span>
@@ -178,7 +178,7 @@
               <th class="px-5 py-3 text-center sm:px-6 w-36">
                 <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Topik</p>
               </th>
-              <th v-if="isAdmin" class="px-5 py-3 text-center sm:px-6 w-40">
+              <th class="px-5 py-3 text-center sm:px-6 w-40">
                 <p class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">Aksi</p>
               </th>
             </tr>
@@ -237,7 +237,7 @@
                   {{ item.topik_ta?.nama_topik || '-' }}
                 </span>
               </td>
-              <td v-if="isAdmin" class="px-5 py-4 text-center sm:px-6 align-top">
+              <td v-if="canViewDetail || isAdmin" class="px-5 py-4 text-center sm:px-6 align-top">
 
                 <div class="flex flex-col gap-2 w-max mx-auto mt-0.5">
                   <button @click="openDetailModal(item)"
@@ -249,7 +249,7 @@
                     </svg>
                     <span>Detail</span>
                   </button>
-                  <button @click="openEditModal(item)"
+                  <button v-if="isAdmin" @click="openEditModal(item)"
                     class="flex items-center justify-start w-[100px] gap-2.5 px-3.5 py-1.5 text-sm font-semibold text-gray-700 transition-colors bg-white border border-gray-200 rounded-lg hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 shadow-theme-xs dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 dark:hover:border-blue-800"
                     title="Edit">
                     <svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
@@ -258,7 +258,7 @@
                     </svg>
                     <span>Edit</span>
                   </button>
-                  <button @click="openDeleteModal(item)"
+                  <button v-if="isAdmin" @click="openDeleteModal(item)"
                     class="flex items-center justify-start w-[100px] gap-2.5 px-3.5 py-1.5 text-sm font-semibold text-gray-700 transition-colors bg-white border border-gray-200 rounded-lg hover:bg-red-50 hover:text-red-600 hover:border-red-200 shadow-theme-xs dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-red-900/30 dark:hover:text-red-400 dark:hover:border-red-800"
                     title="Hapus">
                     <svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -351,7 +351,7 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 border-t border-gray-100 pt-6 dark:border-gray-800">
+          <div v-if="isAdmin" class="grid grid-cols-1 gap-6 sm:grid-cols-2 border-t border-gray-100 pt-6 dark:border-gray-800">
             <div class="flex flex-col">
               <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Akun Pengguna
                 (Username)</span>
@@ -646,8 +646,7 @@ type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 
 interface Prodi { id_prodi: number; nama_prodi: string; }
 interface Topik { id_topik: number; nama_topik: string; }
-interface Dosen { id_dosen: number; nama_dosen: string; }
-
+interface Dosen {id_dosen: number;nama_dosen: string;nidn: string;prodi_id: number;user?: {id_user: number;username: string;email: string;};}
 interface Mahasiswa {
   id_mahasiswa: number;
   nama_mahasiswa: string;
@@ -692,6 +691,15 @@ const isAdmin = computed(() => {
   return userRoles.value.some(role => role.toLowerCase() === 'admin')
 })
 
+const isKaprodi = computed(() => {
+  return userRoles.value.some(role => role.toLowerCase() === 'kaprodi')
+})
+
+const canViewDetail = computed(() => {
+  return isAdmin.value || isKaprodi.value
+})
+
+const userProdiId = ref<number | null>(null);
 const mahasiswaList = ref<Mahasiswa[]>([])
 const listProdi = ref<Prodi[]>([])
 const listTopik = ref<Topik[]>([])
@@ -824,7 +832,11 @@ const handleClickOutside = (event: MouseEvent) => {
 const filteredList = computed(() => {
   let result = mahasiswaList.value;
 
-  if (filterProdi.value !== '') {
+  if (!isAdmin.value && isKaprodi.value && userProdiId.value) {
+    result = result.filter(mhs => mhs.prodi_id === userProdiId.value);
+  }
+
+  if (isAdmin.value && filterProdi.value !== '') {
     result = result.filter(mhs => mhs.prodi_id === filterProdi.value);
   }
 
@@ -1087,12 +1099,41 @@ const confirmDelete = async () => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   try {
     userRoles.value = JSON.parse(localStorage.getItem('userRoles') || '[]')
   } catch {
     userRoles.value = (localStorage.getItem('userRoles') || '').split(',').map(r => r.trim())
   }
+
+    if (!isAdmin.value && isKaprodi.value) {
+    try {
+      const profileRes = await fetch(`${baseUrl}/auth/profile`, {
+        method: 'GET',
+        credentials: 'include'
+      });
+      const profileData = await profileRes.json();
+      console.log("Profile Data:", profileData);
+
+      if (profileData.success && profileData.data) {
+        const username = profileData.data.username;
+        const dosenRes = await fetch(`${baseUrl}/dosen`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+        const dosenData = await dosenRes.json();
+        if (dosenData.success && dosenData.data) {
+          const dosen = dosenData.data.find((d: Dosen) => d.user?.username === username);
+          if (dosen) {
+            userProdiId.value = dosen.prodi_id;
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Gagal mengambil prodi Kaprodi:", error);
+    }
+  }
+
   document.addEventListener('mousedown', handleClickOutside)
   fetchMahasiswa()
   fetchProdiList()

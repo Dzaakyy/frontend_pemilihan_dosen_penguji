@@ -31,17 +31,18 @@
                   </router-link>
                 </div>
 
-                <form @submit.prevent="handleSubmit" v-if="!successMessage">
+                <form @submit.prevent="handleSubmit" v-if="!successMessage" novalidate>
                   <div class="space-y-5">
                     <div>
                       <label for="password" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                         Password Baru<span class="text-error-500">*</span>
                       </label>
                       <div class="relative">
-                        <input v-model="newPassword" :type="showPassword ? 'text' : 'password'" id="password" minlength="6"
+                        <input v-model="newPassword" :type="showPassword ? 'text' : 'password'" id="password"
                           placeholder="Minimal 6 karakter"
                           class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-4 pr-11 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
-                          required />
+                          @input="errorMessage = ''"
+                        />
                         <span @click="showPassword = !showPassword" class="absolute z-30 text-gray-500 -translate-y-1/2 cursor-pointer right-4 top-1/2 dark:text-gray-400 hover:text-gray-700 transition-colors">
                           <svg v-if="!showPassword" class="fill-current w-5 h-5" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M10 4C6.5 4 3.5 6.3 2.4 9.5C3.5 12.7 6.5 15 10 15C13.5 15 16.5 12.7 17.6 9.5C16.5 6.3 13.5 4 10 4ZM10 13.5C7.8 13.5 6 11.7 6 9.5C6 7.3 7.8 5.5 10 5.5C12.2 5.5 14 7.3 14 9.5C14 11.7 12.2 13.5 10 13.5ZM10 7C8.6 7 7.5 8.1 7.5 9.5C7.5 10.9 8.6 12 10 12C11.4 12 12.5 10.9 12.5 9.5C12.5 8.1 11.4 7 10 7Z"/>
@@ -116,14 +117,27 @@ const errorMessage = ref('')
 const successMessage = ref('')
 
 onMounted(() => {
-  // Ambil token dari parameter URL
   token.value = (route.query.token as string) || ''
   if (!token.value) {
     errorMessage.value = 'Tautan tidak valid! Pastikan Anda mengklik tautan langsung dari email.'
   }
 })
 
+const validateInput = () => {
+  if (!newPassword.value) {
+    errorMessage.value = 'Password tidak boleh kosong.'
+    return false
+  }
+  if (newPassword.value.length < 6) {
+    errorMessage.value = 'Password harus memiliki minimal 6 karakter.'
+    return false
+  }
+  return true
+}
+
 const handleSubmit = async () => {
+  if (!validateInput()) return
+
   if (!token.value) return
 
   errorMessage.value = ''

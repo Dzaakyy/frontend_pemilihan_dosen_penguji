@@ -335,7 +335,7 @@
                         :class="{ 'opacity-50 cursor-not-allowed': (isDosenSelected(d.dosen_id) && formData.sekretaris !== d.dosen_id) || isDosenMaxed(d.dosen_id) }">
                         <span class="text-brand-600 dark:text-brand-400 font-bold mr-1">#{{ d.rank }}</span> - {{
                         d.nama_dosen }}
-                        <span v-if="isDosenMaxed(d.dosen_id)" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Maks 2 Sesi/Hari)</span>
+                        <span v-if="isDosenMaxed(d.dosen_id)" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Maks {{ maxPerDay }} Sesi/Hari)</span>
                         <span v-else-if="isDosenSelected(d.dosen_id) && formData.sekretaris !== d.dosen_id"
                           class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
                       </li>
@@ -349,7 +349,7 @@
                         class="px-4 py-2.5 text-sm cursor-pointer hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50"
                         :class="{ 'opacity-50 cursor-not-allowed': (isDosenSelected(d.id_dosen) && formData.sekretaris !== d.id_dosen) || isDosenMaxed(d.id_dosen) }">
                         {{ d.nama_dosen }}
-                        <span v-if="isDosenMaxed(d.id_dosen)" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Maks 2 Sesi/Hari)</span>
+                        <span v-if="isDosenMaxed(d.id_dosen)" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Maks {{ maxPerDay }} Sesi/Hari)</span>
                         <span v-else-if="isDosenSelected(d.id_dosen) && formData.sekretaris !== d.id_dosen"
                           class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
                       </li>
@@ -398,7 +398,7 @@
                         :class="{ 'opacity-50 cursor-not-allowed': (isDosenSelected(d.dosen_id) && formData.penguji_1 !== d.dosen_id) || isDosenMaxed(d.dosen_id) }">
                         <span class="text-brand-600 dark:text-brand-400 font-bold mr-1">#{{ d.rank }}</span> - {{
                         d.nama_dosen }}
-                        <span v-if="isDosenMaxed(d.dosen_id)" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Maks 2 Sesi/Hari)</span>
+                        <span v-if="isDosenMaxed(d.dosen_id)" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Maks {{ maxPerDay }} Sesi/Hari)</span>
                         <span v-else-if="isDosenSelected(d.dosen_id) && formData.penguji_1 !== d.dosen_id"
                           class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
                       </li>
@@ -412,7 +412,7 @@
                         class="px-4 py-2.5 text-sm cursor-pointer hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50"
                         :class="{ 'opacity-50 cursor-not-allowed': (isDosenSelected(d.id_dosen) && formData.penguji_1 !== d.id_dosen) || isDosenMaxed(d.id_dosen) }">
                         {{ d.nama_dosen }}
-                        <span v-if="isDosenMaxed(d.id_dosen)" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Maks 2 Sesi/Hari)</span>
+                        <span v-if="isDosenMaxed(d.id_dosen)" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Maks {{ maxPerDay }} Sesi/Hari)</span>
                         <span v-else-if="isDosenSelected(d.id_dosen) && formData.penguji_1 !== d.id_dosen"
                           class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
                       </li>
@@ -461,7 +461,7 @@
                         :class="{ 'opacity-50 cursor-not-allowed': (isDosenSelected(d.dosen_id) && formData.penguji_2 !== d.dosen_id) || isDosenMaxed(d.dosen_id) }">
                         <span class="text-brand-600 dark:text-brand-400 font-bold mr-1">#{{ d.rank }}</span> - {{
                         d.nama_dosen }}
-                        <span v-if="isDosenMaxed(d.dosen_id)" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Maks 2 Sesi/Hari)</span>
+                        <span v-if="isDosenMaxed(d.dosen_id)" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Maks {{ maxPerDay }} Sesi/Hari)</span>
                         <span v-else-if="isDosenSelected(d.dosen_id) && formData.penguji_2 !== d.dosen_id"
                           class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
                       </li>
@@ -475,7 +475,7 @@
                         class="px-4 py-2.5 text-sm cursor-pointer hover:bg-gray-50 text-gray-700 transition-colors border-b border-gray-50 font-medium dark:text-gray-300 dark:hover:bg-gray-700 dark:border-gray-700/50"
                         :class="{ 'opacity-50 cursor-not-allowed': (isDosenSelected(d.id_dosen) && formData.penguji_2 !== d.id_dosen) || isDosenMaxed(d.id_dosen) }">
                         {{ d.nama_dosen }}
-                        <span v-if="isDosenMaxed(d.id_dosen)" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Maks 2 Sesi/Hari)</span>
+                        <span v-if="isDosenMaxed(d.id_dosen)" class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Maks {{ maxPerDay }} Sesi/Hari)</span>
                         <span v-else-if="isDosenSelected(d.id_dosen) && formData.penguji_2 !== d.id_dosen"
                           class="text-red-500 text-xs ml-2 italic dark:text-red-400">(Sudah Terpilih)</span>
                       </li>
@@ -541,7 +541,7 @@ type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 interface GenericRecord { [key: string]: unknown; }
 interface TopikTA { nama_topik: string; }
 interface Dosen { id_dosen: number; nama_dosen: string; nidn: string; }
-interface Mahasiswa { id_mahasiswa: number; nama_mahasiswa: string; nim: string; judul_ta: string; topik_ta?: TopikTA; prodi_id?: unknown; }
+interface Mahasiswa { id_mahasiswa: number; nama_mahasiswa: string; nim: string; judul_ta: string; topik_ta?: TopikTA; prodi_id?: unknown; pembimbing_1?: number; pembimbing_2?: number;}
 interface Rekomendasi { id_rekomendasi: number; dosen_id: number; rank: string; dosen?: Dosen; nama_dosen?: string; tanggal_ujian?: string; sesi_waktu?: string; }
 
 interface Penugasan {
@@ -573,7 +573,8 @@ const activeProdiName = ref('')
 
 const isAdmin = computed(() => userRoles.value.some(role => role.toLowerCase() === 'admin'))
 const canManage = computed(() => userRoles.value.some(role => ['admin', 'kaprodi'].includes(role.toLowerCase())))
-
+const pembimbingMahasiswa = ref<{ id: number | null, id2: number | null }>({ id: null, id2: null })
+const maxPerDay = computed(() => parseInt(localStorage.getItem('max_dosen_per_day') || '2'));
 const getRawId = (dataData: unknown): number => {
   if (dataData === null || dataData === undefined) return 0;
   if (typeof dataData === 'object' && dataData !== null) {
@@ -654,7 +655,8 @@ const currentDailyCounts = computed(() => {
 });
 
 const isDosenMaxed = (dosenId: number) => {
-  return (currentDailyCounts.value[dosenId] || 0) >= 2;
+  const maxPerDay = parseInt(localStorage.getItem('max_dosen_per_day') || '2');
+  return (currentDailyCounts.value[dosenId] || 0) >= maxPerDay;
 };
 // ============================================================
 
@@ -676,6 +678,16 @@ const getMahasiswaLabel = (id: number | '') => {
 const selectMahasiswa = (id: number) => {
   formData.value.mahasiswa_id = id;
   openDropdown.value = null;
+  const mhs = mahasiswaList.value.find(m => m.id_mahasiswa === id);
+  if (mhs) {
+    pembimbingMahasiswa.value = {
+      id: mhs.pembimbing_1 || null,
+      id2: mhs.pembimbing_2 || null
+    };
+  } else {
+    pembimbingMahasiswa.value = { id: null, id2: null };
+  }
+
   handleMahasiswaChange();
 }
 
@@ -685,6 +697,13 @@ const isDosenSelected = (id_dosen: number) => {
     formData.value.penguji_2 === id_dosen;
 }
 
+const excludedDosenIds = computed(() => {
+  const ids: number[] = [];
+  if (pembimbingMahasiswa.value.id) ids.push(pembimbingMahasiswa.value.id);
+  if (pembimbingMahasiswa.value.id2) ids.push(pembimbingMahasiswa.value.id2);
+  return ids;
+});
+
 const recommendedDosen = computed(() => {
   return rekomendasiList.value.map(rek => ({
     id_rekomendasi: rek.id_rekomendasi,
@@ -692,6 +711,7 @@ const recommendedDosen = computed(() => {
     nama_dosen: rek.dosen?.nama_dosen || '',
     rank: rek.rank
   }))
+  .filter(d => !excludedDosenIds.value.includes(d.dosen_id));
 })
 
 const filteredRecommendedDosen = computed(() => {
@@ -702,7 +722,9 @@ const filteredRecommendedDosen = computed(() => {
 
 const otherDosen = computed(() => {
   const recIds = recommendedDosen.value.map(d => d.dosen_id);
-  return dosenList.value.filter(d => !recIds.includes(d.id_dosen));
+  return dosenList.value
+  .filter(d => !recIds.includes(d.id_dosen))
+  .filter(d => !excludedDosenIds.value.includes(d.id_dosen));
 })
 
 const filteredOtherDosen = computed(() => {
@@ -735,6 +757,11 @@ const handleOutsideClick = (event: MouseEvent) => {
 }
 
 const selectDosenFor = (role: 'sekretaris' | 'penguji_1' | 'penguji_2', id_dosen: number) => {
+    if (excludedDosenIds.value.includes(id_dosen)) {
+    showAlert('warning', 'Dosen Pembimbing Tidak Bisa Dipilih', 'Dosen pembimbing mahasiswa ini tidak boleh menjadi sekretaris atau penguji.');
+    return;
+  }
+
   // Cegah jika sudah max 2 kali hari ini
   if (isDosenMaxed(id_dosen)) return;
 
@@ -912,6 +939,8 @@ const submitForm = async () => {
     return rec ? rec.id_rekomendasi : null;
   }
 
+  const maxDosenPerDay = parseInt(localStorage.getItem('max_dosen_per_day') || '2');
+
   try {
     const url = isEditing.value ? `${baseUrl}/penugasan/${formData.value.id}` : `${baseUrl}/penugasan`;
     const method = isEditing.value ? 'PUT' : 'POST';
@@ -929,7 +958,8 @@ const submitForm = async () => {
         rekomendasi_penguji_1: findRekomendasiId(penguji_1),
         rekomendasi_penguji_2: findRekomendasiId(penguji_2),
         tanggal_ujian: selectedWaktuPso.value.tanggal || null,
-        sesi_waktu: selectedWaktuPso.value.sesi || null
+        sesi_waktu: selectedWaktuPso.value.sesi || null,
+        max_dosen_per_day: maxDosenPerDay
       })
     })
 
