@@ -8,7 +8,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/signin'
+      name: 'Landing',
+      component: () => import('../views/LandingPage.vue'),
+      meta: {
+        title: 'Beranda',
+      },
     },
     {
       path: '/signin',
@@ -174,7 +178,6 @@ const router = createRouter({
         title: 'Badge',
       },
     },
-
     {
       path: '/buttons',
       name: 'Buttons',
@@ -183,7 +186,6 @@ const router = createRouter({
         title: 'Buttons',
       },
     },
-
     {
       path: '/images',
       name: 'Images',
@@ -208,7 +210,6 @@ const router = createRouter({
         title: 'Blank',
       },
     },
-
     {
       path: '/error-404',
       name: '404 Error',
@@ -217,8 +218,6 @@ const router = createRouter({
         title: '404 Error',
       },
     },
-
-
     {
       path: '/signup',
       name: 'Signup',
@@ -265,7 +264,7 @@ router.beforeEach((to, from, next) => {
 
   const rolesLower = userRoles.map(r => r.toLowerCase());
 
-  const publicPages = ['Signin', 'Signup', 'Forgot Password', 'Update Password'];
+  const publicPages = ['Landing', 'Signin', 'Signup', 'Forgot Password', 'Update Password'];
   const authRequired = !publicPages.includes(to.name as string);
 
   if (authRequired && !isAuthenticated) {

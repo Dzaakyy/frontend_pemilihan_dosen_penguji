@@ -69,9 +69,13 @@
                     <div>
                       <button type="submit" :disabled="isLoading"
                         class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition-all duration-200 rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 focus:ring-4 focus:ring-brand-500/30 disabled:opacity-70 disabled:cursor-not-allowed">
-                        <svg v-if="isLoading" class="w-5 h-5 mr-3 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg v-if="isLoading" class="w-5 h-5 mr-3 -ml-1 text-white animate-spin"
+                          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                          </circle>
+                          <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                          </path>
                         </svg>
                         {{ isLoading ? 'Memproses...' : 'Sign In' }}
                       </button>
@@ -79,38 +83,58 @@
                   </div>
                 </form>
 
+                <div class="mt-4 text-center">
+                  <router-link to="/"
+                    class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-brand-600 dark:text-gray-400 dark:hover:text-brand-400 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Kembali ke Beranda
+                  </router-link>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="relative items-center hidden w-full h-full lg:w-1/2 bg-brand-950 dark:bg-gray-900 lg:flex overflow-hidden">
-          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-brand-800/40 via-brand-950 to-brand-950 dark:from-brand-900/30 dark:via-gray-900 dark:to-gray-900 z-0"></div>
-
+        <div
+          class="relative items-center hidden w-full h-full lg:w-1/2 bg-brand-950 dark:bg-gray-900 lg:flex overflow-hidden">
+          <div
+            class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-brand-800/40 via-brand-950 to-brand-950 dark:from-brand-900/30 dark:via-gray-900 dark:to-gray-900 z-0">
+          </div>
 
           <div class="relative z-10 flex flex-col items-center justify-center w-full p-8 text-center sm:p-12">
             <div class="w-full max-w-lg p-10 border shadow-2xl backdrop-blur-md bg-white/5 border-white/10 rounded-3xl">
 
               <div class="flex justify-center mb-8">
                 <div class="p-5 rounded-full bg-brand-500/20 ring-1 ring-brand-400/30 backdrop-blur-sm">
-                  <svg class="w-14 h-14 text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                  <svg class="w-14 h-14 text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                    </path>
                   </svg>
                 </div>
               </div>
 
               <h2 class="mb-5 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                Sistem Pemilihan Penguji TA
+                Sistem Rekomendasi Dosen Penguji TA
               </h2>
 
               <p class="text-base leading-relaxed text-gray-300 sm:text-lg">
-                Platform otomatisasi cerdas berbasis web. Mengoptimalkan penentuan dosen penguji secara adil dan transparan menggunakan algoritma <span class="font-semibold text-brand-300">Particle Swarm Optimization (PSO)</span>.
+                Optimalkan pemilihan dosen penguji dengan kecerdasan kolektif <span
+                  class="font-semibold text-brand-300">Particle Swarm Optimization (PSO)</span>.
               </p>
 
               <div class="flex flex-wrap justify-center gap-3 mt-10">
-                <span class="px-4 py-1.5 text-xs font-medium tracking-wide text-brand-200 rounded-full bg-brand-800/40 border border-brand-700/50 backdrop-blur-sm shadow-sm">Cerdas</span>
-                <span class="px-4 py-1.5 text-xs font-medium tracking-wide text-brand-200 rounded-full bg-brand-800/40 border border-brand-700/50 backdrop-blur-sm shadow-sm">Otomatis</span>
-                <span class="px-4 py-1.5 text-xs font-medium tracking-wide text-brand-200 rounded-full bg-brand-800/40 border border-brand-700/50 backdrop-blur-sm shadow-sm">Akurat</span>
+                <span
+                  class="px-4 py-1.5 text-xs font-medium tracking-wide text-brand-200 rounded-full bg-brand-800/40 border border-brand-700/50 backdrop-blur-sm shadow-sm">Cepat</span>
+                <span
+                  class="px-4 py-1.5 text-xs font-medium tracking-wide text-brand-200 rounded-full bg-brand-800/40 border border-brand-700/50 backdrop-blur-sm shadow-sm">Objektif</span>
+                <span
+                  class="px-4 py-1.5 text-xs font-medium tracking-wide text-brand-200 rounded-full bg-brand-800/40 border border-brand-700/50 backdrop-blur-sm shadow-sm">Merata
+                </span>
               </div>
             </div>
           </div>
@@ -166,7 +190,7 @@ const handleSubmit = async () => {
 
       const userId = result.data.id || result.data.id_user;
       if (userId) {
-          localStorage.setItem('userData', JSON.stringify({ id_user: userId }));
+        localStorage.setItem('userData', JSON.stringify({ id_user: userId }));
       }
 
       let rolesArray: string[] = [];

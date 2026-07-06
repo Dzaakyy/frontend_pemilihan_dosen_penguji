@@ -30,7 +30,7 @@
           </router-link>
         </li>
       </ul>
-      <router-link to="/signin" @click="signOut"
+      <router-link to="/" @click="signOut"
         class="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
         <LogoutIcon class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300" />
         Sign out
@@ -67,7 +67,9 @@ const closeDropdown = () => {
   dropdownOpen.value = false
 }
 
-const signOut = async () => {
+const signOut = async (event: Event) => {
+  event.preventDefault()
+
   try {
     console.log('Signing out...')
 
@@ -82,9 +84,10 @@ const signOut = async () => {
     localStorage.removeItem('isLoggedIn')
     localStorage.removeItem('username')
     localStorage.removeItem('userRoles')
+    localStorage.removeItem('userData')
 
     closeDropdown()
-    router.push('/signin')
+    router.push('/')
 
   } catch (error) {
     console.error("Terjadi masalah saat logout:", error)
@@ -92,9 +95,10 @@ const signOut = async () => {
     localStorage.removeItem('isLoggedIn')
     localStorage.removeItem('username')
     localStorage.removeItem('userRoles')
+    localStorage.removeItem('userData')
 
     closeDropdown()
-    router.push('/signin')
+    router.push('/')
   }
 }
 
