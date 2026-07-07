@@ -13,7 +13,9 @@
 
         <nav class="hidden items-center gap-8 md:flex">
           <a href="#fitur" class="text-sm font-medium text-gray-600 transition hover:text-blue-600">Fitur</a>
-          <a href="#cara-kerja" class="text-sm font-medium text-gray-600 transition hover:text-blue-600">Cara Kerja</a>
+          <a href="#cara-kerja-pso" class="text-sm font-medium text-gray-600 transition hover:text-blue-600">Cara Kerja
+            PSO</a>
+          <a href="#langkah" class="text-sm font-medium text-gray-600 transition hover:text-blue-600">Langkah</a>
           <a href="#manfaat" class="text-sm font-medium text-gray-600 transition hover:text-blue-600">Manfaat</a>
         </nav>
 
@@ -119,7 +121,7 @@
           <span class="inline-block rounded-full bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700">Fitur
             Unggulan</span>
           <h2 class="mt-4 text-3xl font-bold text-gray-900 md:text-4xl">
-            Mengapa Memilih <span class="text-blue-600">SIRUJI TA</span>?
+            Fitur <span class="text-blue-600">Unggulan</span> SIRUJI TA
           </h2>
           <p class="mt-4 text-gray-600">
             Sistem ini dirancang untuk membantu Ketua Program Studi dalam menugaskan dosen penguji secara optimal dan
@@ -141,14 +143,78 @@
       </div>
     </section>
 
-    <!-- ====== How It Works ====== -->
-    <section id="cara-kerja" class="bg-gray-50 py-20 md:py-28">
+    <!-- ====== Cara Kerja PSO ====== -->
+    <section id="cara-kerja-pso" class="py-16 md:py-24 bg-gray-50">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="mx-auto max-w-3xl text-center">
+          <span class="inline-block rounded-full bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700">Algoritma
+            PSO</span>
+          <h2 class="mt-4 text-3xl font-bold text-gray-900 md:text-4xl">
+            Bagaimana Algoritma <span class="text-blue-600">PSO</span> Bekerja?
+          </h2>
+          <p class="mt-2 text-gray-500">3 tahap sederhana menuju rekomendasi optimal</p>
+        </div>
+
+        <div class="mt-10 grid gap-6 md:grid-cols-3">
+          <div
+            class="group rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-gray-100 transition hover:shadow-md hover:-translate-y-1">
+            <div
+              class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 text-3xl transition group-hover:scale-110">
+              🎯
+            </div>
+            <h4 class="text-xl font-semibold text-gray-900">1. Inisialisasi</h4>
+            <p class="mt-2 text-sm text-gray-500 leading-relaxed">
+              Sistem membangkitkan <strong>kawanan partikel</strong> secara acak.
+              Setiap partikel merepresentasikan satu kombinasi penugasan dosen penguji untuk seluruh mahasiswa.
+            </p>
+            <div class="mt-4 inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+              Swarm Partikel
+            </div>
+          </div>
+
+          <div
+            class="group rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-gray-100 transition hover:shadow-md hover:-translate-y-1">
+            <div
+              class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-indigo-100 text-3xl transition group-hover:scale-110">
+              🔄
+            </div>
+            <h4 class="text-xl font-semibold text-gray-900">2. Evaluasi &amp; Update</h4>
+            <p class="mt-2 text-sm text-gray-500 leading-relaxed">
+              Setiap partikel dievaluasi menggunakan <strong>fungsi fitness</strong> (keahlian + distribusi).
+              Partikel bergerak menuju posisi terbaik pribadi (Pbest) dan global (Gbest).
+            </p>
+            <div class="mt-4 inline-block rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700">
+              Fitness = Keahlian + Distribusi
+            </div>
+          </div>
+
+          <div
+            class="group rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-gray-100 transition hover:shadow-md hover:-translate-y-1">
+            <div
+              class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-3xl transition group-hover:scale-110">
+              ✅
+            </div>
+            <h4 class="text-xl font-semibold text-gray-900">3. Konvergensi</h4>
+            <p class="mt-2 text-sm text-gray-500 leading-relaxed">
+              Setelah iterasi maksimal tercapai, partikel berkumpul di solusi terbaik.
+              Sistem menghasilkan <strong>3 dosen penguji</strong> dengan nilai fitness tertinggi.
+            </p>
+            <div class="mt-4 inline-block rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700">
+              Top 3 Rekomendasi
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== Alur Penggunaan Sistem ====== -->
+    <section id="langkah" class="bg-white py-20 md:py-28">
       <div class="container mx-auto px-4 md:px-6">
         <div class="mx-auto mb-16 max-w-2xl text-center">
-          <span class="inline-block rounded-full bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700">Cara
-            Kerja</span>
+          <span class="inline-block rounded-full bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700">Alur
+            Sistem</span>
           <h2 class="mt-4 text-3xl font-bold text-gray-900 md:text-4xl">
-            Proses <span class="text-blue-600">4 Langkah</span> Mudah
+            4 Langkah <span class="text-blue-600">Penggunaan</span> Sistem
           </h2>
           <p class="mt-4 text-gray-600">
             Dari pengelolaan data hingga penetapan dosen penguji, semua terintegrasi dalam satu platform.
@@ -157,7 +223,7 @@
 
         <div class="mx-auto max-w-3xl space-y-6">
           <div v-for="(step, idx) in steps" :key="idx"
-            class="flex items-start gap-5 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100 transition hover:shadow-md">
+            class="flex items-start gap-5 rounded-2xl bg-gray-50 p-6 shadow-sm ring-1 ring-gray-100 transition hover:shadow-md">
             <div
               class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-lg font-bold text-white shadow-lg shadow-blue-600/25">
               {{ idx + 1 }}
@@ -174,14 +240,69 @@
       </div>
     </section>
 
+    <!-- ====== Contoh Rekomendasi Detail ====== -->
+    <section id="contoh-rekomendasi" class="py-16 md:py-24 bg-gray-50">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="mx-auto max-w-3xl text-center">
+          <span class="inline-block rounded-full bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700">Contoh
+            Hasil</span>
+          <h2 class="mt-4 text-3xl font-bold text-gray-900 md:text-4xl">
+            Rekomendasi <span class="text-blue-600">Dosen Penguji</span>
+          </h2>
+          <p class="mt-2 text-gray-500">Skor dihitung dari poin keahlian + poin distribusi beban</p>
+        </div>
+
+        <div class="mx-auto mt-10 max-w-2xl space-y-4">
+          <div v-for="(item, idx) in detailedRecommendations" :key="idx"
+            class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 transition hover:shadow-md">
+            <div class="flex items-center gap-4">
+              <div
+                class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-700">
+                {{ idx + 1 }}
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-semibold text-gray-800">{{ item.name }}</h4>
+                  <span class="text-lg font-bold text-green-600">{{ item.score }}%</span>
+                </div>
+                <p class="text-sm text-gray-500">{{ item.expertise }}</p>
+                <div class="mt-1 flex flex-wrap items-center gap-3 text-xs text-gray-400">
+                  <span class="flex items-center gap-1">
+                    <span class="inline-block h-2 w-2 rounded-full bg-blue-400"></span>
+                    🔬 {{ item.detail.keahlian }} poin
+                  </span>
+                  <span class="flex items-center gap-1">
+                    <span class="inline-block h-2 w-2 rounded-full bg-green-400"></span>
+                    📊 {{ item.detail.distribusi }} poin
+                  </span>
+                  <span class="flex items-center gap-1">
+                    <span class="inline-block h-2 w-2 rounded-full bg-orange-400"></span>
+                    📋 Beban {{ item.detail.beban }} tugas
+                  </span>
+                  <span class="flex items-center gap-1 text-gray-300">|</span>
+                  <span class="text-gray-400">Iterasi ke-{{ item.detail.iterasi }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mx-auto mt-6 max-w-2xl rounded-xl bg-blue-50 p-4 text-center text-sm text-blue-700">
+          💡 <span class="font-medium">Skor Maksimal 100%</span> ·
+          Keahlian (75 poin) + Distribusi Beban (25 poin) ·
+          Semakin tinggi = semakin optimal
+        </div>
+      </div>
+    </section>
+
     <!-- ====== manfaat Section ====== -->
-    <section id="manfaat" class="py-20 md:py-28">
+    <section id="manfaat" class="py-20 md:py-28 bg-white">
       <div class="container mx-auto px-4 md:px-6">
         <div class="mx-auto mb-16 max-w-2xl text-center">
           <span
             class="inline-block rounded-full bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700">Manfaat</span>
           <h2 class="mt-4 text-3xl font-bold text-gray-900 md:text-4xl">
-            Keunggulan <span class="text-blue-600">Sistem</span>
+            Manfaat <span class="text-blue-600">Sistem</span>
           </h2>
         </div>
 
@@ -219,28 +340,29 @@
     </section>
 
     <!-- ====== Footer ====== -->
-<footer class="border-t border-gray-200 bg-gray-50">
-  <div class="container mx-auto px-4 py-8 md:py-12">
-    <div class="flex flex-col items-center gap-8 md:flex-row md:justify-between">
-      <div class="flex items-center gap-3">
-        <img src="/images/logo/logo.svg" alt="SIRUJI TA Logo" class="h-10 w-10 object-contain" />
-        <div>
-          <span class="text-lg font-bold text-gray-800">SIRUJI <span class="text-blue-600">TA</span></span>
-          <p class="text-sm text-gray-500">Sistem Rekomendasi Dosen Penguji Tugas Akhir</p>
+    <footer class="border-t border-gray-200 bg-gray-50">
+      <div class="container mx-auto px-4 py-8 md:py-12">
+        <div class="flex flex-col items-center gap-8 md:flex-row md:justify-between">
+          <div class="flex items-center gap-3">
+            <img src="/images/logo/logo.svg" alt="SIRUJI TA Logo" class="h-10 w-10 object-contain" />
+            <div>
+              <span class="text-lg font-bold text-gray-800">SIRUJI <span class="text-blue-600">TA</span></span>
+              <p class="text-sm text-gray-500">Sistem Rekomendasi Dosen Penguji Tugas Akhir</p>
+            </div>
+          </div>
+          <nav class="flex flex-wrap justify-center gap-6 text-sm">
+            <a href="#fitur" class="text-gray-600 hover:text-blue-600 transition">Fitur</a>
+            <a href="#cara-kerja-pso" class="text-gray-600 hover:text-blue-600 transition">Cara Kerja PSO</a>
+            <a href="#langkah" class="text-gray-600 hover:text-blue-600 transition">Langkah</a>
+            <a href="#manfaat" class="text-gray-600 hover:text-blue-600 transition">Manfaat</a>
+            <router-link to="/login" class="text-gray-600 hover:text-blue-600 transition">Masuk</router-link>
+          </nav>
+        </div>
+        <div class="mt-6 border-t border-gray-200 pt-6 text-center text-sm text-gray-500">
+          &copy; {{ new Date().getFullYear() }} SIRUJI TA · Sistem Rekomendasi Dosen Penguji Tugas Akhir
         </div>
       </div>
-      <nav class="flex flex-wrap justify-center gap-6 text-sm">
-        <a href="#fitur" class="text-gray-600 hover:text-blue-600 transition">Fitur</a>
-        <a href="#cara-kerja" class="text-gray-600 hover:text-blue-600 transition">Cara Kerja</a>
-        <a href="#manfaat" class="text-gray-600 hover:text-blue-600 transition">Manfaat</a>
-        <router-link to="/login" class="text-gray-600 hover:text-blue-600 transition">Masuk</router-link>
-      </nav>
-    </div>
-    <div class="mt-6 border-t border-gray-200 pt-6 text-center text-sm text-gray-500">
-      &copy; {{ new Date().getFullYear() }} SIRUJI TA · Sistem Rekomendasi Dosen Penguji Tugas Akhir
-    </div>
-  </div>
-</footer>
+    </footer>
   </div>
 </template>
 
@@ -259,11 +381,10 @@ import {
   Settings,
   CheckCircle,
   Clock,
-  Shield,
-  BarChart3,
+  Shield
 } from 'lucide-vue-next'
 
-// ====== Mock Rekomendasi (tanpa detail perhitungan) ======
+// ====== Mock Rekomendasi (Hero) ======
 const mockRecommendations = [
   {
     name: 'Machine Learning',
@@ -279,6 +400,43 @@ const mockRecommendations = [
     name: 'Pemrograman Web',
     expertise: 'Framework · Database · API · Fullstack',
     score: 95,
+  },
+]
+
+// ====== Detail Rekomendasi (Tambahan) ======
+const detailedRecommendations = [
+  {
+    name: 'Dosen 1',
+    expertise: 'Machine Learning · Deep Learning · CNN · NLP · Data Mining',
+    score: 100,
+    detail: {
+      keahlian: 75,
+      distribusi: 25,
+      beban: 0,
+      iterasi: 8,
+    },
+  },
+  {
+    name: 'Dosen 2',
+    expertise: 'UI/UX Design · User Experience · Design Thinking · Prototyping',
+    score: 97,
+    detail: {
+      keahlian: 75,
+      distribusi: 22,
+      beban: 1,
+      iterasi: 12,
+    },
+  },
+  {
+    name: 'Dosen 3',
+    expertise: 'Pemrograman Web · Framework · Database · API · Fullstack',
+    score: 94,
+    detail: {
+      keahlian: 75,
+      distribusi: 19,
+      beban: 2,
+      iterasi: 15,
+    },
   },
 ]
 
@@ -340,27 +498,27 @@ const steps = [
   },
 ]
 
-// ====== Manfaat ======
+// ====== Manfaat (Dampak bagi Pengguna) ======
 const manfaat = [
   {
     icon: Clock,
-    title: 'Proses Cepat',
-    description: 'Penugasan massal dalam hitungan detik',
+    title: 'Efisiensi Waktu Kaprodi',
+    description: 'Kaprodi tidak perlu memeriksa dosen satu per satu. Cukup klik tombol, rekomendasi langsung muncul.',
   },
   {
     icon: Shield,
-    title: 'Objektif & Terukur',
-    description: 'Berbasis data dan perhitungan matematis',
+    title: 'Keputusan Objektif',
+    description: 'Rekomendasi berdasarkan data, bukan ingatan atau penilaian pribadi Kaprodi. Hasilnya lebih adil.',
   },
   {
-    icon: BarChart3,
-    title: 'Analisis Visual',
-    description: 'Dashboard dan grafik konvergensi PSO',
+    icon: Scale,
+    title: 'Beban Menguji Merata',
+    description: 'Tidak ada dosen yang kelebihan jadwal menguji. Semua dosen mendapat giliran yang adil.',
   },
   {
-    icon: CheckCircle,
-    title: 'Terintegrasi',
-    description: 'Google Scholar, basis data terpusat',
+    icon: Eye,
+    title: 'Transparansi untuk Semua',
+    description: 'Dosen tahu siapa yang harus diuji. Mahasiswa tahu siapa pengujinya. Semua informasi jelas.',
   },
 ]
 </script>
