@@ -4,9 +4,7 @@
       <span class="mr-3 overflow-hidden rounded-full h-11 w-11 bg-gray-200 flex items-center justify-center text-brand-500 font-bold text-lg">
         {{ currentUsername.charAt(0).toUpperCase() }}
       </span>
-
       <span class="block mr-1 font-medium text-theme-sm">{{ currentUsername }}</span>
-
       <ChevronDownIcon :class="{ 'rotate-180': dropdownOpen }" />
     </button>
 
@@ -30,13 +28,13 @@
           </router-link>
         </li>
       </ul>
-      <router-link to="/" @click="signOut"
+      <a href="#" @click.prevent="signOut"
         class="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
         <LogoutIcon class="text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300" />
         Sign out
-      </router-link>
+      </a>
     </div>
-    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -44,14 +42,14 @@ import {
   UserCircleIcon,
   ChevronDownIcon,
   LogoutIcon,
-  } from '@/icons'
+} from '@/icons'
 import { RouterLink, useRouter } from 'vue-router'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 
 const router = useRouter()
 const dropdownOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const baseUrl = import.meta.env.VITE_API_BASE_URL
 const currentUsername = ref('Guest')
 const currentRoles = ref('User')
 
@@ -70,35 +68,25 @@ const closeDropdown = () => {
 const signOut = async (event: Event) => {
   event.preventDefault()
 
-  try {
-    console.log('Signing out...')
+  localStorage.removeItem('isLoggedIn')
+  localStorage.removeItem('username')
+  localStorage.removeItem('userRoles')
+  localStorage.removeItem('userData')
 
+  closeDropdown()
+
+  await nextTick()
+
+  router.replace('/')
+
+  try {
     await fetch(`${baseUrl}/auth/logout`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       credentials: 'include'
     })
-
-    localStorage.removeItem('isLoggedIn')
-    localStorage.removeItem('username')
-    localStorage.removeItem('userRoles')
-    localStorage.removeItem('userData')
-
-    closeDropdown()
-    router.push('/')
-
   } catch (error) {
-    console.error("Terjadi masalah saat logout:", error)
-
-    localStorage.removeItem('isLoggedIn')
-    localStorage.removeItem('username')
-    localStorage.removeItem('userRoles')
-    localStorage.removeItem('userData')
-
-    closeDropdown()
-    router.push('/')
+    console.error('Logout server error:', error)
   }
 }
 
@@ -113,21 +101,20 @@ onMounted(() => {
 
   currentUsername.value = localStorage.getItem('username') || 'Guest'
 
-  const storedRoles = localStorage.getItem('userRoles');
+  const storedRoles = localStorage.getItem('userRoles')
   if (storedRoles) {
     try {
-      const parsedRoles = JSON.parse(storedRoles);
-
+      const parsedRoles = JSON.parse(storedRoles)
       if (Array.isArray(parsedRoles) && parsedRoles.length > 0) {
-        currentRoles.value = parsedRoles.join(', ');
+        currentRoles.value = parsedRoles.join(', ')
       } else {
-        currentRoles.value = 'User';
+        currentRoles.value = 'User'
       }
     } catch {
-      currentRoles.value = storedRoles;
+      currentRoles.value = storedRoles
     }
   } else {
-    currentRoles.value = 'User';
+    currentRoles.value = 'User'
   }
 })
 
