@@ -39,7 +39,7 @@
 
       <hr class="border-gray-100 dark:border-gray-800" />
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
         <div class="relative w-full">
           <input v-model="searchQuery" type="text" placeholder="Cari nama, NIDN..."
             class="h-10 w-full rounded-lg border border-gray-300 bg-white pl-10 pr-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
@@ -90,6 +90,22 @@
                 <li @click="selectSortOrder('')" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors border-b border-gray-100 dark:border-gray-700 font-medium">Urutkan Default</li>
                 <li @click="selectSortOrder('asc')" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors border-b border-gray-50 dark:border-gray-700/50">Nama (A - Z)</li>
                 <li @click="selectSortOrder('desc')" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors border-b border-gray-50 last:border-0 dark:border-gray-700/50">Nama (Z - A)</li>
+              </ul>
+            </div>
+          </transition>
+        </div>
+
+        <div class="relative w-full" ref="kaprodiDropdownRef">
+          <button type="button" @click="isKaprodiDropdownOpen = !isKaprodiDropdownOpen"
+            class="flex items-center justify-between h-10 w-full rounded-lg border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
+            <span class="truncate pr-4 font-medium">{{ selectedKaprodiLabel }}</span>
+            <svg :class="['w-4 h-4 text-gray-400 transition-transform duration-200 flex-shrink-0', { 'rotate-180': isKaprodiDropdownOpen }]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+          <transition enter-active-class="transition duration-100 ease-out" enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100" leave-active-class="transition duration-75 ease-in" leave-from-class="transform scale-100 opacity-100" leave-to-class="transform scale-95 opacity-0">
+            <div v-if="isKaprodiDropdownOpen" class="absolute z-[100] w-full mt-1.5 top-full bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
+              <ul class="max-h-60 overflow-y-auto custom-scrollbar py-1">
+                <li @click="selectFilterKaprodi('')" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors border-b border-gray-100 dark:border-gray-700 font-medium">Dosen</li>
+                <li @click="selectFilterKaprodi(true)" class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors border-b border-gray-50 last:border-0 dark:border-gray-700/50">Kaprodi</li>
               </ul>
             </div>
           </transition>
@@ -360,7 +376,7 @@
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-5 gap-y-4">
               <div>
                 <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Email <span class="text-red-500">*</span></label>
-                <input v-model="formData.email" type="email" placeholder="email@gmail.com" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" required />
+                <input v-model="formData.email" type="email" placeholder="email@gmail.com" class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors" required/>
               </div>
 
               <div>
@@ -481,11 +497,13 @@ const dataGrupRiset = [
 const searchQuery = ref('')
 const filterProdi = ref<number | ''>('')
 const filterGrupRiset = ref('')
+const filterKaprodi = ref<boolean | ''>('')
 const sortOrder = ref<'asc' | 'desc' | ''>('')
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 
 const itemsPerPageDropdownRef = ref<HTMLElement | null>(null)
+  const kaprodiDropdownRef = ref<HTMLElement | null>(null)
 const prodiDropdownRef = ref<HTMLElement | null>(null)
 const grupRisetDropdownRef = ref<HTMLElement | null>(null)
 const sortDropdownRef = ref<HTMLElement | null>(null)
@@ -493,6 +511,7 @@ const formProdiDropdownRef = ref<HTMLElement | null>(null)
 const formGrupRisetDropdownRef = ref<HTMLElement | null>(null)
 
 const isItemsPerPageDropdownOpen = ref(false)
+const isKaprodiDropdownOpen = ref(false)
 const isProdiDropdownOpen = ref(false)
 const isGrupRisetDropdownOpen = ref(false)
 const isSortDropdownOpen = ref(false)
@@ -501,6 +520,15 @@ const isFormGrupRisetDropdownOpen = ref(false)
 
 const isDetailModalOpen = ref(false)
 const selectedDosenDetail = ref<Dosen | null>(null)
+
+const selectedKaprodiLabel = computed(() => {
+  return filterKaprodi.value === true ? 'Kaprodi' : 'Dosen'
+})
+
+const selectFilterKaprodi = (val: boolean | '') => {
+  filterKaprodi.value = val;
+  isKaprodiDropdownOpen.value = false;
+}
 
 const selectedProdiLabel = computed(() => {
  if (filterProdi.value === '') return 'Semua Prodi'
@@ -544,6 +572,7 @@ const handleClickOutside = (event: MouseEvent) => {
  if (sortDropdownRef.value && !sortDropdownRef.value.contains(target)) isSortDropdownOpen.value = false
  if (formProdiDropdownRef.value && !formProdiDropdownRef.value.contains(target)) isFormProdiDropdownOpen.value = false
  if (formGrupRisetDropdownRef.value && !formGrupRisetDropdownRef.value.contains(target)) isFormGrupRisetDropdownOpen.value = false
+ if (kaprodiDropdownRef.value && !kaprodiDropdownRef.value.contains(target)) isKaprodiDropdownOpen.value = false
 }
 
 const filteredList = computed(() => {
@@ -556,6 +585,12 @@ const filteredList = computed(() => {
  if (filterGrupRiset.value !== '') {
   result = result.filter(dosen => dosen.grup_riset === filterGrupRiset.value);
  }
+
+ if (filterKaprodi.value === true) {
+    result = result.filter(dosen =>
+      dosen.user?.role?.some(r => r.id_role === 2)
+    );
+  }
 
  if (searchQuery.value) {
   const lowerQuery = searchQuery.value.toLowerCase();
@@ -584,7 +619,7 @@ const paginatedList = computed(() => {
  return filteredList.value.slice(start, end)
 })
 
-watch([searchQuery, filterProdi, filterGrupRiset, sortOrder, itemsPerPage], () => {
+watch([searchQuery, filterProdi, filterGrupRiset, filterKaprodi, sortOrder, itemsPerPage], () => {
  currentPage.value = 1
 })
 
