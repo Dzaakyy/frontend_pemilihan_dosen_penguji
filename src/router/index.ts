@@ -219,14 +219,6 @@ const router = createRouter({
       },
     },
     {
-      path: '/signup',
-      name: 'Signup',
-      component: () => import('../views/Auth/Signup.vue'),
-      meta: {
-        title: 'Signup',
-      },
-    },
-    {
       path: '/forgot-password',
       name: 'Forgot Password',
       component: () => import('../views/Auth/ForgotPasswordView.vue'),
