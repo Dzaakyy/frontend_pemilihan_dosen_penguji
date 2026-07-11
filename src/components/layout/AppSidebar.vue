@@ -9,14 +9,21 @@
       'lg:translate-x-0': true,
     },
   ]" @mouseenter="handleMouseEnter" @mouseleave="isHovered = false">
-    <div :class="['py-8 flex w-full justify-center']">
-        <img v-if="isExpanded || isHovered || isMobileOpen" class="dark:hidden" src="/images/logo/logo.svg" alt="Logo"
-          width="150" height="40" />
-        <img v-if="isExpanded || isHovered || isMobileOpen" class="hidden dark:block" src="/images/logo/logo.svg"
-          alt="Logo" width="150" height="40" />
-        <img v-else src="/images/logo/logo.svg" alt="Logo" width="60" height="60" />
+
+    <div class="hidden lg:flex py-6 w-full justify-center items-center overflow-hidden shrink-0">
+        <template v-if="isExpanded || isHovered">
+          <img style="width: 140px; max-width: 100%; height: auto; object-fit: contain;" class="dark:hidden"
+            src="/images/logo/logo.svg" alt="Logo" />
+          <img style="width: 140px; max-width: 100%; height: auto; object-fit: contain;" class="hidden dark:block"
+            src="/images/logo/logo.svg" alt="Logo" />
+        </template>
+        <template v-else>
+          <img style="width: 45px; max-width: 100%; height: auto; object-fit: contain;" src="/images/logo/logo.svg"
+            alt="Logo" />
+        </template>
     </div>
-    <div class="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
+
+    <div class="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar pt-24 lg:pt-0">
       <nav class="mb-6">
         <div class="flex flex-col gap-4">
           <div v-for="(menuGroup, groupIndex) in menuGroups" :key="groupIndex">
@@ -134,8 +141,7 @@
           </div>
         </div>
       </nav>
-      <!-- <SidebarWidget v-if="isExpanded || isHovered || isMobileOpen" /> -->
-    </div>
+      </div>
   </aside>
 </template>
 
@@ -202,8 +208,8 @@ const menuGroups: MenuGroup[] = [
       {
         icon: GridIcon,
         name: "Dashboard",
+        path: "/dashboard",
         roles: ['Admin', 'Kaprodi'],
-        subItems: [{ name: "Dashboard", path: "/dashboard", pro: false }],
       },
       {
         icon: ListIcon,
@@ -253,71 +259,8 @@ const menuGroups: MenuGroup[] = [
         path: "/dosen-penguji",
         roles: ['Mahasiswa']
       },
-      // {
-      //   icon: CalenderIcon,
-      //   name: "Calendar",
-      //   path: "/calendar",
-      // },
-      // {
-      //   icon: UserCircleIcon,
-      //   name: "User Profile",
-      //   path: "/profile",
-      // },
-      // {
-      //   name: "Forms",
-      //   icon: ListIcon,
-      //   subItems: [
-      //     { name: "Form Elements", path: "/form-elements", pro: false },
-      //   ],
-      // },
-      // {
-      //   name: "Tables",
-      //   icon: TableIcon,
-      //   subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-      // },
-      // {
-      //   name: "Pages",
-      //   icon: PageIcon,
-      //   subItems: [
-      //     { name: "Black Page", path: "/blank", pro: false },
-      //     { name: "404 Page", path: "/error-404", pro: false },
-      //   ],
-      // },
     ],
   },
-  // {
-  //   title: "Others",
-  //   items: [
-  //     {
-  //       icon: PieChartIcon,
-  //       name: "Charts",
-  //       subItems: [
-  //         { name: "Line Chart", path: "/line-chart", pro: false },
-  //         { name: "Bar Chart", path: "/bar-chart", pro: false },
-  //       ],
-  //     },
-  //     {
-  //       icon: BoxCubeIcon,
-  //       name: "Ui Elements",
-  //       subItems: [
-  //         { name: "Alerts", path: "/alerts", pro: false },
-  //         { name: "Avatars", path: "/avatars", pro: false },
-  //         { name: "Badge", path: "/badge", pro: false },
-  //         { name: "Buttons", path: "/buttons", pro: false },
-  //         { name: "Images", path: "/images", pro: false },
-  //         { name: "Videos", path: "/videos", pro: false },
-  //       ],
-  //     },
-  //     {
-  //       icon: PlugInIcon,
-  //       name: "Authentication",
-  //       subItems: [
-  //         { name: "Signin", path: "/signin", pro: false },
-  //         { name: "Signup", path: "/signup", pro: false },
-  //       ],
-  //     },
-  //   ],
-  // },
 ];
 
 const canViewMenu = (roles?: string[]) => {
@@ -338,7 +281,6 @@ const toggleSubmenu = (groupIndex: number, itemIndex: number) => {
   const key = `${groupIndex}-${itemIndex}`;
   openSubmenu.value = openSubmenu.value === key ? null : key;
 };
-
 
 const updateActiveSubmenu = () => {
   let found = false;
