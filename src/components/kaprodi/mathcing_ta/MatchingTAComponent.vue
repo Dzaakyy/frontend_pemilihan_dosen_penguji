@@ -883,18 +883,6 @@ const psoParams = ref({ maxIter: 50, numParticles: 30, w: 0.7, c1: 1.5, c2: 1.5 
 
 const capacityInfo = ref({ totalDosen: 0, dailyCapacity: 0, globalCapacity: 0 });
 
-const fetchCapacityInfo = async () => {
-  try {
-    const response = await fetch(`${baseUrl}/matching-ta/capacity`, { method: 'GET', credentials: 'include' });
-    const result = await response.json();
-    if (response.ok && result.data) {
-      capacityInfo.value = result.data;
-    }
-  } catch (e) {
-    console.error("Gagal menarik data kapasitas", e);
-    capacityInfo.value = { totalDosen: 999, dailyCapacity: 999, globalCapacity: 9999 };
-  }
-};
 
 const selectedMahasiswaIds = ref<number[]>([])
 const mhsTimeConfig = ref<Record<number, { tanggal: string }>>({})
@@ -1309,7 +1297,6 @@ const openGenerateModal = () => {
   modalSearchQuery.value = '';
   activeDatePicker.value = null;
   isGenerateModalOpen.value = true;
-  fetchCapacityInfo();
 }
 
 const capacityErrors = computed(() => {

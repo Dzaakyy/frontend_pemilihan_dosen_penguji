@@ -861,8 +861,12 @@ const handleMahasiswaChange = async (isFromEdit = false) => {
 
   isLoadingRekomendasi.value = true
   try {
-    const response = await fetch(`${baseUrl}/matching-ta/mahasiswa/${formData.value.mahasiswa_id}`, { method: 'GET', credentials: 'include' })
+    const response = await fetch(`${baseUrl}/matching-ta/mahasiswa/${formData.value.mahasiswa_id}`, {
+      method: 'GET',
+      credentials: 'include'
+    })
     const result = await response.json()
+
     if (response.ok) {
       let recs = [];
       if (result.data && Array.isArray(result.data)) recs = result.data;
@@ -877,9 +881,23 @@ const handleMahasiswaChange = async (isFromEdit = false) => {
       }
 
       rekomendasiList.value = recs.slice(0, 3);
+    } else {
+      let errorMsg = 'Gagal mengambil rekomendasi dosen.';
+      if (result.message) errorMsg = result.message;
+      else if (result.err?.message) errorMsg = result.err.message;
+      else if (result.err && typeof result.err === 'string') errorMsg = result.err;
+
+      if (response.status === 500) {
+        errorMsg = 'Terjadi kesalahan pada server saat mengambil rekomendasi. Silakan hubungi administrator.';
+      }
+
+      showAlert('error', 'Gagal Ambil Rekomendasi', errorMsg);
+      rekomendasiList.value = [];
     }
   } catch (error) {
     console.error("Gagal fetch rekomendasi:", error)
+    showAlert('error', 'Gangguan Koneksi', 'Tidak dapat menghubungi server untuk mengambil rekomendasi dosen. Periksa koneksi internet Anda.');
+    rekomendasiList.value = [];
   } finally {
     isLoadingRekomendasi.value = false
   }
@@ -1007,7 +1025,6 @@ const confirmDelete = async () => {
     if (response.ok) {
       const mhsName = itemToDelete.value.mahasiswa?.nama_mahasiswa || 'mahasiswa tersebut';
 
-      // KITA PAKSA MENGGUNAKAN PESAN DETAIL (MENGABAIKAN PESAN DARI BACKEND)
       showAlert('success', 'Penghapusan Berhasil', `Data penugasan atas nama ${mhsName} telah dihapus permanen. Alokasi sesi untuk ketiga dosen terkait kini telah kembali tersedia.`);
       closeDeleteModal()
       fetchPenugasan()

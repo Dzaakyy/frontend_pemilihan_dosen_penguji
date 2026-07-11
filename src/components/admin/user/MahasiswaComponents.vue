@@ -308,7 +308,7 @@
               class="flex flex-col p-4 bg-gray-50 rounded-xl border border-gray-100 dark:bg-gray-800/50 dark:border-gray-800">
               <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Nomor Induk (NIM)</span>
               <span class="text-[15px] font-bold text-gray-800 dark:text-gray-200">{{ selectedMahasiswaDetail.nim
-                }}</span>
+              }}</span>
             </div>
           </div>
 
@@ -351,7 +351,8 @@
             </div>
           </div>
 
-          <div v-if="isAdmin" class="grid grid-cols-1 gap-6 sm:grid-cols-2 border-t border-gray-100 pt-6 dark:border-gray-800">
+          <div v-if="isAdmin"
+            class="grid grid-cols-1 gap-6 sm:grid-cols-2 border-t border-gray-100 pt-6 dark:border-gray-800">
             <div class="flex flex-col">
               <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Akun Pengguna
                 (Username)</span>
@@ -484,7 +485,7 @@
                     class="flex items-center justify-between h-10 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 text-left transition-colors">
                     <span class="truncate pr-4"
                       :class="{ 'text-gray-500 dark:text-gray-400': formData.pembimbing_1 === '' }">{{
-                      selectedFormPembimbing1Label }}</span>
+                        selectedFormPembimbing1Label }}</span>
                     <svg
                       :class="['w-4 h-4 text-gray-400 transition-transform duration-200 flex-shrink-0', { 'rotate-180': isFormPembimbing1DropdownOpen }]"
                       fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -502,9 +503,9 @@
                           class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
                       </div>
                       <ul class="max-h-48 overflow-y-auto custom-scrollbar py-1">
-                        <li @click="selectFormPembimbing1('')"
+                        <!-- <li @click="selectFormPembimbing1('')"
                           class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors border-b border-gray-100 dark:border-gray-700 font-medium">
-                          Kosongkan Pembimbing</li>
+                          Kosongkan Pembimbing</li> -->
                         <li v-for="dosen in filteredPembimbing1Options" :key="'p1_' + dosen.id_dosen"
                           @click="selectFormPembimbing1(dosen.id_dosen)"
                           class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors border-b border-gray-50 last:border-0 dark:border-gray-700/50">
@@ -524,7 +525,7 @@
                     class="flex items-center justify-between h-10 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 text-left transition-colors">
                     <span class="truncate pr-4"
                       :class="{ 'text-gray-500 dark:text-gray-400': formData.pembimbing_2 === '' }">{{
-                      selectedFormPembimbing2Label }}</span>
+                        selectedFormPembimbing2Label }}</span>
                     <svg
                       :class="['w-4 h-4 text-gray-400 transition-transform duration-200 flex-shrink-0', { 'rotate-180': isFormPembimbing2DropdownOpen }]"
                       fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -542,9 +543,9 @@
                           class="w-full px-3 py-1.5 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:border-brand-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
                       </div>
                       <ul class="max-h-48 overflow-y-auto custom-scrollbar py-1">
-                        <li @click="selectFormPembimbing2('')"
+                        <!-- <li @click="selectFormPembimbing2('')"
                           class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors border-b border-gray-100 dark:border-gray-700 font-medium">
-                          Kosongkan Pembimbing</li>
+                          Kosongkan Pembimbing</li> -->
                         <li v-for="dosen in filteredPembimbing2Options" :key="'p2_' + dosen.id_dosen"
                           @click="selectFormPembimbing2(dosen.id_dosen)"
                           class="px-4 py-2.5 text-sm cursor-pointer hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors border-b border-gray-50 last:border-0 dark:border-gray-700/50">
@@ -588,7 +589,8 @@
                   <input v-model="formData.password" type="password" placeholder="Password login"
                     class="h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 transition-colors"
                     :required="!isEditing" />
-                  <p v-if="isEditing" class="mt-1 text-[10px] text-gray-500 dark:text-gray-400">Kosongkan jika tak diubah.
+                  <p v-if="isEditing" class="mt-1 text-[10px] text-gray-500 dark:text-gray-400">Kosongkan jika tak
+                    diubah.
                   </p>
                 </div>
               </div>
@@ -646,7 +648,7 @@ type AlertVariant = 'success' | 'error' | 'warning' | 'info';
 
 interface Prodi { id_prodi: number; nama_prodi: string; }
 interface Topik { id_topik: number; nama_topik: string; }
-interface Dosen {id_dosen: number;nama_dosen: string;nidn: string;prodi_id: number;user?: {id_user: number;username: string;email: string;};}
+interface Dosen { id_dosen: number; nama_dosen: string; nidn: string; prodi_id: number; user?: { id_user: number; username: string; email: string; }; }
 interface Mahasiswa {
   id_mahasiswa: number;
   nama_mahasiswa: string;
@@ -1015,6 +1017,10 @@ const openEditModal = (item: Mahasiswa) => {
 const closeModal = () => { isModalOpen.value = false }
 
 const submitForm = async () => {
+  if (!formData.value.pembimbing_1 || !formData.value.pembimbing_2) {
+    showAlert('error', 'Validasi Gagal', 'Pembimbing 1 dan Pembimbing 2 wajib dipilih.');
+    return;
+  }
   isSaving.value = true
   try {
     const url = isEditing.value
@@ -1061,8 +1067,27 @@ const submitForm = async () => {
       fetchMahasiswa()
       showAlert('success', 'Berhasil!', `Data Mahasiswa berhasil ${isEditing.value ? 'diperbarui' : 'ditambahkan'}.`)
     } else {
-      const errorData = await response.json()
-      showAlert('error', 'Gagal!', errorData.message || 'Terdapat kesalahan saat menyimpan data.')
+      let errorMessage = 'Terdapat kesalahan saat menyimpan data.'
+      try {
+        const errorData = await response.json()
+        console.log('Error data:', errorData)
+        if (errorData.errors) {
+          const firstError = Object.values(errorData.errors)[0];
+          errorMessage = firstError ? String(firstError) : errorMessage;
+        } else if (errorData.message) {
+          let msg = errorData.message;
+          const colonIndex = msg.indexOf(': ');
+          if (colonIndex !== -1) {
+            msg = msg.substring(colonIndex + 2);
+          }
+          errorMessage = msg;
+        } else if (errorData.err?.message) {
+          errorMessage = errorData.err.message;
+        }
+      } catch (e) {
+        console.log('Parse error:', e);
+      }
+      showAlert('error', 'Gagal!', errorMessage)
     }
   } catch (error) {
     console.error("Error simpan data:", error)
@@ -1089,7 +1114,27 @@ const confirmDelete = async () => {
       fetchMahasiswa()
       showAlert('success', 'Dihapus!', 'Data Mahasiswa dan akunnya berhasil dihapus permanen.')
     } else {
-      showAlert('error', 'Gagal!', 'Terdapat kesalahan saat menghapus data.')
+      let errorMessage = 'Terdapat kesalahan saat menghapus data.'
+      try {
+        const errorData = await response.json()
+        console.log('Error data:', errorData)
+        if (errorData.errors) {
+          const firstError = Object.values(errorData.errors)[0];
+          errorMessage = firstError ? String(firstError) : errorMessage;
+        } else if (errorData.message) {
+          let msg = errorData.message;
+          const colonIndex = msg.indexOf(': ');
+          if (colonIndex !== -1) {
+            msg = msg.substring(colonIndex + 2);
+          }
+          errorMessage = msg;
+        } else if (errorData.err?.message) {
+          errorMessage = errorData.err.message;
+        }
+      } catch (e) {
+        console.log('Parse error:', e);
+      }
+      showAlert('error', 'Gagal!', errorMessage)
     }
   } catch (error) {
     console.error("Error hapus data:", error)
@@ -1106,7 +1151,7 @@ onMounted(async () => {
     userRoles.value = (localStorage.getItem('userRoles') || '').split(',').map(r => r.trim())
   }
 
-    if (!isAdmin.value && isKaprodi.value) {
+  if (!isAdmin.value && isKaprodi.value) {
     try {
       const profileRes = await fetch(`${baseUrl}/auth/profile`, {
         method: 'GET',
