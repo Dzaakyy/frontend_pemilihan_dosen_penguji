@@ -34,11 +34,11 @@
           <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm font-semibold text-gray-500 shrink-0">
              <div class="text-center w-1/2 border-r border-gray-200">
                <p class="text-xs">Dosen</p>
-               <p class="text-lg text-gray-800">{{ filteredDosenList.length }}</p>
+               <p class="text-lg text-gray-800 dark:text-white/90">{{ filteredDosenList.length }}</p>
              </div>
              <div class="text-center w-1/2">
                <p class="text-xs">Keahlian</p>
-               <p class="text-lg text-gray-800">{{ uniqueKeahlianCount }}</p>
+               <p class="text-lg text-gray-800 dark:text-white/90">{{ uniqueKeahlianCount }}</p>
              </div>
           </div>
         </div>
@@ -277,11 +277,19 @@ const jumlahDosenDitugaskan = computed(() => {
 
 const rataRataSkorMatching = computed(() => {
   if (filteredMatchingList.value.length === 0) return 0;
-  const rank1Matches = filteredMatchingList.value.filter(m => String(m.rank) === '1');
-  if (rank1Matches.length === 0) return 0;
 
-  const totalFitness = rank1Matches.reduce((sum, item) => sum + (Number(item.nilai_fitness) || 0), 0);
-  const average = totalFitness / rank1Matches.length;
+  console.log('Total data matching:', filteredMatchingList.value.length);
+  console.log('Detail data:', filteredMatchingList.value.map(m => ({
+    mahasiswa_id: m.mahasiswa_id,
+    rank: m.rank,
+    nilai_fitness: m.nilai_fitness
+  })));
+
+  const totalFitness = filteredMatchingList.value.reduce(
+    (sum, item) => sum + (Number(item.nilai_fitness) || 0),
+    0
+  );
+  const average = totalFitness / filteredMatchingList.value.length;
 
   return Number(average.toFixed(1));
 })

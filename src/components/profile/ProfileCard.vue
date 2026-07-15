@@ -4,7 +4,7 @@
       <div class="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
         <div class="flex flex-col items-center w-full gap-6 xl:flex-row">
           <!-- Logo Inisial -->
-          <div class="flex items-center justify-center w-20 h-20 overflow-hidden text-3xl font-bold bg-gray-200 border border-gray-200 rounded-full text-brand-500 dark:border-gray-800">
+          <div class="flex items-center justify-center w-20 h-20 overflow-hidden text-3xl font-bold rounded-full bg-gradient-to-br from-brand-100 to-brand-50 dark:from-brand-900/40 dark:to-brand-800/20 text-brand-600 dark:text-brand-400 shadow-inner ">
             {{ profileName.charAt(0).toUpperCase() }}
           </div>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="relative" ref="dropdownRef">
     <button class="flex items-center text-gray-700 dark:text-gray-400" @click.prevent="toggleDropdown">
-      <span class="mr-3 overflow-hidden rounded-full h-11 w-11 bg-gray-200 flex items-center justify-center text-brand-500 font-bold text-lg">
+      <span class="mr-3 overflow-hidden rounded-full h-11 w-11 bg-gradient-to-br from-brand-100 to-brand-50 dark:from-brand-900/40 dark:to-brand-800/20 flex items-center justify-center text-brand-600 dark:text-brand-400 font-bold text-lg shadow-inner">
         {{ currentUsername.charAt(0).toUpperCase() }}
       </span>
       <span class="block mr-1 font-medium text-theme-sm">{{ currentUsername }}</span>
