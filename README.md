@@ -1,36 +1,34 @@
-# Frontend Project
+# Sistem Rekomendasi Pemilihan Dosen Penguji Tugas Akhir
 
-This is the frontend repository for the project. It is built using Vue 3, Vite, and Tailwind CSS.
+Frontend aplikasi web untuk sistem rekomendasi pemilihan dosen penguji Tugas Akhir menggunakan algoritma Particle Swarm Optimization (PSO).
 
-## Prerequisites
+Sistem ini dikembangkan sebagai proyek Tugas Akhir pada Program Studi Teknologi Rekayasa Perangkat Lunak, Politeknik Negeri Padang.
 
-Make sure you have Node.js installed. We recommend using Node.js 18.x or later.
+## Repository
 
-## Setup & Installation
+- **Frontend:** Repository ini
+- **Backend:** https://github.com/Dzaakyy/backend_pemilihan_dosen_penguji
 
-1. Install the dependencies:
+## Features
 
-```bash
-npm install
-```
-
-2. Start the development server:
-
-```bash
-npm run dev
-```
-
-3. Build for production:
-
-```bash
-npm run build
-```
+- Authentication dan role-based access
+- Pengelolaan data dosen, mahasiswa, topik Tugas Akhir, dan keahlian
+- Rekomendasi dosen penguji menggunakan algoritma Particle Swarm Optimization (PSO)
+- Penyesuaian rekomendasi berdasarkan kesesuaian bidang keahlian
+- Pengaturan beban dosen dan kuota penguji
+- Dashboard untuk Admin dan Kaprodi
+- Informasi hasil rekomendasi bagi pengguna
 
 ## Technologies Used
 
 - [Vue 3](https://vuejs.org/)
 - [Vite](https://vitejs.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
 - [TypeScript](https://www.typescriptlang.org/)
-- [Pinia](https://pinia.vuejs.org/) (State Management)
-- [Vue Router](https://router.vuejs.org/) (Navigation)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Pinia](https://pinia.vuejs.org/) — State Management
+- [Vue Router](https://router.vuejs.org/) — Navigation
+
+## Related Repository
+
+Backend API:
+https://github.com/Dzaakyy/backend_pemilihan_dosen_penguji
